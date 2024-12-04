@@ -10,6 +10,7 @@ import CharRouter from "./Router/CharRouter.js";
 import CharacRouter from "./Router/CharacRouter.js";
 import AnimeReviewRouter from "./Router/AnimeReviewRouter.js"; // Ensure correct import path
 import MangaReviewRouter from "./Router/MangaReviewRouter.js";
+import UserDataRoutes from "./index.js"
 
 dotenv.config();
 const app = express();
