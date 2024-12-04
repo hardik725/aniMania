@@ -1,6 +1,6 @@
 import express from 'express';
 import { signUp, Login, Userdata, searchUsersByUsername, updateUser} from '../Controller/userController.js';
-import userDataRoutes from './userDataRoutes.js'; // Import the new routes
+import UserDataRoutes from './UserDataRoutes.js'; // Import the new routes
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.post("/signup", signUp);
 router.post("/login", Login);
 
 // Use the new user data routes
-router.use('/data', userDataRoutes);
+router.use('/data', UserDataRoutes);
 
 // Route for fetching user data
 router.get('/Userdata/:username', Userdata); // Updated to use `GET` method with `:username` param
