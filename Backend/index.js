@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import UserRouter from "./Router/UserRouter.js";
+import userDataRoutes from "./Router/userDataRoutes.js"
 import cors from "cors";
 import AnimeRouter from "./Router/AnimeRouter.js";
 import MangaRouter from "./Router/MangaRouter.js";
