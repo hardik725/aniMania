@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import UserRouter from "./Router/UserRouter.js";
+import {UserDataRoutes , UserRouter} from "./Router/UserRouter.js";
 import cors from "cors";
 import AnimeRouter from "./Router/AnimeRouter.js";
 import MangaRouter from "./Router/MangaRouter.js";
@@ -9,7 +9,6 @@ import CharRouter from "./Router/CharRouter.js";
 import CharacRouter from "./Router/CharacRouter.js";
 import AnimeReviewRouter from "./Router/AnimeReviewRouter.js"; // Ensure correct import path
 import MangaReviewRouter from "./Router/MangaReviewRouter.js";
-import UserDataRoutes from "./index.js"
 
 dotenv.config();
 const app = express();
