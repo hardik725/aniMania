@@ -33,6 +33,10 @@ app.use("/charac", CharacRouter);
 app.use("/review", AnimeReviewRouter);
 app.use("/mangareview", MangaReviewRouter);
 
+app.get('/', (req,res) => {
+    res.send("Welcome")
+})
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
