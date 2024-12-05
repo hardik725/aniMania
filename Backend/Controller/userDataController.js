@@ -1,5 +1,4 @@
 import UserData from '../Model/UserData.js';
-import { check, validationResult } from 'express-validator';
 
 // Controller to get user data
 export const getUserData = async (req, res) => {
