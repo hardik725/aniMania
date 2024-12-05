@@ -27,6 +27,7 @@ mongoose.connect(URI)
 
 // Routes
 app.use("/user", UserRouter);
+app.use("/user/data", UserDataRoutes);
 app.use("/anime", AnimeRouter);
 app.use("/manga", MangaRouter);
 app.use("/char", CharRouter);
