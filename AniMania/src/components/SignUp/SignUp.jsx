@@ -11,7 +11,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-        const response = await fetch("http://localhost:4001/User/signUp", {
+        const response = await fetch("https://animania-backend-dmjs.onrender.com/User/signUp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

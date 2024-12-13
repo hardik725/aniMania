@@ -12,7 +12,7 @@ function MyMangaList({ username , onLogout }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch(`http://localhost:4001/User/data/user-data/${username}`);
+                const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
                 if (response.ok) {
                     const data = await response.json();
                     setUserData(data);
@@ -25,7 +25,7 @@ function MyMangaList({ username , onLogout }) {
                     setUserScores(scores);
 
                     const mangaPromises = sortedMangaList.map(({ title }) =>
-                        fetch(`http://localhost:4001/manga/${title}`).then(res => res.json())
+                        fetch(`https://animania-backend-dmjs.onrender.com/manga/${title}`).then(res => res.json())
                     );
                     const mangaData = await Promise.all(mangaPromises);
                     setMangaDetails(mangaData);

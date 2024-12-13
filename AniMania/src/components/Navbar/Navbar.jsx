@@ -22,7 +22,7 @@ function Navbar({ username, onLogout }) {
 
     const fetchUserData = async () => {
       try {
-        const userResponse = await fetch(`http://localhost:4001/User/Userdata/${username}`);
+        const userResponse = await fetch(`https://animania-backend-dmjs.onrender.com/User/Userdata/${username}`);
         if (userResponse.ok) {
           const userData = await userResponse.json();
           setProfilePicture(userData.ProfilePicture);
@@ -32,7 +32,7 @@ function Navbar({ username, onLogout }) {
         }
 
         // Fetch notifications
-        const notificationsResponse = await fetch(`http://localhost:4001/User/data/user-data/${username}`);
+        const notificationsResponse = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
         if (notificationsResponse.ok) {
           const notificationsData = await notificationsResponse.json();
           setNotifications(notificationsData.Notifications || []); // Update notifications state

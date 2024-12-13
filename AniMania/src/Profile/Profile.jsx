@@ -19,7 +19,7 @@ function Profile({ username, onLogout }) {
   useEffect(() => {
     const fetchPhotoData = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/User/Userdata/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/Userdata/${username}`);
         if (response.ok) {
           const data = await response.json();
           setUser(data);
@@ -43,13 +43,13 @@ function Profile({ username, onLogout }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/User/data/user-data/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
 
           const animePromises = data.AnimeList.map(({ title }) =>
-            fetch(`http://localhost:4001/anime/${title}`).then((res) => {
+            fetch(`https://animania-backend-dmjs.onrender.com/anime/${title}`).then((res) => {
               if (res.ok) return res.json();
               throw new Error(`Failed to fetch anime: ${title}`);
             })
@@ -58,7 +58,7 @@ function Profile({ username, onLogout }) {
           setAnimeDetails(animeData);
 
           const mangaPromises = data.MangaList.map(({ title }) =>
-            fetch(`http://localhost:4001/manga/${title}`).then((res) => {
+            fetch(`https://animania-backend-dmjs.onrender.com/manga/${title}`).then((res) => {
               if (res.ok) return res.json();
               throw new Error(`Failed to fetch manga: ${title}`);
             })
@@ -108,7 +108,7 @@ function Profile({ username, onLogout }) {
     e.preventDefault();
     try {
       // Implement logic to update the user details on the server
-      const response = await fetch(`http://localhost:4001/User/update/${username}`, {
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/update/${username}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

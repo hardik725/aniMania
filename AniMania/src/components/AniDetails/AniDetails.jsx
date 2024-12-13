@@ -15,13 +15,13 @@ function AniDetails({ username , onLogout }) {
   useEffect(() => {
     const fetchAnimeDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/anime/${animeName}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/${animeName}`);
         if (response.ok) {
           const data = await response.json();
           setAnime(data);
 
           // Fetch character images
-          const charactersResponse = await fetch(`http://localhost:4001/char/${animeName}`);
+          const charactersResponse = await fetch(`https://animania-backend-dmjs.onrender.com/char/${animeName}`);
           if (charactersResponse.ok) {
             const charactersData = await charactersResponse.json();
             setCharacters(Array.isArray(charactersData) ? charactersData : []);
@@ -30,7 +30,7 @@ function AniDetails({ username , onLogout }) {
           }
 
           // Fetch reviews
-          const reviewsResponse = await fetch(`http://localhost:4001/review/${animeName}`);
+          const reviewsResponse = await fetch(`https://animania-backend-dmjs.onrender.com/review/${animeName}`);
           if (reviewsResponse.ok) {
             const reviewsData = await reviewsResponse.json();
             setReviews(reviewsData.ReviewList || []);
@@ -55,7 +55,7 @@ function AniDetails({ username , onLogout }) {
     event.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:4001/review/post', {
+      const response = await fetch('https://animania-backend-dmjs.onrender.com/review/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ function AniDetails({ username , onLogout }) {
       console.log('Review submitted successfully:', data);
   
       // Fetch the updated reviews from the backend to reflect changes immediately
-      const reviewsResponse = await fetch(`http://localhost:4001/review/${animeName}`);
+      const reviewsResponse = await fetch(`https://animania-backend-dmjs.onrender.com/review/${animeName}`);
       if (reviewsResponse.ok) {
         const reviewsData = await reviewsResponse.json();
         setReviews(reviewsData.ReviewList || []);

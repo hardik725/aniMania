@@ -14,13 +14,13 @@ function MangDetails({ username, onLogout }) {
   useEffect(() => {
     const fetchMangaDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/manga/${mangaName}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/manga/${mangaName}`);
         if (response.ok) {
           const data = await response.json();
           setManga(data);
 
           // Fetch character images
-          const charactersResponse = await fetch(`http://localhost:4001/charac/${mangaName}`);
+          const charactersResponse = await fetch(`https://animania-backend-dmjs.onrender.com/charac/${mangaName}`);
           if (charactersResponse.ok) {
             const charactersData = await charactersResponse.json();
             setCharacters(Array.isArray(charactersData) ? charactersData : []);
@@ -29,7 +29,7 @@ function MangDetails({ username, onLogout }) {
           }
 
           // Fetch reviews
-          const reviewsResponse = await fetch(`http://localhost:4001/mangareview/${mangaName}`);
+          const reviewsResponse = await fetch(`https://animania-backend-dmjs.onrender.com/mangareview/${mangaName}`);
           if (reviewsResponse.ok) {
             const reviewsData = await reviewsResponse.json();
             setReviews(reviewsData.ReviewList || []);
@@ -54,7 +54,7 @@ function MangDetails({ username, onLogout }) {
     event.preventDefault();
 
     try {
-        const response = await fetch('http://localhost:4001/mangareview/post', {
+        const response = await fetch('https://animania-backend-dmjs.onrender.com/mangareview/post', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -13,7 +13,7 @@ const TopAnime = ({ username, onLogout }) => {
         const fetchUserAnimeList = async () => {
             if (username) {
                 try {
-                    const response = await fetch(`http://localhost:4001/User/data/user/${username}/animelist`);
+                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/animelist`);
                     const data = await response.json();
                     if (Array.isArray(data)) {
                         setUserAnimeList(data);
@@ -36,7 +36,7 @@ const TopAnime = ({ username, onLogout }) => {
 
             try {
                 for (let rank = 1; rank <= 50; rank++) {
-                    const response = await fetch(`http://localhost:4001/anime/rank/${rank}`);
+                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/rank/${rank}`);
                     const data = await response.json();
                     if (data && typeof data === 'object') {
                         fetchedAnimeList.push(data);
@@ -69,7 +69,7 @@ const TopAnime = ({ username, onLogout }) => {
 
     const handleAddToList = async (animeTitle, animeScore) => {
         try {
-            const response = await fetch(`http://localhost:4001/User/data/user/${username}/add-anime`, {
+            const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/add-anime`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ const MangaCard = ({ rank, className }) => {
     useEffect(() => {
         const fetchMangaData = async () => {
             try {
-                const response = await fetch(`http://localhost:4001/manga/rank/${rank}`);
+                const response = await fetch(`https://animania-backend-dmjs.onrender.com/manga/rank/${rank}`);
                 if (response.ok) {
                     const data = await response.json();
                     setMangaData(data);

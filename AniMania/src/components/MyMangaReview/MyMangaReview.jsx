@@ -11,14 +11,14 @@ function MyMangaReview({ username, onLogout }) {
     const fetchUserReviews = async () => {
       try {
         // Fetch user reviews
-        const response = await fetch(`http://localhost:4001/mangareview/user/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/mangareview/user/${username}`);
         if (response.ok) {
           const reviewData = await response.json();
 
           // Fetch manga data for each review
           const reviewsWithMangaData = await Promise.all(
             reviewData.ReviewList.map(async (review) => {
-              const mangaResponse = await fetch(`http://localhost:4001/manga/${review.mangaName}`);
+              const mangaResponse = await fetch(`https://animania-backend-dmjs.onrender.com/manga/${review.mangaName}`);
               if (mangaResponse.ok) {
                 const mangaData = await mangaResponse.json();
                 return {

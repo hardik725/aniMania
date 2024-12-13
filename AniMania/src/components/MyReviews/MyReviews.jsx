@@ -10,13 +10,13 @@ function MyReviews({ username, onLogout }) {
   useEffect(() => {
     const fetchUserReviews = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/review/user/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/review/user/${username}`);
         if (response.ok) {
           const reviewData = await response.json();
 
           const reviewsWithAnimeData = await Promise.all(
             reviewData.ReviewList.map(async (review) => {
-              const animeResponse = await fetch(`http://localhost:4001/anime/${review.animeName}`);
+              const animeResponse = await fetch(`https://animania-backend-dmjs.onrender.com/anime/${review.animeName}`);
               if (animeResponse.ok) {
                 const animeData = await animeResponse.json();
                 return {

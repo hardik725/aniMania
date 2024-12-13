@@ -15,7 +15,7 @@ function FriendProfile({ username, onLogout }) {
   // Fetch user data
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`http://localhost:4001/User/data/user-data/${profileUsername}`);
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${profileUsername}`);
       if (!response.ok) {
         throw new Error('Failed to fetch user data');
       }
@@ -29,10 +29,10 @@ function FriendProfile({ username, onLogout }) {
       setIsFriend(isCurrentUserFriend);
 
       const animePromises = data.AnimeList.map(({ title }) =>
-        fetch(`http://localhost:4001/anime/${title}`).then((res) => res.json())
+        fetch(`https://animania-backend-dmjs.onrender.com/anime/${title}`).then((res) => res.json())
       );
       const mangaPromises = data.MangaList.map(({ title }) =>
-        fetch(`http://localhost:4001/manga/${title}`).then((res) => res.json())
+        fetch(`https://animania-backend-dmjs.onrender.com/manga/${title}`).then((res) => res.json())
       );
 
       const [animeData, mangaData] = await Promise.all([Promise.all(animePromises), Promise.all(mangaPromises)]);
@@ -46,7 +46,7 @@ function FriendProfile({ username, onLogout }) {
   // Fetch friend photo and ID
   const fetchPhotoData = async () => {
     try {
-      const response = await fetch(`http://localhost:4001/User/Userdata/${profileUsername}`);
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/Userdata/${profileUsername}`);
       if (!response.ok) {
         throw new Error('Failed to fetch user photo data');
       }
@@ -78,7 +78,7 @@ function FriendProfile({ username, onLogout }) {
   const handleFriendAction = async () => {
     try {
       const action = isFriend ? 'removeFriend' : 'addFriend';
-      const response = await fetch(`http://localhost:4001/User/data/${action}/${username}`, {
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/${action}/${username}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
