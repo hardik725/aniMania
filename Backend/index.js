@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import UserDataRoutes from "./Router/UserDataRoutes.js";
 import UserRouter from "./Router/UserRouter.js";
 import cors from "cors";
 import AnimeRouter from "./Router/AnimeRouter.js";
@@ -27,7 +26,6 @@ mongoose.connect(URI)
 
 // Routes
 app.use("/user", UserRouter);
-app.use("/user/data", UserDataRoutes);
 app.use("/anime", AnimeRouter);
 app.use("/manga", MangaRouter);
 app.use("/char", CharRouter);

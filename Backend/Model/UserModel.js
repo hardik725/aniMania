@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema({
+const UserDataSchema = mongoose.Schema({
+    // Common fields
     Username: {
         type: String,
         unique: true,
@@ -16,24 +17,92 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     ProfilePicture: {
-        type: String, // Use String to store the URL of the profile picture
+        type: String,
         default: "https://c4.wallpaperflare.com/wallpaper/164/852/842/jujutsu-kaisen-anime-boys-anime-satoru-gojo-hd-wallpaper-preview.jpg",
     },
     Gender: {
         type: String,
-        enum: ["Male", "Female", "Other"], // Restrict to specific values
+        enum: ["Male", "Female", "Other"],
         default: "Male",
     },
     Age: {
         type: Number,
-        default: 18, // Age should not be negative
+        default: 18,
     },
     DateJoined: {
         type: Date,
-        default: Date.now, // Automatically set the date when the user is created
-    }
+        default: Date.now,
+    },
+
+    // Anime and Manga statistics
+    AnimeWatched: {
+        type: Number,
+        required: true,
+    },
+    MangaRead: {
+        type: Number,
+        required: true,
+    },
+    TotalEpisodes: {
+        type: Number,
+        required: true,
+    },
+    TotalChapters: {
+        type: Number,
+        required: true,
+    },
+    MeanAnimeScoreGiven: {
+        type: Number,
+        required: true,
+    },
+    MeanMangaScoreGiven: {
+        type: Number,
+        required: true,
+    },
+
+    // Lists and Friends
+    AnimeList: [
+        {
+            title: { type: String, required: true },
+            score: { type: Number, required: true },
+        }
+    ],
+    MangaList: [
+        {
+            title: { type: String, required: true },
+            score: { type: Number, required: true },
+        }
+    ],
+    UserFriend: [
+        {
+            FriendName: { type: String, required: true },
+        }
+    ],
+
+    // Messages
+    Messages: [
+        {
+            friend: { type: String, required: true },
+            conversation: [
+                {
+                    sender: { type: String, required: true },
+                    content: { type: String, required: true },
+                    timestamp: { type: Date, default: Date.now },
+                }
+            ]
+        }
+    ],
+
+    // Notifications
+    Notifications: [
+        {
+            message: { type: String, required: true },
+            type: { type: String, enum: ['info', 'warning', 'error'], default: 'info' },
+            timestamp: { type: Date, default: Date.now },
+        }
+    ],
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("MergedUser", UserDataSchema);
 
 export default User;
