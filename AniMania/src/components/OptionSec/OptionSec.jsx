@@ -11,6 +11,21 @@ function OptionSec({ username }) {
     const [searchResults, setSearchResults] = useState([]);
     const [friendsList, setFriendsList] = useState([]);
     const [showContactForm, setShowContactForm] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Check for screen size changes
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768); // Mobile if width <= 768px
+        };
+
+        handleResize(); // Set initial state
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     // Fetch user's friends list
     useEffect(() => {
@@ -82,9 +97,13 @@ function OptionSec({ username }) {
     }, [showContactForm]);
 
     return (
-        <div className="flex flex-center flex-wrap mx-auto w-full h-[2.1rem] max-w-[980px] bg-blue-800 relative z-10">
+        <div
+            className={`flex mx-auto w-full max-w-[980px] bg-blue-800 relative z-10 ${
+                isMobile ? 'flex-col' : 'flex-row'
+            }`}
+        >
             {/* Options Section */}
-            <div className="flex flex-wrap h-full w-1/2 justify-between items-center">
+            <div className={`flex ${isMobile ? 'flex-row w-full justify-evenly' : 'flex-row justify-evenly w-1/2'} items-center`}>
                 {/* Anime Menu */}
                 <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Anime</a>
@@ -126,7 +145,7 @@ function OptionSec({ username }) {
             </div>
 
             {/* Search Section */}
-            <div className="relative flex items-center justify-start w-1/2 h-full">
+            <div className={`relative ${isMobile ? 'w-full mt-2' : 'w-1/2 h-full'} flex items-center justify-start`}>
                 <div className="relative bg-gray-700 px-2 h-[1.7rem] flex items-center rounded-l-md">
                     <a href="#" onClick={toggleOptionDropdown} className="flex items-center text-white space-x-1">
                         <span className="mr-1 text-sm">{searchCategory}</span>

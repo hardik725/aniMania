@@ -7,6 +7,7 @@ function Navbar({ username, onLogout }) {
   const [isFirstDropdownOpen, setFirstDropdownOpen] = useState(false);
   const [isThirdDropdownOpen, setThirdDropdownOpen] = useState(false);
   const [isUsernameDropdownOpen, setUsernameDropdownOpen] = useState(false);
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   const [notifications, setNotifications] = useState([]); // State for notifications
   const [unreadCount, setUnreadCount] = useState(0);
@@ -77,6 +78,8 @@ function Navbar({ username, onLogout }) {
     setThirdDropdownOpen(false);
   };
 
+  const toggleMobileDropdown = () => setIsMobileDropdownOpen(!isMobileDropdownOpen);
+
   const isBlurredBackground = (location.pathname === "/userAnimeList" || location.pathname === "/userMangaList");
   const navbarClass = `relative z-30 ${isBlurredBackground ? 'bg-black bg-opacity-50 backdrop-blur-md mt-4 mx-2 md:mx-20 rounded-md' : 'bg-black'}`;
 
@@ -102,137 +105,201 @@ function Navbar({ username, onLogout }) {
           }}
         ></div>
 
-        {/* Nav Items */}
-        <div className="flex flex-grow justify-end space-x-4 relative z-20">
-          {/* First Dropdown */}
-          <div className="relative z-30">
-            <a
-              href="#"
-              onClick={toggleFirstDropdown}
-              className="sm:h-[3rem] flex items-center justify-center text-white"
-            >
-              <FontAwesomeIcon
-                icon={faList}
-                style={{ fontSize: '36px' }}
-              />
-            </a>
-            {isFirstDropdownOpen && (
-              <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-40">
-                <Link
-                  to="/userAnimeList"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  Anime List
-                </Link>
-                <Link
-                  to="/userMangaList"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  Manga List
-                </Link>
-                <Link
-                  to="/favourite"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  Favourite
-                </Link>
-                <Link
-                  to="/interested-genre"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  Interested Genre
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Second Icon */}
-          <div className="relative z-30 sm:h-[3rem] flex items-center justify-center">
-            <Link to="/MyFriends" className="h-[3rem] flex items-center justify-center text-white">
-              <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: '36px' }} />
-            </Link>
-          </div>
-
-          {/* Third Dropdown */}
-          <div className="relative z-30">
+      {/* Desktop View */}
+      <div className="hidden sm:flex flex-grow justify-end space-x-4 relative z-20">
+        {/* First Dropdown */}
+        <div className="relative z-30">
           <a
-              href="#"
-              onClick={toggleThirdDropdown}
-              className="relative sm:h-[3rem] flex items-center justify-center text-white"
-            >
-              <FontAwesomeIcon icon={faBell} style={{ fontSize: '36px' }} />
-              {unreadCount > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-red-100 bg-red-600 rounded-full">
-                  {unreadCount}
-                </span>
-              )}
-            </a>
-
-            {isThirdDropdownOpen && (
-  <div className="absolute right-0 mt-2 w-72 bg-gray-900 text-white shadow-xl rounded-lg z-40 border border-gray-700">
-    <div className="px-4 py-2 border-b border-gray-700 font-semibold text-lg">
-      Notifications
-    </div>
-    {notifications.length > 0 ? (
-      notifications.map((notification, index) => (
-        <div
-          key={index}
-          className="px-4 py-3 border-b border-gray-700 hover:bg-gray-800 transition-colors duration-200"
-        >
-          {notification.message}
+            href="#"
+            onClick={toggleFirstDropdown}
+            className="sm:h-[3rem] flex items-center justify-center text-white"
+          >
+            <FontAwesomeIcon icon={faList} style={{ fontSize: '36px' }} />
+          </a>
+          {isFirstDropdownOpen && (
+            <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-40">
+              <Link
+                to="/userAnimeList"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                Anime List
+              </Link>
+              <Link
+                to="/userMangaList"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                Manga List
+              </Link>
+              <Link
+                to="/favourite"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                Favourite
+              </Link>
+              <Link
+                to="/interested-genre"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                Interested Genre
+              </Link>
+            </div>
+          )}
         </div>
-      ))
-    ) : (
-      <div className="px-4 py-3 text-gray-400">
-        No notifications
-      </div>
-    )}
-  </div>
-)}
-          </div>
 
-          {/* Username and Profile Picture Dropdown */}
-          <div className="relative z-30">
-            <a
-              href="#"
-              onClick={toggleUsernameDropdown}
-              className="h-[3rem] flex items-center justify-center text-white"
-            >
-              {profilePicture ? (
-                <img
-                  src={profilePicture}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full mr-2"
-                />
-              ) : (
-                <span>{username}</span>
-              )}
-              <FontAwesomeIcon icon={isUsernameDropdownOpen ? faCaretUp : faCaretDown} />
-            </a>
-            {isUsernameDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-40">
-                <Link
-                  to="/profile"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/MyReviews"
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
-                >
-                  My Reviews
-                </Link>
-                <button
-                  onClick={onLogout}
-                  className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black w-full text-left"
-                >
-                  Logout
-                </button>
-              </div>
+        {/* Second Icon */}
+        <div className="relative z-30 sm:h-[3rem] flex items-center justify-center">
+          <Link to="/MyFriends" className="h-[3rem] flex items-center justify-center text-white">
+            <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: '36px' }} />
+          </Link>
+        </div>
+
+        {/* Third Dropdown */}
+        <div className="relative z-30">
+          <a
+            href="#"
+            onClick={toggleThirdDropdown}
+            className="relative sm:h-[3rem] flex items-center justify-center text-white"
+          >
+            <FontAwesomeIcon icon={faBell} style={{ fontSize: '36px' }} />
+            {unreadCount > 0 && (
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-red-100 bg-red-600 rounded-full">
+                {unreadCount}
+              </span>
             )}
-          </div>
+          </a>
+
+          {isThirdDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-72 bg-gray-900 text-white shadow-xl rounded-lg z-40 border border-gray-700">
+              <div className="px-4 py-2 border-b border-gray-700 font-semibold text-lg">
+                Notifications
+              </div>
+              {notifications.length > 0 ? (
+                notifications.map((notification, index) => (
+                  <div
+                    key={index}
+                    className="px-4 py-3 border-b border-gray-700 hover:bg-gray-800 transition-colors duration-200"
+                  >
+                    {notification.message}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-3 text-gray-400">
+                  No notifications
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Username and Profile Picture Dropdown */}
+        <div className="relative z-30">
+          <a
+            href="#"
+            onClick={toggleUsernameDropdown}
+            className="h-[3rem] flex items-center justify-center text-white"
+          >
+            {profilePicture ? (
+              <img
+                src={profilePicture}
+                alt="Profile"
+                className="w-8 h-8 rounded-full mr-2"
+              />
+            ) : (
+              <span>{username}</span>
+            )}
+            <FontAwesomeIcon icon={isUsernameDropdownOpen ? faCaretUp : faCaretDown} />
+          </a>
+          {isUsernameDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-40">
+              <Link
+                to="/profile"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                Profile
+              </Link>
+              <Link
+                to="/MyReviews"
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
+              >
+                My Reviews
+              </Link>
+              <button
+                onClick={onLogout}
+                className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black w-full text-left"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile View */}
+      <div className="sm:hidden flex items-center">
+  <button
+    onClick={toggleMobileDropdown}
+    className="text-white focus:outline-none"
+  >
+    <FontAwesomeIcon icon={faList} style={{ fontSize: '36px' }} />
+  </button>
+  {isMobileDropdownOpen && (
+    <div
+      className="absolute top-full right-0 w-1/2 bg-gray-800 shadow-lg z-40 rounded-md transform scale-y-0 origin-top transition-transform ease-out duration-300"
+      style={{ transform: isMobileDropdownOpen ? 'scaleY(1)' : 'scaleY(0)' }}
+    >
+      <Link
+        to="/userAnimeList"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        Anime List
+      </Link>
+      <Link
+        to="/userMangaList"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        Manga List
+      </Link>
+      <Link
+        to="/favourite"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        Favourite
+      </Link>
+      <Link
+        to="/interested-genre"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        Interested Genre
+      </Link>
+      <Link
+        to="/MyFriends"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        My Friends
+      </Link>
+      <Link
+        to="/profile"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        Profile
+      </Link>
+      <Link
+        to="/MyReviews"
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
+      >
+        My Reviews
+      </Link>
+      <button
+        onClick={onLogout}
+        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200 w-full text-left"
+      >
+        Logout
+      </button>
+    </div>
+  )}
+</div>
+
+
       </div>
     </nav>
   );
