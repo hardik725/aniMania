@@ -11,6 +11,16 @@ function AniDetails({ username , onLogout }) {
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
+
+  useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
+    }, []);
 
   useEffect(() => {
     const fetchAnimeDetails = async () => {
@@ -95,10 +105,85 @@ function AniDetails({ username , onLogout }) {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!anime) return <div>No anime data available</div>;
-
   return (
     <>
       <Navbar username={username} onLogout={onLogout} />
+      {
+        isMobile ? 
+        // mobile application code is here ----
+        <div className="bg-gray-900 text-white p-4">
+
+        {/* First Row: Photo and Name */}
+        <div className="flex flex-row  gap-4 bg-gray-800 p-3 rounded-lg">
+          <div className="flex-none w-1/2">
+            <img 
+              src={anime.Photo} 
+              alt={anime.Name} 
+              className="rounded-lg w-full h-auto"
+            />
+          </div>
+          <div className="flex-grow">
+            <h1 className="text-xl font-bold mb-2">{anime.Name}</h1>
+            <p><strong>Rating:</strong> {anime.Rating} / 10</p>
+            <p><strong>Episodes:</strong> {anime.episodes}</p>
+            <p><strong>Rank:</strong> #{anime.Rank}</p>
+            <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
+            <p><strong>Aired On:</strong> {anime.aired_on}</p>
+          </div>
+        </div>
+
+        {/* Second Row: Description */}
+        <div className="mt-4 bg-gray-800 p-3 rounded-lg">
+          <h2 className="text-lg font-bold mb-2">Description</h2>
+          <p className="text-sm">{anime.Description}</p>
+        </div>
+
+        {/* 3rd row for all the characters in the anime*/}
+        <div className="bg-gray-800 p-4 rounded-lg">
+              <h2 className="text-2xl font-bold mb-2">Characters</h2>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+              {characters.map((character, index) => (
+              <div key={index} className="flex flex-col items-center">
+              <img 
+              src={character.imageUrl} 
+              alt={character.name} 
+              className="rounded-lg w-full h-auto mb-2" 
+              />
+              <p className="text-center">{character.name}</p>
+              <p className="text-center">{character.role}</p>
+             </div>
+             ))}
+             </div>
+            </div>
+
+        {/* Fourth Row: Reviews */}
+        <div className="bg-gray-800 p-4 rounded-lg mt-4">
+              <h2 className="text-2xl font-bold mb-2">Reviews</h2>
+              <form onSubmit={handleReviewSubmit} className="mb-4">
+                <textarea
+                  value={newReview}
+                  onChange={(e) => setNewReview(e.target.value)}
+                  className="w-full p-2 rounded mb-2 text-black"
+                  placeholder="Write your review..."
+                  required
+                />
+                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+                  Submit Review
+                </button>
+              </form>
+
+              {/* Display Reviews */}
+              <div>
+                {reviews.map((review, index) => (
+                  <div key={index} className="bg-gray-700 p-3 rounded mb-2">
+                    <Link to={`/friendprofile/${review.user}`}><p><strong>{review.user}</strong>:</p></Link>
+                    <p>{review.review}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+      </div>
+        :
       <div className="bg-gray-900 text-white p-6">
         <div className="grid grid-cols-12 gap-6">
           {/* Left Column */}
@@ -168,6 +253,7 @@ function AniDetails({ username , onLogout }) {
           </div>
         </div>
       </div>
+}
     </>
   );
 }

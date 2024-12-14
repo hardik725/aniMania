@@ -103,7 +103,7 @@ function OptionSec({ username }) {
             }`}
         >
             {/* Options Section */}
-            <div className={`flex ${isMobile ? 'flex-row w-full justify-evenly' : 'flex-row justify-evenly w-1/2'} items-center`}>
+            <div className={`flex ${isMobile ? 'flex-row w-full justify-evenly' : 'flex-row justify-evenly w-1/2'} items-center z-20`}>
                 {/* Anime Menu */}
                 <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Anime</a>
