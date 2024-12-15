@@ -313,7 +313,7 @@ function Profile({ username, onLogout }) {
             <img
               src={anime.Photo}
               alt={anime.Name}
-              className="w-full h-60 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              className="w-full h-24 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
             />
           </Link>
         ))}
@@ -335,7 +335,7 @@ function Profile({ username, onLogout }) {
             <img
               src={manga.Photo}
               alt={manga.Name}
-              className="w-full h-60 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              className="w-full h-24 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
             />
           </Link>
         ))}
