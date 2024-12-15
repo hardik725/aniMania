@@ -184,10 +184,10 @@ function Profile({ username, onLogout }) {
 
     {/* User Details Section */}
     <div className="bg-white text-black p-2 rounded-md shadow-lg w-full h-[166px]">
-      <p className="text-[16px]"><strong>Username:</strong> {username}</p>
-      <p className="text-[16px]"><strong>Age:</strong> {UserId.Age}</p>
-      <p className="text-[16px]"><strong>Joined Date:</strong> {formatDate(userData.DateJoined)}</p>
-      <p className="text-[16px]"><strong>Gender:</strong> {UserId.Gender}</p>
+      <p className="text-sm"><strong>Username:</strong> {username}</p>
+      <p className="text-sm"><strong>Age:</strong> {UserId.Age}</p>
+      <p className="text-sm"><strong>Joined Date:</strong> {formatDate(userData.DateJoined)}</p>
+      <p className="text-sm"><strong>Gender:</strong> {UserId.Gender}</p>
     </div>
 
     {/* Button to Change Profile Picture */}
@@ -253,16 +253,16 @@ function Profile({ username, onLogout }) {
   </div>
 
   {/* Anime & Manga Info Section */}
-  <div className="bg-gray-800 bg-opacity-80 p-4 rounded-lg shadow-md w-full h-[60vh]">
-    <h2 className="text-3xl font-extrabold mb-6 text-white text-center tracking-wide uppercase">Statistics</h2>
+  <div className="bg-gray-800 bg-opacity-80 p-2 rounded-lg shadow-md w-full h-[60vh]">
+    <h2 className="text-3xl font-extrabold mb-4 text-white text-center tracking-wide uppercase">Statistics</h2>
 
     {/* Anime Section */}
-    <div className="mb-8">
+    <div className="mb-6">
       <div className="border-white border-[1.5px] p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
         <h4 className="text-md font-bold mb-4 text-yellow-400 text-center">Anime Stats</h4>
-        <p className="text-sm text-gray-300 mb-2"><strong>Anime Watched:</strong> {userData.AnimeList.length}</p>
-        <p className="text-sm text-gray-300 mb-2"><strong>Mean Score:</strong> {meanAnimeScore.toFixed(2)}</p>
-        <p className="text-sm text-gray-300 mb-2"><strong>Total Episodes:</strong> {totalEpisodes}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Anime Watched:</strong> {userData.AnimeList.length}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Mean Score:</strong> {meanAnimeScore.toFixed(2)}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Total Episodes:</strong> {totalEpisodes}</p>
         <div className="mt-4 text-center">
           <Link to="/userAnimeList" className="bg-white text-gray-900 hover:bg-pink-300 px-4 py-2 rounded-md font-semibold transition duration-300">
             Anime List
@@ -275,9 +275,9 @@ function Profile({ username, onLogout }) {
     <div>
       <div className="border-white border-[1.5px] p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
         <h4 className="text-md font-bold mb-4 text-pink-400 text-center">Manga Stats</h4>
-        <p className="text-sm text-gray-300 mb-2"><strong>Manga Read:</strong> {userData.MangaList.length}</p>
-        <p className="text-sm text-gray-300 mb-2"><strong>Mean Score:</strong> {meanMangaScore.toFixed(2)}</p>
-        <p className="text-sm text-gray-300 mb-2"><strong>Total Chapters:</strong> {totalChapters}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Manga Read:</strong> {userData.MangaList.length}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Mean Score:</strong> {meanMangaScore.toFixed(2)}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Total Chapters:</strong> {totalChapters}</p>
         <div className="mt-4 text-center">
           <Link to="/userMangaList" className="bg-white text-gray-900 hover:bg-pink-300 px-4 py-2 rounded-md font-semibold transition duration-300">
             Manga List
