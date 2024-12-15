@@ -287,7 +287,7 @@ function Profile({ username, onLogout }) {
     </div>
   </div>
 </div>
-      <div className="relative w-full mt-8">
+      <div className="relative w-full">
       <img
       src="https://i.imghippo.com/files/bAG6589VW.jpg"
       alt="Hero Section"
