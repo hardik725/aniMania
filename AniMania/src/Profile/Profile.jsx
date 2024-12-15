@@ -287,7 +287,7 @@ function Profile({ username, onLogout }) {
     </div>
   </div>
 </div>
-      <div className="relative w-full">
+      <div className="relative w-full mt-8">
       <img
       src="https://i.imghippo.com/files/bAG6589VW.jpg"
       alt="Hero Section"
@@ -298,7 +298,7 @@ function Profile({ username, onLogout }) {
           {/* Black Background with Blur */}
           <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
 
-          <div className="relative flex flex-col">
+  <div className="relative flex flex-col">
   {/* Anime Watched Section */}
   {animeDetails.length > 0 && (
     <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-4">
