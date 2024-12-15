@@ -294,7 +294,7 @@ function Profile({ username, onLogout }) {
       className="w-full h-full object-cover"
       />
       </div>
-      <div className="relative min-h-screen flex flex-col overflow-y-auto p-8">
+      <div className="relative min-h-screen flex flex-col overflow-y-auto p-1">
           {/* Black Background with Blur */}
           <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
 
@@ -313,7 +313,7 @@ function Profile({ username, onLogout }) {
             <img
               src={anime.Photo}
               alt={anime.Name}
-              className="w-full h-24 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
             />
           </Link>
         ))}
@@ -335,7 +335,7 @@ function Profile({ username, onLogout }) {
             <img
               src={manga.Photo}
               alt={manga.Name}
-              className="w-full h-24 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
             />
           </Link>
         ))}
