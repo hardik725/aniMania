@@ -11,6 +11,16 @@ function FriendProfile({ username, onLogout }) {
   const [mangDetails, setMangDetails] = useState([]);
   const [isFriend, setIsFriend] = useState(false);
   const [FriendId, setFriendId] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
+
+  useEffect(() => {
+      const handleResize = () => {
+          setIsMobile(window.innerWidth <= 768);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
+  }, []);    
 
   // Fetch user data
   const fetchUserData = async () => {
@@ -128,7 +138,135 @@ function FriendProfile({ username, onLogout }) {
   return (
     <>
       <Navbar username={username} onLogout={onLogout} />
+      {isMobile ? 
+      <div className={`relative min-h-screen flex flex-col overflow-y-auto p-1`}>
+        {/* Black Background with Blur */}
+        <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
 
+<div className="relative flex-grow flex flex-row gap-2 max-w-screen-lg mx-auto h-[60vh]">
+  {/* User Profile Section */}
+  <div className="bg-gray-800 h-[60vh] bg-opacity-70 p-6 rounded-lg shadow-md w-full flex flex-col gap-4 items-center">
+    <div className="w-full h-56 bg-gray-700 flex items-center justify-center rounded-lg mb-1 overflow-hidden">
+      {/* Profile Picture Area */}
+      <img
+        src={FriendId?.ProfilePicture || '/path/to/default/profile/picture'}
+        alt="User Profile"
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* User Details Section */}
+    <div className="bg-white text-black p-2 rounded-md shadow-lg w-full h-[166px]">
+      <p className="text-sm"><strong>Username:</strong> {profileUsername}</p>
+      <p className="text-sm"><strong>Age:</strong> {FriendId?.Age || 'N/A'}</p>
+      <p className="text-sm"><strong>Joined Date:</strong> {formatDate(FriendData.DateJoined)}</p>
+      <p className="text-sm"><strong>Gender:</strong> {FriendId?.Gender || 'N/A'}</p>
+    </div>
+
+    {/* Button to Change Profile Picture */}
+    <button
+        className={`py-2 px-4 rounded-md ${isFriend ? 'bg-red-500' : 'bg-green-500'} text-white font-semibold`}
+        onClick={handleFriendAction}
+      >
+        {isFriend ? 'Remove Friend' : 'Add Friend'}
+    </button>
+  </div>
+
+  {/* Anime & Manga Info Section */}
+  <div className="bg-gray-800 bg-opacity-80 p-2 rounded-lg shadow-md w-full h-[60vh]">
+    <h2 className="text-3xl font-extrabold mb-4 text-white text-center tracking-wide uppercase">Statistics</h2>
+
+    {/* Anime Section */}
+    <div className="mb-6">
+      <div className="border-white border-[1.5px] p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
+        <h4 className="text-md font-bold mb-4 text-yellow-400 text-center">Anime Stats</h4>
+        <p className="text-sm text-gray-300 mb-1"><strong>Anime Watched:</strong> {FriendData.AnimeList.length}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Mean Score:</strong> {meanAnimeScore.toFixed(2)}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Total Episodes:</strong> {totalEpisodes}</p>
+        <div className="mt-4 text-center">
+          <Link to="/userAnimeList" className="bg-white text-gray-900 hover:bg-pink-300 px-4 py-2 rounded-md font-semibold transition duration-300">
+            Anime List
+          </Link>
+        </div>
+      </div>
+    </div>
+
+    {/* Manga Section */}
+    <div>
+      <div className="border-white border-[1.5px] p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
+        <h4 className="text-md font-bold mb-4 text-pink-400 text-center">Manga Stats</h4>
+        <p className="text-sm text-gray-300 mb-1"><strong>Manga Read:</strong> {FriendData.MangaList.length}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Mean Score:</strong> {meanMangaScore.toFixed(2)}</p>
+        <p className="text-sm text-gray-300 mb-1"><strong>Total Chapters:</strong> {totalChapters}</p>
+        <div className="mt-4 text-center">
+          <Link to="/userMangaList" className="bg-white text-gray-900 hover:bg-pink-300 px-4 py-2 rounded-md font-semibold transition duration-300">
+            Manga List
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div className="relative w-full">
+      <img
+      src="https://i.imghippo.com/files/bAG6589VW.jpg"
+      alt="Hero Section"
+      className="w-full h-full object-cover"
+      />
+      </div>
+      <div className="relative min-h-screen flex flex-col overflow-y-auto p-1">
+          {/* Black Background with Blur */}
+          <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
+
+  <div className="relative flex flex-col">
+  {/* Anime Watched Section */}
+  {aniDetails.length > 0 && (
+    <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-4">
+      <h2 className="text-xl font-bold mb-4 px-7 text-white">Anime Watched</h2>
+      <div className="grid grid-cols-3 gap-4 px-2">
+        {aniDetails.slice(0, 3).map(anime => (
+          <Link
+            to={`/AniDetails/${anime.Name}`}
+            key={anime._id}
+            className="flex justify-center px-1"
+          >
+            <img
+              src={anime.Photo}
+              alt={anime.Name}
+              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* Manga Read Section */}
+  {mangDetails.length > 0 && (
+    <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4 px-7 text-white">Manga Read</h2>
+      <div className="grid grid-cols-3 gap-4 px-2">
+        {mangDetails.slice(0, 3).map(manga => (
+          <Link
+            to={`/MangDetails/${manga.Name}`}
+            key={manga._id}
+            className="flex justify-center px-1"
+          >
+            <img
+              src={manga.Photo}
+              alt={manga.Name}
+              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+        </div>      
+      </div>      
+      :
       <div className="relative min-h-screen flex flex-col overflow-y-auto p-8">
         {/* Black Background with Blur */}
         <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
@@ -259,6 +397,7 @@ function FriendProfile({ username, onLogout }) {
           </div>
         </div>
       </div>
+}
     </>
   );
 }
