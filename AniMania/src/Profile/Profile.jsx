@@ -106,13 +106,37 @@ function Profile({ username, onLogout }) {
     setUpdatedUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    // Handle file upload logic here (e.g., upload to server and get the URL)
-    // Assuming we receive the URL after upload, we update the state
-    const fileUrl = URL.createObjectURL(file); // Temporary URL, replace with the actual server URL
-    setUpdatedUser((prev) => ({ ...prev, ProfilePicture: fileUrl }));
+  
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "Profile_picture"); // Replace with your Cloudinary preset name
+    formData.append("cloud name", "dshjyicig");
+    try {
+      const response = await fetch("https://api.cloudinary.com/v1_1/dshjyicig/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        const fileUrl = data.secure_url; // Cloudinary's hosted URL
+        setUpdatedUser((prev) => ({ ...prev, ProfilePicture: fileUrl }));
+        console.log("Uploaded file URL:", fileUrl);
+      } else {
+        console.error("Failed to upload the file");
+      }
+    } catch (error) {
+      console.error("Error uploading the file:", error);
+    }
   };
+  
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
