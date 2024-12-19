@@ -21,8 +21,17 @@ app.use(express.json());
 
 // Database connection
 mongoose.connect(URI)
-.then(() => console.log("Connected to MongoDB"))
-.catch((error) => console.log("ERROR: ", error));
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.log("ERROR: ", error));
+
+mongoose.connection.on('error', (error) => {
+  console.error('MongoDB Connection Error:', error);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
+
 
 // Routes
 app.use("/user", UserRouter);
