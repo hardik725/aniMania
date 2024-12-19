@@ -108,12 +108,17 @@ function Profile({ username, onLogout }) {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-  
+   
     if (!file) {
       console.error("No file selected");
       return;
     }
-  
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      console.error("File size exceeds the limit of 10MB");
+      return;
+    }
+   
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "Profile_picture"); // Replace with your Cloudinary preset name
@@ -123,7 +128,7 @@ function Profile({ username, onLogout }) {
         method: "POST",
         body: formData,
       });
-  
+   
       if (response.ok) {
         const data = await response.json();
         const fileUrl = data.secure_url; // Cloudinary's hosted URL
@@ -135,10 +140,11 @@ function Profile({ username, onLogout }) {
     } catch (error) {
       console.error("Error uploading the file:", error);
     }
-  };
+   };
+   
   
 
-  const handleFormSubmit = async (e) => {
+   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
       // Implement logic to update the user details on the server
@@ -149,10 +155,10 @@ function Profile({ username, onLogout }) {
         },
         body: JSON.stringify(updatedUser)
       });
-
+   
       if (response.ok) {
         const updatedData = await response.json();
-        setUser(updatedData);
+        setUser(updatedData);// Update UserId with the new data
         setEditMode(false);
       } else {
         console.error('Failed to update user data');
@@ -162,7 +168,8 @@ function Profile({ username, onLogout }) {
       console.error('Error:', error);
       setError('Error updating user data');
     }
-  };
+   };
+   
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
