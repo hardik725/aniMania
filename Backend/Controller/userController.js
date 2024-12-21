@@ -266,6 +266,7 @@ export const getUserMangaList = async (req, res) => {
         const { username } = req.params;
         const { mangaTitle, mangaScore } = req.body;
 
+        // Find the user
         const user = await User.findOne({ Username: username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -281,11 +282,11 @@ export const getUserMangaList = async (req, res) => {
         const mangaResponse = await fetch(mangaDataUrl);
 
         if (!mangaResponse.ok) {
-            return res.status(400).json({ message: "Failed to fetch anime data" });
+            return res.status(400).json({ message: "Failed to fetch manga data" });
         }
 
         const mangaData = await mangaResponse.json();
-        const genres = mangaData.Genres || []; // Default to empty array if no genres are found
+        const genres = mangaData.genre || []; // Default to empty array if no genres are found
 
         // Update AnimeGenresWatched
         genres.forEach(genre => {
