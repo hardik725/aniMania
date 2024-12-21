@@ -4,6 +4,7 @@ import OptionSec from '../components/OptionSec/OptionSec';
 import HeroSection from '../components/HeroSection/HeroSection';
 import TopAnimeSection from '../components/TopAnimeSection/TopAnimeSection';
 import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
+import RomanceSection from '../components/RomanceSection/RomanceSection';
 
 function Home({ username, onLogout }) {
   return (
@@ -29,6 +30,7 @@ function Home({ username, onLogout }) {
         {username && <OptionSec username={username} />}
         <TopAnimeSection />
         <TopMangaSection />
+        <RomanceSection />
       </div>
     </div>
   );
