@@ -5,16 +5,18 @@ import HeroSection from '../components/HeroSection/HeroSection';
 import TopAnimeSection from '../components/TopAnimeSection/TopAnimeSection';
 import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
 import RomanceSection from '../components/RomanceSection/RomanceSection';
+import ActionSection from '../components/ActionSection/ActionSection';
 
 function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
+  const [mangtopGenre, setMangTopGenre] = useState(null);
 
   useEffect(() => {
     const fetchUserGenreWatched = async () => {
       if (username) {
         try {
           const response = await fetch(
-            `https://animania-backend-dmjs.onrender.com/user/data/user/${username}`
+            `https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`
           );
           const userData = await response.json();
 
@@ -29,6 +31,17 @@ function Home({ username, onLogout }) {
           } else {
             console.error('Failed to fetch user data or genres are missing.');
           }
+          if (response.ok && userData.MangaGenresWatched) {
+            // Convert the Map object into an array and find the top genre
+            const genresArray = Object.entries(userData.MangaGenresWatched);
+            const [topGenreKey] = genresArray.reduce(
+              (max, genre) => (genre[1] > max[1] ? genre : max),
+              ["", 0] // Initial value: Empty string and 0
+            );
+            setMangTopGenre(topGenreKey);
+          } else {
+            console.error('Failed to fetch user data or genres are missing.');
+          }          
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -63,6 +76,7 @@ function Home({ username, onLogout }) {
         <TopMangaSection />
         {/* Pass the top genre dynamically */}
         {topGenre && <RomanceSection genre={topGenre} />}
+        {topGenre && <ActionSection genre={mangtopGenre} />}
       </div>
     </div>
   );

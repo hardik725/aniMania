@@ -1,8 +1,8 @@
 import express from 'express'
-import { GetGenreData } from '../Controller/MangGenreController.js'
+import { GetMangaGenreData } from '../Controller/MangGenreController.js'
 
 const router = express.Router();
 
-router.get('/:genre',GetGenreData);
+router.get('/:genre',GetMangaGenreData);
 
 export default router;

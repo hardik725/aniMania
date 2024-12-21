@@ -1,6 +1,6 @@
 import MangGenreData from "../Model/Mang_Genre_wise.js";
 
-export const GetGenreData = async (req, res) => {
+export const GetMangaGenreData = async (req, res) => {
     try {
         const { genre } = req.params;  // Get the genre from the URL parameter
 
