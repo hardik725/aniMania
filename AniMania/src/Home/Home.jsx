@@ -76,7 +76,7 @@ function Home({ username, onLogout }) {
         <TopMangaSection />
         {/* Pass the top genre dynamically */}
         {topGenre && <RomanceSection genre={topGenre} />}
-        {topGenre && <ActionSection genre={mangtopGenre} />}
+        {mangtopGenre && <ActionSection genre={mangtopGenre} />}
       </div>
     </div>
   );
