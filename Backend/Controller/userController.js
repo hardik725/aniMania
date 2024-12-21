@@ -196,23 +196,47 @@ export const addToAnimeList = async (req, res) => {
         const { username } = req.params;
         const { animeTitle, animeScore } = req.body;
 
+        // Find user
         const user = await User.findOne({ Username: username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Check if anime already exists in the list
         const existingAnime = user.AnimeList.find(anime => anime.title === animeTitle);
-
         if (existingAnime) {
             return res.status(400).json({ message: "Anime is already in the list" });
         }
 
+        // Fetch anime data to get genres
+        const animeDataUrl = `https://animania-backend-dmjs.onrender.com/anime/${animeTitle}`;
+        const animeResponse = await fetch(animeDataUrl);
+
+        if (!animeResponse.ok) {
+            return res.status(400).json({ message: "Failed to fetch anime data" });
+        }
+
+        const animeData = await animeResponse.json();
+        const genres = animeData.Genres || []; // Default to empty array if no genres are found
+
+        // Update AnimeGenresWatched
+        genres.forEach(genre => {
+            if (user.AnimeGenresWatched.has(genre)) {
+                user.AnimeGenresWatched.set(genre, user.AnimeGenresWatched.get(genre) + 1);
+            } else {
+                user.AnimeGenresWatched.set(genre, 1); // Initialize if the genre is new
+            }
+        });
+
+        // Add anime to the user's list
         user.AnimeList.push({ title: animeTitle, score: animeScore });
+
+        // Save updated user data
         await user.save();
-        
-        return res.status(200).json({ message: "Anime added to list" });
+
+        return res.status(200).json({ message: "Anime added to list and genres updated" });
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error("Error:", error.message);
         return res.status(500).json({ message: "An error occurred while adding the anime to the list" });
     }
 };
