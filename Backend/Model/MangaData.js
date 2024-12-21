@@ -36,7 +36,11 @@ const MangaSchema = mongoose.Schema({
     aired_on: {
         type: String,
         required: true,
-    }
+    },
+    Genres: {
+        type: [String],
+        default: [], // Initialize with an empty array
+    },
 });
 
 const Manga = mongoose.model('Manga', MangaSchema);
