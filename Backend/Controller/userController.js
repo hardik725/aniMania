@@ -209,7 +209,7 @@ export const addToAnimeList = async (req, res) => {
 
         user.AnimeList.push({ title: animeTitle, score: animeScore });
         await user.save();
-
+        
         return res.status(200).json({ message: "Anime added to list" });
     } catch (error) {
         console.error('Error:', error.message);

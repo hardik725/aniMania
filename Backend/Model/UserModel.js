@@ -101,6 +101,17 @@ const UserDataSchema = mongoose.Schema({
             timestamp: { type: Date, default: Date.now },
         }
     ],
+    AnimeGenresWatched: {
+        type: Map,
+        of: Number,
+        default: {
+            Action: 0,
+            Comedy: 0,
+            Drama: 0,
+            Fantasy: 0,
+            Romance: 0,
+        },
+    },
 });
 
 const User = mongoose.model("MergedUser", UserDataSchema);

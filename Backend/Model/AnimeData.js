@@ -37,6 +37,10 @@ const AnimeSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    Genres: {
+        type: [String],
+        default: [], // Initialize with an empty array
+    },
 });
 
 const Anime = mongoose.model('Anime', AnimeSchema);
