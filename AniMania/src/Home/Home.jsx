@@ -31,9 +31,9 @@ function Home({ username, onLogout }) {
           } else {
             console.error('Failed to fetch user data or genres are missing.');
           }
-          if (response.ok && userData.MangaGenresWatched) {
+          if (response.ok && userData.MangaGenresRead) {
             // Convert the Map object into an array and find the top genre
-            const genresArray = Object.entries(userData.MangaGenresWatched);
+            const genresArray = Object.entries(userData.MangaGenresRead);
             const [topGenreKey] = genresArray.reduce(
               (max, genre) => (genre[1] > max[1] ? genre : max),
               ["", 0] // Initial value: Empty string and 0
