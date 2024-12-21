@@ -1,9 +1,9 @@
 import React from 'react';
-import RomanceList from '../RomanceList/RomanceList'
+import ActionList from '../ActionList/ActionList'
 import { useState , useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-function RomanceSection({genre}) {
+function ActionSection({genre}) {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
     const location = useLocation();
     const isRecommended = (location.pathname === "/home");
@@ -20,12 +20,12 @@ function RomanceSection({genre}) {
     return (
         <div className={`relative container mx-auto text-center ${isMobile ? "px-[1px]" : "px-[5px]"}`}>
             <div className="bg-black text-white text-start backdrop-blur-3xl p-5">
-                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Anime</h1>
+                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Manga</h1>
                 <div className="border-t border-gray-600 mb-4"></div> {/* Thin line with bottom margin */}
-                <RomanceList genre={genre}/>
+                <ActionList genre={genre}/>
             </div>
         </div>
     );
 }
 
-export default RomanceSection;
+export default ActionSection;

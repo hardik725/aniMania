@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import OptionSec from '../components/OptionSec/OptionSec';
 import HeroSection from '../components/HeroSection/HeroSection';
@@ -7,6 +7,37 @@ import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
 import RomanceSection from '../components/RomanceSection/RomanceSection';
 
 function Home({ username, onLogout }) {
+  const [topGenre, setTopGenre] = useState(null);
+
+  useEffect(() => {
+    const fetchUserGenreWatched = async () => {
+      if (username) {
+        try {
+          const response = await fetch(
+            `https://animania-backend-dmjs.onrender.com/user/data/user/${username}`
+          );
+          const userData = await response.json();
+
+          if (response.ok && userData.AnimeGenresWatched) {
+            // Convert the Map object into an array and find the top genre
+            const genresArray = Object.entries(userData.AnimeGenresWatched);
+            const [topGenreKey] = genresArray.reduce(
+              (max, genre) => (genre[1] > max[1] ? genre : max),
+              ["", 0] // Initial value: Empty string and 0
+            );
+            setTopGenre(topGenreKey);
+          } else {
+            console.error('Failed to fetch user data or genres are missing.');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserGenreWatched();
+  }, [username]);
+
   return (
     <div className="relative">
       <Navbar username={username} onLogout={onLogout} />
@@ -30,11 +61,8 @@ function Home({ username, onLogout }) {
         {username && <OptionSec username={username} />}
         <TopAnimeSection />
         <TopMangaSection />
-        <RomanceSection genre={'Romance'}/>
-        <RomanceSection genre={'Action'}/>
-        <RomanceSection genre={'Comedy'}/>
-        <RomanceSection genre={'Fantasy'}/>
-        <RomanceSection genre={'Drama'}/>
+        {/* Pass the top genre dynamically */}
+        {topGenre && <RomanceSection genre={topGenre} />}
       </div>
     </div>
   );
