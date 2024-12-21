@@ -272,12 +272,13 @@ export const getUserMangaList = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Check if manga already exists in the list
         const existingManga = user.MangaList.find(manga => manga.title === mangaTitle);
-
         if (existingManga) {
             return res.status(400).json({ message: "Manga is already in the list" });
         }
-        // Fetch anime data to get genres
+
+        // Fetch manga data to get genres
         const mangaDataUrl = `https://animania-backend-dmjs.onrender.com/manga/${mangaTitle}`;
         const mangaResponse = await fetch(mangaDataUrl);
 
@@ -288,24 +289,28 @@ export const getUserMangaList = async (req, res) => {
         const mangaData = await mangaResponse.json();
         const genres = mangaData.Genres || []; // Default to empty array if no genres are found
 
-        // Update AnimeGenresWatched
+        // Update MangaGenresRead
         genres.forEach(genre => {
             if (user.MangaGenresRead.has(genre)) {
-                user.MnagaGenresRead.set(genre, user.MangaGenresRead.get(genre) + 1);
+                user.MangaGenresRead.set(genre, user.MangaGenresRead.get(genre) + 1);
             } else {
                 user.MangaGenresRead.set(genre, 1); // Initialize if the genre is new
             }
-        });        
+        });
 
+        // Add manga to the user's list
         user.MangaList.push({ title: mangaTitle, score: mangaScore });
+
+        // Save updated user data
         await user.save();
 
         return res.status(200).json({ message: "Manga added to list" });
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Error adding manga:', error.message);
         return res.status(500).json({ message: "An error occurred while adding the manga to the list" });
     }
 };
+
 
 export const addFriend = async (req, res) => {
   try {
