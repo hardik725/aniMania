@@ -10,7 +10,9 @@ function AniDetails({ username , onLogout }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [selectedScore, setSelectedScore] = useState();
   const [newReview, setNewReview] = useState("");
+  const [animeStatus, setAnimeStatus] = useState();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
 
   useEffect(() => {
@@ -21,6 +23,85 @@ function AniDetails({ username , onLogout }) {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
     }, []);
+
+    useEffect(() => {
+      const fetchUserAnimeList = async () => {
+        if (username) {
+          try {
+            // Fetch user anime list from the backend
+            const response = await fetch(
+              `https://animania-backend-dmjs.onrender.com/User/data/user/${username}/animelist`
+            );
+            const data = await response.json();
+    
+            // Check if the fetched data is an array
+            if (Array.isArray(data)) {
+              // Search for the animeName in the list
+              const isAnimePresent = data.some(
+                (item) => item.title.toUpperCase() === animeName.toUpperCase() // Case-insensitive check
+              );
+    
+              // Set animeStatus based on the result
+              setAnimeStatus(isAnimePresent);
+    
+              // Log the status for debugging
+              if (!isAnimePresent) {
+                console.log("Anime is not present in the user's list.");
+              } else {
+                console.log("Anime is present in the user's list.");
+              }
+            } else {
+              console.error("Unexpected data format for user anime list:", data);
+            }
+          } catch (error) {
+            console.error("Error fetching user anime list:", error);
+          }
+        }
+      };
+    
+      fetchUserAnimeList();
+    }, [username, animeName]); // Dependencies to refetch when username or animeName changes
+
+    // here the useeffect funtion to add anime to the user animelist
+    const handleAddToList = async (animeTitle, animeScore) => {
+      try {
+          const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/add-anime`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ animeTitle, animeScore })
+          });
+  
+          if (!response.ok) {
+              const errorText = await response.text();
+              console.error('Error adding anime to list:', errorText);
+              throw new Error('Failed to add anime to list');
+          }
+  
+          const data = await response.json();
+          console.log('Anime added successfully:', data);
+  
+          // Update the state to reflect that this anime has been added
+          setAnimeStatus(true); // Assuming anime is successfully added
+          setSelectedScore(''); // Reset selected score after adding
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  };
+  
+  const handleScoreChange = (e) => {
+      setSelectedScore(e.target.value); // Set the score directly
+  };
+  
+  const handleScoreSubmit = () => {
+      const score = selectedScore;
+      if (score) {
+          handleAddToList(animeName, score); // Add the current anime with the selected score
+      }
+  };
+      
+// here there is logic for fetching the anime details
 
   useEffect(() => {
     const fetchAnimeDetails = async () => {
@@ -122,13 +203,46 @@ function AniDetails({ username , onLogout }) {
               className="rounded-lg w-full h-auto"
             />
           </div>
-          <div className="flex-grow">
-            <h1 className="text-xl font-bold mb-2">{anime.Name}</h1>
+          <div className="flex-grow text-sm">
+            <h1 className="text-md font-bold mb-2">{anime.Name}</h1>
             <p><strong>Rating:</strong> {anime.Rating} / 10</p>
             <p><strong>Episodes:</strong> {anime.episodes}</p>
             <p><strong>Rank:</strong> #{anime.Rank}</p>
             <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
             <p><strong>Aired On:</strong> {anime.aired_on}</p>
+            <div className='flex justify-center mt-3'>
+            {!animeStatus ? (
+                <>
+                  <button
+                    className={`px-2 py-1 ${
+                      isMobile ? 'text-xs' : ''
+                    } bg-pink-500 text-white rounded`}
+                    onClick={() => handleScoreSubmit(animeName)}
+                  >
+                    Add to list
+                  </button>
+                  <select
+                    value={selectedScore || 'Select Score'}
+                    onChange={(e) => handleScoreChange(e, animeName)}
+                    className={`ml-2 border rounded px-2 py-1 text-black`}
+                  >
+                    <option value="" className='text-black'>Select score</option>
+                    {[...Array(10).keys()].map((num) => (
+                      <option key={num + 1} value={num + 1}>
+                        {num + 1}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <button
+                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+                  disabled
+                >
+                  Added
+                </button>
+              )}    
+              </div>
           </div>
         </div>
 
@@ -187,7 +301,7 @@ function AniDetails({ username , onLogout }) {
       <div className="bg-gray-900 text-white p-6">
         <div className="grid grid-cols-12 gap-6">
           {/* Left Column */}
-          <div className="col-span-3">
+          <div className="col-span-2">
             <img src={anime.Photo} alt={anime.Name} className="rounded-lg mb-4" />
             <div className="bg-gray-800 p-4 rounded-lg">
               <h2 className="text-xl font-bold mb-2">Anime Information</h2>
@@ -196,10 +310,43 @@ function AniDetails({ username , onLogout }) {
               <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
               <p><strong>Aired On:</strong> {anime.aired_on}</p>
             </div>
+            <div className='flex justify-center mt-3'>
+            {!animeStatus ? (
+                <>
+                  <button
+                    className={`px-2 py-1 ${
+                      isMobile ? 'text-xs' : ''
+                    } bg-pink-500 text-white rounded`}
+                    onClick={() => handleScoreSubmit(animeName)}
+                  >
+                    Add to list
+                  </button>
+                  <select
+                    value={selectedScore || 'Select Score'}
+                    onChange={(e) => handleScoreChange(e, animeName)}
+                    className={`ml-2 border rounded px-2 py-1 text-black`}
+                  >
+                    <option value="" className='text-black'>Select score</option>
+                    {[...Array(10).keys()].map((num) => (
+                      <option key={num + 1} value={num + 1}>
+                        {num + 1}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <button
+                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+                  disabled
+                >
+                  Added
+                </button>
+              )}    
+              </div>
           </div>
 
           {/* Right Column */}
-          <div className="col-span-9">
+          <div className="col-span-10">
             <h1 className="text-4xl font-bold mb-4">{anime.Name}</h1>
             <div className="bg-gray-800 p-4 rounded-lg mb-4">
               <h2 className="text-2xl font-bold mb-2">Description</h2>
