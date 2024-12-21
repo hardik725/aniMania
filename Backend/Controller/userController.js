@@ -276,6 +276,25 @@ export const getUserMangaList = async (req, res) => {
         if (existingManga) {
             return res.status(400).json({ message: "Manga is already in the list" });
         }
+        // Fetch anime data to get genres
+        const mangaDataUrl = `https://animania-backend-dmjs.onrender.com/manga/${mangaTitle}`;
+        const mangaResponse = await fetch(mangaDataUrl);
+
+        if (!mangaResponse.ok) {
+            return res.status(400).json({ message: "Failed to fetch anime data" });
+        }
+
+        const mangaData = await mangaResponse.json();
+        const genres = mangaData.Genres || []; // Default to empty array if no genres are found
+
+        // Update AnimeGenresWatched
+        genres.forEach(genre => {
+            if (user.MangaGenresRead.has(genre)) {
+                user.MnagaGenresRead.set(genre, user.MangaGenresRead.get(genre) + 1);
+            } else {
+                user.MangaGenresRead.set(genre, 1); // Initialize if the genre is new
+            }
+        });        
 
         user.MangaList.push({ title: mangaTitle, score: mangaScore });
         await user.save();
