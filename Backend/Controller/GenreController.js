@@ -9,7 +9,7 @@ export const GetGenreData = async (req, res) => {
 
         if (genreData) {
             // Send back the titles of the requested genre
-            res.status(200).json({ genre: genreData.genre, titles: genreData.Names });
+            res.status(200).json({ genre: genreData.Genres, titles: genreData.Names });
         } else {
             res.status(404).json({ message: `No data found for genre: ${genre}` });
         }
