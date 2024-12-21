@@ -286,7 +286,7 @@ export const getUserMangaList = async (req, res) => {
         }
 
         const mangaData = await mangaResponse.json();
-        const genres = mangaData.genre || []; // Default to empty array if no genres are found
+        const genres = mangaData.Genres || []; // Default to empty array if no genres are found
 
         // Update AnimeGenresWatched
         genres.forEach(genre => {
