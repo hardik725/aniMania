@@ -92,3 +92,32 @@ export const searchAnimeByName = async (req, res) => {
     }
 };
 
+export async function updateAnimeGenres(animeName, genresList) {
+    const animeGenres = []; // To store the genres for the anime
+
+    try {
+        for (const genre of genresList) {
+            const response = await fetch(`https://animania-backend-dmjs.onrender.com/genrouter/${genre}`);
+            const genreData = await response.json();
+
+            // Check if genreData matches the expected schema
+            if (genreData && genreData.genre === genre && Array.isArray(genreData.Names)) {
+                // Check if the animeName exists in the Names array
+                if (genreData.titles.some(anime => anime.title === animeName)) {
+                    animeGenres.push(genre); // Add genre if anime belongs to it
+                }
+            }
+        }
+
+        // Update the Anime document with the collected genres
+        const updatedAnime = await Anime.findOneAndUpdate(
+            { Name: animeName }, // Find the anime by its name
+            { Genres: animeGenres }, // Update the Genres field
+            { new: true } // Return the updated document
+        );
+
+        console.log(`Genres updated for ${animeName}:`, updatedAnime.Genres);
+    } catch (error) {
+        console.error(`Error updating genres for ${animeName}:`, error);
+    }
+}
