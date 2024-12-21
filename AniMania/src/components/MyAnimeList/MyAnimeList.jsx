@@ -12,7 +12,7 @@ function MyAnimeList({ username , onLogout }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
+                const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`);
                 if (response.ok) {
                     const data = await response.json();
                     setUserData(data);

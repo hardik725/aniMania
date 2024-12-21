@@ -9,7 +9,7 @@ const ChatBox = ({ username, friend, onClose }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/messages/${friend}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/messages/${friend}`);
         if (!response.ok) {
           throw new Error('Failed to fetch messages');
         }
@@ -25,7 +25,7 @@ const ChatBox = ({ username, friend, onClose }) => {
 
   const handleSendMessage = async () => {
     try {
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/messages/${friend}`, {
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/messages/${friend}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: newMessage }),
@@ -35,7 +35,7 @@ const ChatBox = ({ username, friend, onClose }) => {
       }
       setNewMessage('');
       // Refresh messages
-      const updatedMessages = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/messages/${friend}`);
+      const updatedMessages = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/messages/${friend}`);
       const data = await updatedMessages.json();
       setMessages(data);
     } catch (err) {

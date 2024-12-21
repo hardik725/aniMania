@@ -30,7 +30,7 @@ function AniDetails({ username , onLogout }) {
           try {
             // Fetch user anime list from the backend
             const response = await fetch(
-              `https://animania-backend-dmjs.onrender.com/User/data/user/${username}/animelist`
+              `https://animania-backend-dmjs.onrender.com/user/data/user/${username}/animelist`
             );
             const data = await response.json();
     
@@ -65,7 +65,7 @@ function AniDetails({ username , onLogout }) {
     // here the useeffect funtion to add anime to the user animelist
     const handleAddToList = async (animeTitle, animeScore) => {
       try {
-          const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/add-anime`, {
+          const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/add-anime`, {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',

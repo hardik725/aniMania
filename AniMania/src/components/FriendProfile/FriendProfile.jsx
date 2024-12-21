@@ -25,7 +25,7 @@ function FriendProfile({ username, onLogout }) {
   // Fetch user data
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${profileUsername}`);
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${profileUsername}`);
       if (!response.ok) {
         throw new Error('Failed to fetch user data');
       }
@@ -56,7 +56,7 @@ function FriendProfile({ username, onLogout }) {
   // Fetch friend photo and ID
   const fetchPhotoData = async () => {
     try {
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/Userdata/${profileUsername}`);
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/Userdata/${profileUsername}`);
       if (!response.ok) {
         throw new Error('Failed to fetch user photo data');
       }
@@ -88,7 +88,7 @@ function FriendProfile({ username, onLogout }) {
   const handleFriendAction = async () => {
     try {
       const action = isFriend ? 'removeFriend' : 'addFriend';
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/${action}/${username}`, {
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/${action}/${username}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

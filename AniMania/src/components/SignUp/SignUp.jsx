@@ -13,7 +13,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://animania-backend-dmjs.onrender.com/User/signUp", {
+      const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

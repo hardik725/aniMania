@@ -24,7 +24,7 @@ const FriendsList = ({ username, onLogout }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }

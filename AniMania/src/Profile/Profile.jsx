@@ -29,7 +29,7 @@ function Profile({ username, onLogout }) {
   useEffect(() => {
     const fetchPhotoData = async () => {
       try {
-        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/Userdata/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/Userdata/${username}`);
         if (response.ok) {
           const data = await response.json();
           setUser(data);
@@ -53,7 +53,7 @@ function Profile({ username, onLogout }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`);
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
@@ -148,7 +148,7 @@ function Profile({ username, onLogout }) {
     e.preventDefault();
     try {
       // Implement logic to update the user details on the server
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/update/${username}`, {
+      const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/update/${username}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

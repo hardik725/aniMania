@@ -31,7 +31,7 @@ function OptionSec({ username }) {
     useEffect(() => {
         const fetchFriendsList = async () => {
             try {
-                const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user-data/${username}`);
+                const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
@@ -60,7 +60,7 @@ function OptionSec({ username }) {
         try {
             let response;
             if (searchCategory === 'User') {
-                response = await fetch(`https://animania-backend-dmjs.onrender.com/User/search/${searchInput}`);
+                response = await fetch(`https://animania-backend-dmjs.onrender.com/user/search/${searchInput}`);
             } else if (searchCategory === 'Anime') {
                 response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/search/${searchInput}`);
             } else if (searchCategory === 'Manga') {

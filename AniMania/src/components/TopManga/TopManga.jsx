@@ -22,7 +22,7 @@ const TopManga = ({ username, onLogout }) => {
         const fetchUserMangaList = async () => {
             if (username) {
                 try {
-                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/mangalist`);
+                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/mangalist`);
                     const data = await response.json();
                     if (Array.isArray(data)) {
                         setUserMangaList(data);
@@ -77,7 +77,7 @@ const TopManga = ({ username, onLogout }) => {
 
     const handleAddToList = async (mangaTitle, mangaScore) => {
         try {
-            const response = await fetch(`https://animania-backend-dmjs.onrender.com/User/data/user/${username}/add-manga`, {
+            const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/add-manga`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
