@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Import the CSS file
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -11,30 +13,30 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-        const response = await fetch("https://animania-backend-dmjs.onrender.com/User/signUp", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                Username: username,
-                Email: email,
-                Password: password
-            }),
-        });
+      const response = await fetch("https://animania-backend-dmjs.onrender.com/User/signUp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Username: username,
+          Email: email,
+          Password: password
+        }),
+      });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('User Signed Up:', data);
-            alert('Sign Up successful!');
-            navigate('/');
-        } else {
-            const errorData = await response.json();
-            alert(`Error: ${errorData.message}`);
-        }
+      if (response.ok) {
+        const data = await response.json();
+        console.log('User Signed Up:', data);
+        toast.success('Sign Up successful!', { position: 'top-center' });  // Success toast
+        navigate('/');
+      } else {
+        const errorData = await response.json();
+        toast.error(`Error: ${errorData.message}`, { position: 'top-center' });  // Error toast
+      }
     } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during sign-up.');
+      console.error('Error:', error);
+      toast.error('An error occurred during sign-up.', { position: 'top-center' });  // Error toast
     }
   };
 

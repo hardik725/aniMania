@@ -26,16 +26,16 @@ const Login = ({ onLogin }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('User Logged In:', data);
-        toast.success('Login successful!', { position: toast.POSITION.TOP_CENTER }); // Success toast
+        toast.success('Login successful!', { position: 'top-center'}); // Success toast
         onLogin(username);  // Pass the username to the parent component
         navigate('/home');
       } else {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`, { position: toast.POSITION.TOP_CENTER }); // Error toast
+        toast.error(`Error: ${errorData.message}`, { position: 'top-center' }); // Error toast
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred during login.', { position: toast.POSITION.TOP_CENTER }); // Error toast
+      toast.error('An error occurred during login.', { position: 'top-center' }); // Error toast
     }
   };
 
