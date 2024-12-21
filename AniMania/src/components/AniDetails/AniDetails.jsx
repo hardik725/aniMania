@@ -214,9 +214,7 @@ function AniDetails({ username , onLogout }) {
             {!animeStatus ? (
                 <>
                   <button
-                    className={`px-2 py-1 ${
-                      isMobile ? 'text-xs' : ''
-                    } bg-pink-500 text-white rounded`}
+                    className={`px-1 py-1 text-xs bg-pink-500 text-white rounded`}
                     onClick={() => handleScoreSubmit(animeName)}
                   >
                     Add to list
@@ -224,7 +222,7 @@ function AniDetails({ username , onLogout }) {
                   <select
                     value={selectedScore || 'Select Score'}
                     onChange={(e) => handleScoreChange(e, animeName)}
-                    className={`ml-2 border rounded px-2 py-1 text-black`}
+                    className={`ml-1 border rounded px-1 py-1 text-black`}
                   >
                     <option value="" className='text-black'>Select score</option>
                     {[...Array(10).keys()].map((num) => (
