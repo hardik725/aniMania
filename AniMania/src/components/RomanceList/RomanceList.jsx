@@ -20,7 +20,7 @@ const RomanceList = () => {
             try {
                 const response = await fetch("https://animania-backend-dmjs.onrender.com/genrouter/Romance");
                 const data = await response.json();
-                setAnimeList(data.Romance); // Assuming data.Romance contains the list of anime titles
+                setAnimeList(data.Names); // Assuming data.Romance contains the list of anime titles
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching Romance genre list:", error);
