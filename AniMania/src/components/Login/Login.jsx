@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -24,16 +26,16 @@ const Login = ({ onLogin }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('User Logged In:', data);
-        alert('Login successful!');
+        toast.success('Login successful!', { position: toast.POSITION.TOP_CENTER }); // Success toast
         onLogin(username);  // Pass the username to the parent component
         navigate('/home');
       } else {
         const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
+        toast.error(`Error: ${errorData.message}`, { position: toast.POSITION.TOP_CENTER }); // Error toast
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred during login.');
+      toast.error('An error occurred during login.', { position: toast.POSITION.TOP_CENTER }); // Error toast
     }
   };
 
