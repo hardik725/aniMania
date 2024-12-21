@@ -40,42 +40,64 @@ const TopAnime = ({ username, onLogout }) => {
     }, [username]);
 
     useEffect(() => {
-        const fetchTopAnime = async () => {
-            const fetchedAnimeList = [];
-            const initialStatuses = {};
-
-            try {
-                for (let rank = 1; rank <= 50; rank++) {
-                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/rank/${rank}`);
-                    const data = await response.json();
-                    if (data && typeof data === 'object') {
-                        fetchedAnimeList.push(data);
-                        initialStatuses[data.Name] = true; // Initialize all as true
-                    } else {
-                        console.error(`Unexpected data format for rank ${rank}:`, data);
-                    }
-                }
-
-                setAnimeList(fetchedAnimeList);
-
-                // Set animeStatuses to false for those already in userAnimeList
-                const updatedStatuses = { ...initialStatuses };
-                userAnimeList.forEach(userAnime => {
-                    if (updatedStatuses[userAnime.title]) {
-                        updatedStatuses[userAnime.title] = false; // Mark as added
-                    }
-                });
-
-                setAnimeStatuses(updatedStatuses);
-            } catch (error) {
-                console.error("Error fetching anime list:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTopAnime();
-    }, [userAnimeList]);
+      const fetchTopAnime = async () => {
+          const fetchedAnimeList = [];
+          const initialStatuses = {};
+  
+          try {
+              for (let rank = 1; rank <= 50; rank++) {
+                  const response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/rank/${rank}`);
+                  const data = await response.json();
+                  if (data && typeof data === 'object') {
+                      data.genres = await fetchAnimeGenres(data.Name); // Add genres dynamically
+                      fetchedAnimeList.push(data);
+                      initialStatuses[data.Name] = true; // Initialize all as true
+                  } else {
+                      console.error(`Unexpected data format for rank ${rank}:`, data);
+                  }
+              }
+  
+              setAnimeList(fetchedAnimeList);
+  
+              // Set animeStatuses to false for those already in userAnimeList
+              const updatedStatuses = { ...initialStatuses };
+              userAnimeList.forEach(userAnime => {
+                  if (updatedStatuses[userAnime.title]) {
+                      updatedStatuses[userAnime.title] = false; // Mark as added
+                  }
+              });
+  
+              setAnimeStatuses(updatedStatuses);
+          } catch (error) {
+              console.error("Error fetching anime list:", error);
+          } finally {
+              setLoading(false);
+          }
+      };
+  
+      // Fetch genres for a specific anime
+      const fetchAnimeGenres = async (animeName) => {
+          const genresList = ["Action", "Romance", "Comedy", "Fantasy", "Drama"];
+          const animeGenres = [];
+  
+          try {
+              for (const genre of genresList) {
+                  const response = await fetch(`https://animania-backend-dmjs.onrender.com/genrouter/${genre}`);
+                  const genreData = await response.json();
+                  if (Array.isArray(genreData) && genreData.some(anime => anime.Name === animeName)) {
+                      animeGenres.push(genre); // Add genre if anime belongs to it
+                  }
+              }
+          } catch (error) {
+              console.error(`Error fetching genres for ${animeName}:`, error);
+          }
+  
+          return animeGenres;
+      };
+  
+      fetchTopAnime();
+  }, [userAnimeList]);
+  
 
     const handleAddToList = async (animeTitle, animeScore) => {
         try {

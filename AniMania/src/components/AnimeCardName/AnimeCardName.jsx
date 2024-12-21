@@ -34,7 +34,7 @@ const AnimeCardName = ({ animeName, className }) => {
         };
 
         fetchAnimeData();
-    }, [rank]);
+    }, [animeName]);
 
     if (!animeData) {
         return <div>Loading...</div>;

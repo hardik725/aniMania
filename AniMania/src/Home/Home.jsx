@@ -30,7 +30,11 @@ function Home({ username, onLogout }) {
         {username && <OptionSec username={username} />}
         <TopAnimeSection />
         <TopMangaSection />
-        <RomanceSection />
+        <RomanceSection genre={'Romance'}/>
+        <RomanceSection genre={'Action'}/>
+        <RomanceSection genre={'Comedy'}/>
+        <RomanceSection genre={'Fantasy'}/>
+        <RomanceSection genre={'Drama'}/>
       </div>
     </div>
   );
