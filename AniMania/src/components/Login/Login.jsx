@@ -26,7 +26,7 @@ const Login = ({ onLogin }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('User Logged In:', data);
-        toast.success('Login successful!', { position: 'top-center'}); // Success toast
+        toast.success('Login successful!', { position: 'top-center' }); // Success toast
         onLogin(username);  // Pass the username to the parent component
         navigate('/home');
       } else {
@@ -45,16 +45,25 @@ const Login = ({ onLogin }) => {
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      className="flex items-center justify-center min-h-screen bg-cover bg-center relative"
       style={{
         backgroundImage: "url('https://i.postimg.cc/Y2b7D1jx/wp5203548-all-the-animes-wallpapers.jpg')"
       }}
     >
-      <div className="w-full max-w-md p-8 shadow-md rounded-lg backdrop-blur-xl opacity-90">
-        <h2 className="text-2xl font-bold mb-6 text-white text-center">Login</h2>
+      <div
+        className="absolute inset-0 bg-black bg-opacity-60 z-0"
+        style={{ backdropFilter: 'blur(5px)' }}
+      ></div>
+      <div
+        className="relative z-10 w-full max-w-md p-8 shadow-lg rounded-lg backdrop-blur-lg bg-gradient-to-b from-blue-500 to-purple-600 text-white animate-float"
+      >
+        <h2 className="text-3xl font-bold mb-6 text-center">Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block text-white text-sm font-semibold mb-2" htmlFor="username">
+            <label
+              className="block text-sm font-semibold mb-2"
+              htmlFor="username"
+            >
               Username:
             </label>
             <input
@@ -63,11 +72,15 @@ const Login = ({ onLogin }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300"
+              placeholder="Enter your username"
             />
           </div>
           <div className="mb-6">
-            <label className="block text-white text-sm font-semibold mb-2" htmlFor="password">
+            <label
+              className="block text-sm font-semibold mb-2"
+              htmlFor="password"
+            >
               Password:
             </label>
             <input
@@ -76,19 +89,20 @@ const Login = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300"
+              placeholder="Enter your password"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            className="w-full py-3 px-4 bg-purple-700 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 transform hover:scale-105"
           >
             Login
           </button>
         </form>
         <button
           onClick={handleSignUpRedirect}
-          className="w-full mt-4 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+          className="w-full mt-4 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105"
         >
           Sign Up
         </button>
