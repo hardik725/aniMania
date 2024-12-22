@@ -1,5 +1,6 @@
 import React from 'react';
-import ActionList from '../ActionList/ActionList'
+import ActionList from '../ActionList/ActionList';
+import UpdatedActionList from '../UpdatedActionList/UpdatedActionList'
 import { useState , useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ function ActionSection({genre}) {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
     const location = useLocation();
     const isRecommended = (location.pathname === "/home");
+    const roman = (location.pathname === "/seasonalmanga");
 
     useEffect(() => {
         const handleResize = () => {
@@ -20,9 +22,13 @@ function ActionSection({genre}) {
     return (
         <div className={`relative container mx-auto text-center ${isMobile ? "px-[1px]" : "px-[5px]"}`}>
             <div className="bg-black text-white text-start backdrop-blur-3xl p-5">
-                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Manga</h1>
+                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Anime</h1>
                 <div className="border-t border-gray-600 mb-4"></div> {/* Thin line with bottom margin */}
+                {roman ? 
+                <UpdatedActionList genre={genre}/>
+                :
                 <ActionList genre={genre}/>
+                }
             </div>
         </div>
     );
