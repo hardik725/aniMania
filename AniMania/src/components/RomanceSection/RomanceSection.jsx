@@ -1,5 +1,6 @@
 import React from 'react';
 import RomanceList from '../RomanceList/RomanceList'
+import UpdatedRomanceList from '../UpdatedRomanceList/UpdatedRomanceList';
 import { useState , useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ function RomanceSection({genre}) {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
     const location = useLocation();
     const isRecommended = (location.pathname === "/home");
+    const roman = (location.pathname === "/seasonalanime");
 
     useEffect(() => {
         const handleResize = () => {
@@ -22,7 +24,11 @@ function RomanceSection({genre}) {
             <div className="bg-black text-white text-start backdrop-blur-3xl p-5">
                 <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Anime</h1>
                 <div className="border-t border-gray-600 mb-4"></div> {/* Thin line with bottom margin */}
+                {roman ? 
+                <UpdatedRomanceList genre={genre}/>
+                :
                 <RomanceList genre={genre}/>
+                }
             </div>
         </div>
     );

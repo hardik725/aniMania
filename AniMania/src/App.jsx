@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Home from './Home/Home';
+import SeasonalAnime from './SeasonalAnime/SeasonalAnime';
 import Login from './components/Login/Login';
 import SignUp from './components/SignUp/SignUp';
 import Profile from './Profile/Profile';
@@ -37,6 +38,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/home" element={username ? <Home username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/profile" element={username ? <Profile username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
+        <Route path="/seasonalanime" element={username ? <SeasonalAnime username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/topAnime" element={username ? <TopAnime username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/topManga" element={username ? <TopManga username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/userAnimeList" element={username ? <MyAnimeList username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />

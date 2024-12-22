@@ -110,7 +110,7 @@ function OptionSec({ username }) {
                     <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
                         <a href="#" onClick={() => handleCategorySelect('Anime')} className="block px-4 py-3 hover:bg-gray-200">Anime Search</a>
                         <Link to="/topAnime" className="block px-4 py-3 hover:bg-gray-200">Top Anime</Link>
-                        <a href="#" className="block px-4 py-3 hover:bg-gray-200">Seasonal Anime</a>
+                        <Link to="/seasonalanime" className="block px-4 py-3 hover:bg-gray-200">Seasonal Anime</Link>
                         <Link to="/MyReviews" className="block px-4 py-3 hover:bg-gray-200">Reviews</Link>
                     </div>
                 </div>
