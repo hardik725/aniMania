@@ -19,23 +19,23 @@ const Login = ({ onLogin }) => {
         },
         body: JSON.stringify({
           Username: username,
-          Password: password
+          Password: password,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('User Logged In:', data);
-        toast.success('Login successful!', { position: 'top-center' }); // Success toast
-        onLogin(username);  // Pass the username to the parent component
+        toast.success('Login successful!', { position: 'top-center' });
+        onLogin(username); // Pass the username to the parent component
         navigate('/home');
       } else {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`, { position: 'top-center' }); // Error toast
+        toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred during login.', { position: 'top-center' }); // Error toast
+      toast.error('An error occurred during login.', { position: 'top-center' });
     }
   };
 
@@ -47,21 +47,25 @@ const Login = ({ onLogin }) => {
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center relative"
       style={{
-        backgroundImage: "url('https://i.postimg.cc/Y2b7D1jx/wp5203548-all-the-animes-wallpapers.jpg')"
+        backgroundImage:
+          "url('https://i.postimg.cc/Y2b7D1jx/wp5203548-all-the-animes-wallpapers.jpg')",
       }}
     >
+      {/* Dark Overlay */}
       <div
         className="absolute inset-0 bg-black bg-opacity-60 z-0"
-        style={{ backdropFilter: 'blur(5px)' }}
+        style={{ backdropFilter: 'blur(5px)' }} // Reduced blur intensity
       ></div>
+
+      {/* Login Box */}
       <div
-        className="relative z-10 w-full max-w-md p-8 shadow-lg rounded-lg backdrop-blur-lg bg-gradient-to-b from-blue-500 to-purple-600 text-white animate-float"
+        className="relative z-10 w-full max-w-sm md:max-w-md lg:max-w-lg p-6 md:p-8 shadow-2xl rounded-xl bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-500 text-white animate-float"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center">Login</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
-              className="block text-sm font-semibold mb-2"
+              className="block text-sm font-medium mb-2"
               htmlFor="username"
             >
               Username:
@@ -72,13 +76,13 @@ const Login = ({ onLogin }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300"
+              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-300"
               placeholder="Enter your username"
             />
           </div>
           <div className="mb-6">
             <label
-              className="block text-sm font-semibold mb-2"
+              className="block text-sm font-medium mb-2"
               htmlFor="password"
             >
               Password:
@@ -89,20 +93,20 @@ const Login = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300"
+              className="w-full px-4 py-2 bg-white bg-opacity-20 border border-transparent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition duration-300"
               placeholder="Enter your password"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-purple-700 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 transform hover:scale-105"
+            className="w-full py-3 px-4 bg-purple-700 text-white font-bold rounded-lg shadow-md hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 transform hover:scale-105"
           >
             Login
           </button>
         </form>
         <button
           onClick={handleSignUpRedirect}
-          className="w-full mt-4 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105"
+          className="w-full mt-4 py-3 px-4 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105"
         >
           Sign Up
         </button>

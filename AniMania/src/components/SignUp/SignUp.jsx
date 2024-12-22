@@ -21,7 +21,7 @@ const SignUp = () => {
         body: JSON.stringify({
           Username: username,
           Email: email,
-          Password: password
+          Password: password,
         }),
       });
 
@@ -39,29 +39,33 @@ const SignUp = () => {
       toast.error('An error occurred during sign-up.', { position: 'top-center' });
     }
   };
+
   const redirectToLogin = () => {
     navigate('/');
-  };  
+  };
 
   return (
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center relative"
       style={{
-        backgroundImage: "url('https://i.postimg.cc/Y2b7D1jx/wp5203548-all-the-animes-wallpapers.jpg')"
+        backgroundImage: "url('https://i.postimg.cc/Y2b7D1jx/wp5203548-all-the-animes-wallpapers.jpg')",
       }}
     >
+      {/* Dark Overlay */}
       <div
         className="absolute inset-0 bg-black bg-opacity-60 z-0"
-        style={{ backdropFilter: 'blur(5px)' }}
+        style={{ backdropFilter: 'blur(5px)' }} // Reduced blur intensity
       ></div>
+
+      {/* Sign-Up Box */}
       <div
-        className="relative z-10 w-full max-w-md p-8 shadow-lg rounded-lg backdrop-blur-lg bg-gradient-to-b from-purple-500 to-blue-600 text-white animate-float"
+        className="relative z-10 w-full max-w-sm md:max-w-md lg:max-w-lg p-6 md:p-8 shadow-2xl rounded-xl bg-gradient-to-b from-purple-500 to-blue-600 text-white animate-float"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center">Sign Up</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">Sign Up</h2>
         <form onSubmit={handleSignUp}>
           <div className="mb-4">
             <label
-              className="block text-sm font-semibold mb-2"
+              className="block text-sm font-medium mb-2"
               htmlFor="username"
             >
               Username:
@@ -78,7 +82,7 @@ const SignUp = () => {
           </div>
           <div className="mb-4">
             <label
-              className="block text-sm font-semibold mb-2"
+              className="block text-sm font-medium mb-2"
               htmlFor="email"
             >
               Email:
@@ -95,7 +99,7 @@ const SignUp = () => {
           </div>
           <div className="mb-6">
             <label
-              className="block text-sm font-semibold mb-2"
+              className="block text-sm font-medium mb-2"
               htmlFor="password"
             >
               Password:
@@ -112,20 +116,17 @@ const SignUp = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105"
+            className="w-full py-3 px-4 bg-blue-700 text-white font-bold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105"
           >
             Sign Up
           </button>
         </form>
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-300 mb-2">Already have an account?</p>
-          <button
-            onClick={redirectToLogin}
-            className="px-4 py-2 text-sm text-white bg-gradient-to-r from-purple-500 to-pink-500 font-semibold rounded-full shadow-md hover:scale-105 transform transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-opacity-50"
-          >
-            Login Here
-          </button>
-        </div>
+        <button
+          onClick={redirectToLogin}
+          className="w-full mt-4 py-3 px-4 bg-purple-700 text-white font-bold rounded-lg shadow-md hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 transform hover:scale-105"
+        >
+          Login
+        </button>
       </div>
     </div>
   );
