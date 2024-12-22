@@ -10,6 +10,8 @@ function MangDetails({ username, onLogout }) {
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
+  const [selectedScore, setSelectedScore] = useState();
+  const [mangaStatus, setMangaStatus] = useState();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -21,6 +23,84 @@ function MangDetails({ username, onLogout }) {
         return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
     }, []);
 
+    // here we will fetch the mangalist of the user 
+    useEffect(() => {
+      const fetchUserMangaList = async () => {
+        if (username) {
+          try {
+            // Fetch user manga list from the backend
+            const response = await fetch(
+              `https://animania-backend-dmjs.onrender.com/user/data/user/${username}/mangalist`
+            );
+            const data = await response.json();
+    
+            // Check if the fetched data is an array
+            if (Array.isArray(data)) {
+              // Search for the mangaName in the list
+              const isMangaPresent = data.some(
+                (item) => item.title.toUpperCase() === mangaName.toUpperCase() // Case-insensitive check
+              );
+    
+              // Set mangaStatus based on the result
+              setMangaStatus(isMangaPresent);
+    
+              // Log the status for debugging
+              if (!isMangaPresent) {
+                console.log("Manga is not present in the user's list.");
+              } else {
+                console.log("Manga is present in the user's list.");
+              }
+            } else {
+              console.error("Unexpected data format for user manga list:", data);
+            }
+          } catch (error) {
+            console.error("Error fetching user manga list:", error);
+          }
+        }
+      };
+    
+      fetchUserMangaList();
+    }, [username, mangaName]); // Dependencies to refetch when username or mangaName changes
+
+    // here the useeffect funtion to add anime to the user animelist
+    const handleAddToList = async (mangaTitle, mangaScore) => {
+      try {
+          const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user/${username}/add-manga`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ mangaTitle, mangaScore })
+          });
+  
+          if (!response.ok) {
+              const errorText = await response.text();
+              console.error('Error adding manga to list:', errorText);
+              throw new Error('Failed to add manga to list');
+          }
+  
+          const data = await response.json();
+          console.log('Manga added successfully:', data);
+  
+          // Update the state to reflect that this manga has been added
+          setMangaStatus(true); // Assuming manga is successfully added
+          setSelectedScore(''); // Reset selected score after adding
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  };
+  
+  const handleScoreChange = (e) => {
+      setSelectedScore(e.target.value); // Set the score directly
+  };
+  
+  const handleScoreSubmit = () => {
+      const score = selectedScore;
+      if (score) {
+          handleAddToList(mangaName, score); // Add the current manga with the selected score
+      }
+  };
+    // here we will fetch the mangadetails that has to be shown in this component
   useEffect(() => {
     const fetchMangaDetails = async () => {
       try {
@@ -125,6 +205,37 @@ function MangDetails({ username, onLogout }) {
             <p><strong>Rank:</strong> #{manga.Rank}</p>
             <p><strong>Total Users Watched:</strong> {manga.TotalUsersRead}</p>
             <p><strong>Aired On:</strong> {manga.published_on}</p>
+            <div className='flex justify-center mt-3'>
+            {!mangaStatus ? (
+                <>
+                  <button
+                    className={`px-1 py-1 text-xs bg-pink-500 text-white rounded`}
+                    onClick={() => handleScoreSubmit(mangaName)}
+                  >
+                    Add to list
+                  </button>
+                  <select
+                    value={selectedScore || 'Select Score'}
+                    onChange={(e) => handleScoreChange(e, mangaName)}
+                    className={`ml-1 border rounded px-1 py-1 text-black`}
+                  >
+                    <option value="" className='text-black'>Select score</option>
+                    {[...Array(10).keys()].map((num) => (
+                      <option key={num + 1} value={num + 1}>
+                        {num + 1}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <button
+                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+                  disabled
+                >
+                  Added
+                </button>
+              )}    
+              </div>            
           </div>
         </div>
 
@@ -193,6 +304,39 @@ function MangDetails({ username, onLogout }) {
               <p><strong>Total Users Read:</strong> {manga.TotalUsersRead}</p>
               <p><strong>Published On:</strong> {manga.published_on}</p>
             </div>
+            <div className='flex justify-center mt-3'>
+            {!mangaStatus ? (
+                <>
+                  <button
+                    className={`px-2 py-1 ${
+                      isMobile ? 'text-xs' : ''
+                    } bg-pink-500 text-white rounded`}
+                    onClick={() => handleScoreSubmit(mangaName)}
+                  >
+                    Add to list
+                  </button>
+                  <select
+                    value={selectedScore || 'Select Score'}
+                    onChange={(e) => handleScoreChange(e, mangaName)}
+                    className={`ml-2 border rounded px-2 py-1 text-black`}
+                  >
+                    <option value="" className='text-black'>Select score</option>
+                    {[...Array(10).keys()].map((num) => (
+                      <option key={num + 1} value={num + 1}>
+                        {num + 1}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <button
+                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+                  disabled
+                >
+                  Added
+                </button>
+              )}    
+              </div>            
           </div>
 
           {/* Right Column */}
