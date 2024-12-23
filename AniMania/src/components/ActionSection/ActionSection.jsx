@@ -22,7 +22,7 @@ function ActionSection({genre}) {
     return (
         <div className={`relative container mx-auto text-center ${isMobile ? "px-[1px]" : "px-[5px]"}`}>
             <div className="bg-black text-white text-start backdrop-blur-3xl p-5">
-                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Anime</h1>
+                <h1 className="text-xl font-bold">{isRecommended ? "Recommended" : `${genre}`} Manga</h1>
                 <div className="border-t border-gray-600 mb-4"></div> {/* Thin line with bottom margin */}
                 {roman ? 
                 <UpdatedActionList genre={genre}/>

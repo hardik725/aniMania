@@ -46,16 +46,15 @@ const AnimeCard = ({ rank, className }) => {
             className={`block ${className}`} 
         >
             <div
-                className={`relative p-4 border rounded-md shadow-lg bg-cover bg-center transition-transform duration-300 ease-in-out hover:scale-105 ${
-                    isMobile ? "h-56" : "h-80"
-                }`}
-                style={{ 
+                className={`relative p-4 border rounded-md shadow-lg bg-cover bg-center transition-transform duration-300 ease-in-out hover:scale-105`}
+                style={{
                     backgroundImage: `url(${animeData.Photo})`,
+                    height: isMobile ? "10rem" : "16rem", // Mobile: 10rem, Desktop: 20rem
                 }}
             >
                 <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-4 rounded-md">
-                    <h2 className={`font-bold text-white ${isMobile ? "text-xs" : "text-md"}`}>{animeData.Name}</h2>
-                    <p className={`text-white ${isMobile ? "text-xs" : "text-md"}`}>Rating: {animeData.Rating}</p>
+                    <h2 className={`font-semibold text-white ${isMobile ? "text-[10px]" : "text-md"}`}>{animeData.Name}</h2>
+                    <p className={`text-white ${isMobile ? "text-[10px]" : "text-md"}`}>Rating: {animeData.Rating}</p>
                 </div>
             </div>
         </Link>

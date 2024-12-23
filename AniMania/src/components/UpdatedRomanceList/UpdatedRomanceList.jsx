@@ -39,7 +39,7 @@ const UpdatedRomanceList = ({ genre }) => {
             ) : animeList.length > 0 ? (
                 <div
                     className={`grid gap-4 ${
-                        isMobile ? "grid-cols-3" : "grid-cols-6"
+                        isMobile ? "grid-cols-3" : "grid-cols-5"
                     }`}
                 >
                     {animeList.map((anime) => (
