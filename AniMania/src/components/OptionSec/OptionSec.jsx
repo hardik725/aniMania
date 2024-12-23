@@ -129,7 +129,7 @@ function OptionSec({ username }) {
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Industry</a>
                     <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
                         <a href="#" className="block px-4 py-3 hover:bg-gray-200">News</a>
-                        <a href="#" className="block px-4 py-3 hover:bg-gray-200">Character</a>
+                        <Link to="/forums" className="block px-4 py-3 hover:bg-gray-200">Forums</Link>
                         <Link to="/MyFriends" className="block px-4 py-3 hover:bg-gray-200">Friends</Link>
                     </div>
                 </div>

@@ -16,6 +16,7 @@ import MyMangaReview from './components/MyMangaReview/MyMangaReview';
 import MangaDetails from './components/MangDetails/MangDetails';
 import FriendList from './components/FriendList/FriendList';
 import FriendProfile from './components/FriendProfile/FriendProfile';
+import Forums from './components/Forums/Forums';
 
 // Import react-toastify components
 import { ToastContainer } from 'react-toastify';
@@ -50,6 +51,7 @@ function App() {
         <Route path="/MyReviews" element={username ? <MyReviews username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/MyMangaReview" element={username ? <MyMangaReview username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/MyFriends" element={username ? <FriendList username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
+        <Route path="/forums" element={username ? <Forums username={username} onLogout={handleLogout} />: <Navigate to="/"/>}/>
         <Route
           path="/friendprofile/:profileUsername"
           element={
