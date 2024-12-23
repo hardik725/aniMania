@@ -58,9 +58,9 @@ const Login = ({ onLogin }) => {
       ></div>
 
       {/* Login Box */}
-      <div
-        className="relative z-10 w-full max-w-sm md:max-w-md lg:max-w-lg p-6 md:p-8 shadow-2xl rounded-xl bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-500 text-white animate-float"
+      <div className="relative z-10 w-11/12 max-w-sm p-6 shadow-2xl rounded-xl bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-500 text-white sm:w-full sm:max-w-md sm:p-8 md:max-w-md lg:max-w-lg animate-float"
       >
+
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">

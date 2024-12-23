@@ -54,12 +54,12 @@ const SignUp = () => {
       {/* Dark Overlay */}
       <div
         className="absolute inset-0 bg-black bg-opacity-60 z-0"
-        style={{ backdropFilter: 'blur(5px)' }} // Reduced blur intensity
+        style={{ backdropFilter: 'blur(5px)' }}
       ></div>
 
       {/* Sign-Up Box */}
       <div
-        className="relative z-10 w-full max-w-sm md:max-w-md lg:max-w-lg p-6 md:p-8 shadow-2xl rounded-xl bg-gradient-to-b from-purple-500 to-blue-600 text-white animate-float"
+        className="relative z-10 w-11/12 max-w-sm p-6 shadow-2xl rounded-xl bg-gradient-to-b from-purple-500 to-blue-600 text-white sm:w-full sm:max-w-md sm:p-8 md:max-w-md lg:max-w-lg animate-float"
       >
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">Sign Up</h2>
         <form onSubmit={handleSignUp}>
