@@ -10,7 +10,8 @@ import CharacRouter from "./Router/CharacRouter.js";
 import AnimeReviewRouter from "./Router/AnimeReviewRouter.js"; // Ensure correct import path
 import MangaReviewRouter from "./Router/MangaReviewRouter.js";
 import GenRouter from "./Router/GenRouter.js";
-import MangGenRouter from "./Router/MangGenRouter.js"
+import MangGenRouter from "./Router/MangGenRouter.js";
+import PostRouter from "./Router/PostRouter.js";
 
 dotenv.config();
 const app = express();
@@ -45,6 +46,7 @@ app.use("/review", AnimeReviewRouter);
 app.use("/mangareview", MangaReviewRouter);
 app.use("/genrouter",GenRouter);
 app.use("/mangenrouter",MangGenRouter);
+app.use("/post",PostRouter);
 
 app.get('/', (req,res) => {
     res.send("Welcome")
