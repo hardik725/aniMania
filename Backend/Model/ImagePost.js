@@ -12,7 +12,6 @@ const PostSchema = new mongoose.Schema({
   },
   PostUrl: {
     type: String,
-    required: true,
   },
   Likes: {
     type: [String], // Array of usernames who liked the post
