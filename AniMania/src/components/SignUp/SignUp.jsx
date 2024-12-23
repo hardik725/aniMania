@@ -12,18 +12,23 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Username: username,
-          Email: email,
-          Password: password,
-        }),
-      });
+  // Trim inputs
+  const trimmedUsername = username.trim();
+  const trimmedEmail = email.trim();
+  const trimmedPassword = password.trim();
+
+  try {
+    const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Username: trimmedUsername,
+        Email: trimmedEmail,
+        Password: trimmedPassword,
+      }),
+    });
 
       if (response.ok) {
         const data = await response.json();
