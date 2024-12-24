@@ -6,10 +6,12 @@ import TopAnimeSection from '../components/TopAnimeSection/TopAnimeSection';
 import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
 import RomanceSection from '../components/RomanceSection/RomanceSection';
 import ActionSection from '../components/ActionSection/ActionSection';
+import Loading from '../components/Loading/Loading';
 
 function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
   const [mangtopGenre, setMangTopGenre] = useState(null);
+  const [loading,setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserGenreWatched = async () => {
@@ -20,36 +22,45 @@ function Home({ username, onLogout }) {
           );
           const userData = await response.json();
 
-          if (response.ok && userData.AnimeGenresWatched) {
-            // Convert the Map object into an array and find the top genre
-            const genresArray = Object.entries(userData.AnimeGenresWatched);
-            const [topGenreKey] = genresArray.reduce(
-              (max, genre) => (genre[1] > max[1] ? genre : max),
-              ["", 0] // Initial value: Empty string and 0
-            );
-            setTopGenre(topGenreKey);
+          if (response.ok) {
+            // Fetch and set AnimeGenresWatched
+            if (userData.AnimeGenresWatched) {
+              const genresArray = Object.entries(userData.AnimeGenresWatched);
+              const [topGenreKey] = genresArray.reduce(
+                (max, genre) => (genre[1] > max[1] ? genre : max),
+                ["", 0]
+              );
+              setTopGenre(topGenreKey);
+            }
+
+            // Fetch and set MangaGenresRead
+            if (userData.MangaGenresRead) {
+              const genresArray = Object.entries(userData.MangaGenresRead);
+              const [topGenreKey] = genresArray.reduce(
+                (max, genre) => (genre[1] > max[1] ? genre : max),
+                ["", 0]
+              );
+              setMangTopGenre(topGenreKey);
+            }
           } else {
             console.error('Failed to fetch user data or genres are missing.');
           }
-          if (response.ok && userData.MangaGenresRead) {
-            // Convert the Map object into an array and find the top genre
-            const genresArray = Object.entries(userData.MangaGenresRead);
-            const [topGenreKey] = genresArray.reduce(
-              (max, genre) => (genre[1] > max[1] ? genre : max),
-              ["", 0] // Initial value: Empty string and 0
-            );
-            setMangTopGenre(topGenreKey);
-          } else {
-            console.error('Failed to fetch user data or genres are missing.');
-          }          
         } catch (error) {
           console.error('Error fetching user data:', error);
+        } finally {
+          setLoading(false); // Set loading to false once data fetching is complete
         }
+      } else {
+        setLoading(false); // Handle case where username is not provided
       }
     };
 
     fetchUserGenreWatched();
   }, [username]);
+
+  if (!topGenre || !mangtopGenre) {
+    return <Loading message="Loading Home Page"/>; // Show loading spinner while data is being fetched
+  }
 
   return (
     <div className="relative">

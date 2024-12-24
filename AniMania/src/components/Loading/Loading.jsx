@@ -1,6 +1,11 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Loading = ({message}) => {
+    const location = useLocation();
+
+    const Logloader = location.pathname === "/home";
+
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-100 to-gray-300">
             {/* Gradient Spinner */}
@@ -15,11 +20,11 @@ const Loading = ({message}) => {
 
             {/* Animated Text */}
             <p className="mt-6 text-2xl font-semibold text-gray-800 animate-pulse">
-                Loading<span className="text-blue-500">...</span>
+                {Logloader ? "Logging In" : "Loading"}<span className="text-blue-500">...</span>
             </p>
 
             {/* Additional Subtext */}
-            <p className="mt-2 text-sm text-gray-600">
+            <p className={`mt-2 text-sm text-gray-600 ${Logloader ? "hidden" : ""}`}>
                 {message || "Please wait while we load the content"}
             </p>
         </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 function MyReviews({ username, onLogout }) {
   const [reviews, setReviews] = useState([]);
@@ -44,7 +45,7 @@ function MyReviews({ username, onLogout }) {
     fetchUserReviews();
   }, [username]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading message="User Anime Reviews"/></div>;
   if (error) return <div>{error}</div>;
 
   return (
