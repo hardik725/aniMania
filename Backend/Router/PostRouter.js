@@ -1,15 +1,11 @@
 import express from 'express';
-import { createPost, addComment, getAllPosts } from '../Controller/ImagePostController.js'
+import { createPost, likePost, getAllPosts } from '../Controller/ImagePostController.js';
 
 const router = express.Router();
 
-// Route to create a new post
-router.post('/create', createPost);
-
-// Route to add a comment to a post
-router.post('/addcomment/:postId', addComment);
-
-// Route to fetch all posts
-router.get('/all', getAllPosts);
+// Routes
+router.post("/createpost", createPost); // Route to create a new post
+router.post("/addlike/:postId", likePost); // Route to like a post
+router.get("/allpost", getAllPosts); // Route to get all posts
 
 export default router;
