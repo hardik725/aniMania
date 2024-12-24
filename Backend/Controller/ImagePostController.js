@@ -33,7 +33,7 @@ export const addComment = async (req, res) => {
   }
 
   try {
-    const post = await Post.findById(postId);
+    const post = await ImagePost.findById(postId);
     if (!post) {
       return res.status(404).json({ message: 'Post not found.' });
     }
@@ -51,7 +51,7 @@ export const addComment = async (req, res) => {
 // Fetch all posts
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 }); // Fetch posts sorted by creation time
+    const posts = await ImagePost.find().sort({ createdAt: -1 }); // Fetch posts sorted by creation time
     res.status(200).json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error.message);
