@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import ChatBox from '../ChatBox/ChatBox';
+import Loading from '../Loading/Loading';
 
 const FriendsList = ({ username, onLogout }) => {
   const [friends, setFriends] = useState([]);
@@ -54,7 +55,7 @@ const FriendsList = ({ username, onLogout }) => {
   };
 
   if (loading) {
-    return <div className="text-center mt-8 text-xl text-gray-500">Loading...</div>;
+    return <div><Loading message="Loading User Friend List"/></div>;
   }
 
   if (error) {

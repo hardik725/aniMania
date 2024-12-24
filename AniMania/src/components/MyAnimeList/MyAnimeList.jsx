@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 function MyAnimeList({ username , onLogout }) {
     const [UserData, setUserData] = useState([]);
@@ -48,13 +49,12 @@ function MyAnimeList({ username , onLogout }) {
     }, [username]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div><Loading message="Loading User AnimeList"/></div>;
     }
 
     if (error) {
         return <div>{error}</div>;
     }
-
     return (
         <div
             className="relative min-h-screen bg-cover bg-center"

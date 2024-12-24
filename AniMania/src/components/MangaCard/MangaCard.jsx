@@ -5,6 +5,10 @@ const MangaCard = ({ rank, className }) => {
     const [mangaData, setMangaData] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+    // Placeholder image URL
+    const placeholderImage =
+        "https://wallpapers-clan.com/wp-content/uploads/2022/07/anime-default-pfp-2.jpg";
+
     // Effect to handle screen resizing and toggle views
     useEffect(() => {
         const handleResize = () => {
@@ -16,12 +20,15 @@ const MangaCard = ({ rank, className }) => {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);    
+    }, []);
 
+    // Fetch manga data based on rank
     useEffect(() => {
         const fetchMangaData = async () => {
             try {
-                const response = await fetch(`https://animania-backend-dmjs.onrender.com/manga/rank/${rank}`);
+                const response = await fetch(
+                    `https://animania-backend-dmjs.onrender.com/manga/rank/${rank}`
+                );
                 if (response.ok) {
                     const data = await response.json();
                     setMangaData(data);
@@ -29,33 +36,47 @@ const MangaCard = ({ rank, className }) => {
                     console.error("Failed to fetch manga data");
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error fetching manga data:", error);
             }
         };
 
         fetchMangaData();
     }, [rank]);
 
-    if (!mangaData) {
-        return <div>Loading...</div>;
-    }
+    // Determine image URL
+    const imageUrl = mangaData?.Photo || placeholderImage;
 
     return (
-        <Link 
-        to={`/MangDetails/${mangaData.Name}`}
-        className={`block ${className}`} 
+        <Link
+            to={mangaData ? `/MangDetails/${mangaData.Name}` : "#"}
+            className={`block ${className}`}
         >
             <div
-                className={`relative p-4 border rounded-md shadow-lg bg-cover bg-center transition-transform duration-300 ease-in-out hover:scale-105`}    
-                style={{ 
-                    backgroundImage: `url(${mangaData.Photo})`,
-                    height: isMobile ? "10rem" : "16rem", // Mobile: 10rem, Desktop: 20rem
+                className={`relative p-4 border rounded-md shadow-lg bg-cover bg-center transition-transform duration-300 ease-in-out hover:scale-105`}
+                style={{
+                    backgroundImage: `url('${imageUrl}')`,
+                    height: isMobile ? "8rem" : "16rem", // Mobile: 10rem, Desktop: 16rem
                 }}
             >
-                <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-4 rounded-md">
-                <h2 className={`font-semibold text-white ${isMobile ? "text-[10px]" : "text-md"}`}>{mangaData.Name}</h2>
-                <p className={`text-white ${isMobile ? "text-[10px]" : "text-md"}`}>Rating: {mangaData.Rating}</p>
-                </div>
+                {/* Show Name and Rating only if mangaData is loaded */}
+                {mangaData && (
+                    <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-2 rounded-md">
+                        <h2
+                            className={`font-semibold text-white ${
+                                isMobile ? "text-[10px]" : "text-md"
+                            }`}
+                        >
+                            {mangaData.Name}
+                        </h2>
+                        <p
+                            className={`text-white ${
+                                isMobile ? "text-[10px]" : "text-md"
+                            }`}
+                        >
+                            Rating: {mangaData.Rating}
+                        </p>
+                    </div>
+                )}
             </div>
         </Link>
     );

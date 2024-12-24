@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 const TopManga = ({ username, onLogout }) => {
     const [mangaList, setMangaList] = useState([]);
@@ -102,7 +103,7 @@ const TopManga = ({ username, onLogout }) => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div><Loading meassage="Fetching the Top Manga Data"/></div>;
     if (!mangaList.length) return <div>No manga data available</div>;
 
     return (

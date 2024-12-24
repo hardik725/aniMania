@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import Loading from '../components/Loading/Loading';
 
 function Profile({ username, onLogout }) {
   const [userData, setUserData] = useState(null);
@@ -180,8 +181,8 @@ function Profile({ username, onLogout }) {
     return date.toLocaleDateString('en-GB', options);
   };
 
-  if (!userData) {
-    return <div>No user data available</div>;
+  if (!userData || !UserId) {
+    return <div><Loading message="Loading the User Profile"/></div>;
   }
 
   const totalEpisodes = animeDetails.reduce((total, anime) => total + anime.episodes, 0);

@@ -5,6 +5,10 @@ const AnimeCard = ({ rank, className }) => {
     const [animeData, setAnimeData] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+    // Placeholder image URL
+    const placeholderImage =
+        "https://wallpapers-clan.com/wp-content/uploads/2022/07/anime-default-pfp-2.jpg";
+
     // Effect to handle screen resizing and toggle views
     useEffect(() => {
         const handleResize = () => {
@@ -18,10 +22,13 @@ const AnimeCard = ({ rank, className }) => {
         };
     }, []);
 
+    // Fetch anime data based on rank
     useEffect(() => {
         const fetchAnimeData = async () => {
             try {
-                const response = await fetch(`https://animania-backend-dmjs.onrender.com/anime/rank/${rank}`);
+                const response = await fetch(
+                    `https://animania-backend-dmjs.onrender.com/anime/rank/${rank}`
+                );
                 if (response.ok) {
                     const data = await response.json();
                     setAnimeData(data);
@@ -29,33 +36,47 @@ const AnimeCard = ({ rank, className }) => {
                     console.error("Failed to fetch anime data");
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error fetching anime data:", error);
             }
         };
 
         fetchAnimeData();
     }, [rank]);
 
-    if (!animeData) {
-        return <div>Loading...</div>;
-    }
+    // Determine image URL
+    const imageUrl = animeData?.Photo || placeholderImage;
 
     return (
-        <Link 
-            to={`/AniDetails/${animeData.Name}`}
-            className={`block ${className}`} 
+        <Link
+            to={animeData ? `/AniDetails/${animeData.Name}` : "#"}
+            className={`block ${className}`}
         >
             <div
                 className={`relative p-4 border rounded-md shadow-lg bg-cover bg-center transition-transform duration-300 ease-in-out hover:scale-105`}
                 style={{
-                    backgroundImage: `url(${animeData.Photo})`,
-                    height: isMobile ? "10rem" : "16rem", // Mobile: 10rem, Desktop: 20rem
+                    backgroundImage: `url('${imageUrl}')`,
+                    height: isMobile ? "8rem" : "16rem", // Mobile: 10rem, Desktop: 16rem
                 }}
             >
-                <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-4 rounded-md">
-                    <h2 className={`font-semibold text-white ${isMobile ? "text-[10px]" : "text-md"}`}>{animeData.Name}</h2>
-                    <p className={`text-white ${isMobile ? "text-[10px]" : "text-md"}`}>Rating: {animeData.Rating}</p>
-                </div>
+                {/* Show Name and Rating only if animeData is loaded */}
+                {animeData && (
+                    <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-4 rounded-md">
+                        <h2
+                            className={`font-semibold text-white ${
+                                isMobile ? "text-[10px]" : "text-md"
+                            }`}
+                        >
+                            {animeData.Name}
+                        </h2>
+                        <p
+                            className={`text-white ${
+                                isMobile ? "text-[10px]" : "text-md"
+                            }`}
+                        >
+                            Rating: {animeData.Rating}
+                        </p>
+                    </div>
+                )}
             </div>
         </Link>
     );

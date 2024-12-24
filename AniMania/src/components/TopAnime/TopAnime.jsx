@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
+import Loading from '../Loading/Loading';
 
 const TopAnime = ({ username, onLogout }) => {
     const [animeList, setAnimeList] = useState([]);
@@ -115,7 +116,7 @@ const TopAnime = ({ username, onLogout }) => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div><Loading message="Feting the Top Anime Data"/></div>;
     if (!animeList.length) return <div>No anime data available</div>;
 
     return (
