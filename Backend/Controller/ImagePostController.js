@@ -51,9 +51,9 @@ export const addComment = async (req, res) => {
     const { postId } = req.params;
     const { Username, Comment } = req.body;
 
-    // Validate input
+    // Validate inputs
     if (!Username || !Comment) {
-      return res.status(400).json({ message: 'Username and comment are required.' });
+      return res.status(400).json({ message: 'Username and Comment are required.' });
     }
 
     // Validate postId
@@ -61,25 +61,27 @@ export const addComment = async (req, res) => {
       return res.status(400).json({ message: 'Invalid Post ID.' });
     }
 
+    // Find the post
     const post = await ImagePost.findById(postId);
-
     if (!post) {
       return res.status(404).json({ message: 'Post not found.' });
     }
 
-    // Add the new comment
+    // Add the comment to the post
     post.Comments.push({ Username, Comment });
     await post.save();
 
+    // Respond with the updated post
     res.status(200).json({
       message: 'Comment added successfully!',
-      updatedPost: post,
+      post,
     });
   } catch (error) {
     console.error('Error adding comment:', error.message || error);
     res.status(500).json({ message: 'Failed to add comment.', error: error.message });
   }
 };
+
 
 
 
