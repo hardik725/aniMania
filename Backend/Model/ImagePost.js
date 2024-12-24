@@ -17,14 +17,22 @@ const PostSchema = new mongoose.Schema({
     type: [String], // Array of usernames who liked the post
     default: [],
   },
-  Comments: [
-    {
-      username: String, // Updated to lowercase
-      comment: String,  // Updated to lowercase
-    },
-  ],
-  
-}, { Timestamps: true });
+  Comments: { 
+    type: [
+      {
+        username: {
+          type: String,
+          required: true,
+        },
+        comment: {
+          type: String,
+          required: true,
+        },
+      }
+    ],
+    default: [], // Default to an empty array
+  },
+}); // Adds `createdAt` and `updatedAt` fields
 
 const ImagePost = mongoose.model('Post', PostSchema);
 
