@@ -15,6 +15,16 @@ const Forums = ({ username, onLogout }) => {
   const [loadingComments, setLoadingComments] = useState({});  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null); // Track which post's comments are being shown
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
+
+  useEffect(() => {
+      const handleResize = () => {
+          setIsMobile(window.innerWidth <= 768);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
+  }, []);    
   
   // Open the modal for comments
   const openCommentsModal = (postId) => {
@@ -182,9 +192,10 @@ const Forums = ({ username, onLogout }) => {
   };  
   if(!posts) return <div><Loading message="AniMania Forums"/></div>
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'black', color: 'white', position: 'relative' }}>
-      {/* Background Overlay */}
-      <div style={{
+<div style={{ minHeight: '100vh', backgroundColor: 'black', color: 'white', position: 'relative' }}>
+  {/* Background Overlay */}
+  <div
+    style={{
       position: 'absolute',
       top: 0,
       left: 0,
@@ -194,254 +205,262 @@ const Forums = ({ username, onLogout }) => {
       opacity: 0.6,
       filter: isModalOpen ? 'blur(8px)' : 'none',
       zIndex: 0,
-    }}></div>
+    }}
+  ></div>
 
-      <Navbar username={username} onLogout={onLogout} />
+  <Navbar username={username} onLogout={onLogout} />
 
-      <div style={{
+  <div
+    style={{
       maxWidth: '800px',
       margin: '0 auto',
-      padding: '2rem',
+      padding: '1rem', // Adjust padding for smaller screens
       position: 'relative',
       zIndex: isModalOpen ? 0 : 10,
-    }}>
-        {/* Title with animation */}
-        <motion.h1
-          style={{
-            fontSize: '3rem',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: '2rem',
-            background: 'linear-gradient(to right, #6EE7B7, #3B82F6)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-          }}
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          Forums
-        </motion.h1>
+      width: '90%', // Ensures content fits smaller screens
+      boxSizing: 'border-box',
+    }}
+  >
+    {/* Title with animation */}
+    <motion.h1
+      style={{
+        fontSize: '2rem', // Adjust font size for smaller screens
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: '1.5rem',
+        background: 'linear-gradient(to right, #6EE7B7, #3B82F6)',
+        WebkitBackgroundClip: 'text',
+        color: 'transparent',
+      }}
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+    >
+      Forums
+    </motion.h1>
 
-        {/* New Post Form */}
+    {/* New Post Form */}
+    <motion.div
+      style={{
+        backgroundColor: 'white',
+        padding: '1rem', // Adjust padding for smaller screens
+        borderRadius: '0.5rem',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        marginBottom: '1.5rem',
+        width: '100%', // Fit to screen width
+      }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <textarea
+        style={{
+          width: '100%',
+          padding: '0.75rem',
+          borderRadius: '0.5rem',
+          border: '1px solid #e0e0e0',
+          marginBottom: '1rem',
+          fontSize: '1rem',
+          color: '#333',
+        }}
+        placeholder="Write something..."
+        value={newPost}
+        onChange={(e) => setNewPost(e.target.value)}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        style={{
+          width: '100%', // Make input stretch full width
+          padding: '0.5rem',
+          marginBottom: '1rem',
+          color: '#3b82f6',
+        }}
+        onChange={(e) => setNewPostImage(e.target.files[0])}
+      />
+      <button
+        style={{
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          padding: '0.75rem',
+          borderRadius: '0.5rem',
+          width: '100%', // Make button stretch full width
+          cursor: 'pointer',
+        }}
+        onClick={handleCreatePost}
+      >
+        Post
+      </button>
+    </motion.div>
+
+    {/* Display Posts */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {posts.map((post) => (
         <motion.div
+          key={post._id}
           style={{
             backgroundColor: 'white',
-            padding: '1.5rem',
-            borderRadius: '0.75rem',
+            padding: '1rem',
+            borderRadius: '0.5rem',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            marginBottom: '2rem',
+            transition: 'all 0.3s ease',
+            width: '100%',
           }}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <textarea
-            style={{
-              width: '100%',
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              border: '1px solid #e0e0e0',
-              marginBottom: '1rem',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              fontSize: '1rem',
-              color: '#333',
-              transition: 'all 0.3s ease',
-            }}
-            placeholder="Write something..."
-            value={newPost}
-            onChange={(e) => setNewPost(e.target.value)}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            style={{
-              padding: '0.5rem',
-              marginBottom: '1rem',
-              color: '#3b82f6',
-              transition: '0.3s',
-            }}
-            onChange={(e) => setNewPostImage(e.target.files[0])}
-          />
-          <button
-            style={{
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              padding: '0.75rem 2rem',
-              borderRadius: '0.5rem',
-              width: '100%',
-              cursor: 'pointer',
-              transition: '0.3s',
-            }}
-            onClick={handleCreatePost}
-          >
-            Post
-          </button>
-        </motion.div>
-
-        {/* Display Posts with Animation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {posts.map((post) => (
-            <motion.div
-              key={post._id}
+          {/* Post Header */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+            <img
+              src="https://via.placeholder.com/40" // Replace with user profile picture URL
+              alt="User Avatar"
               style={{
-                backgroundColor: 'white',
-                padding: '1rem',
-                borderRadius: '0.75rem',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.3s ease',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                marginRight: '0.5rem',
+              }}
+            />
+            <motion.h2
+              style={{
+                fontWeight: 'bold',
+                fontSize: '1.25rem',
+                color: '#3b82f6',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              {post.Username}
+            </motion.h2>
+          </div>
+
+          {/* Post Content */}
+          <p style={{ color: '#333', marginBottom: '1rem' }}>{post.Content}</p>
+          {post.PostUrl && (
+            <img
+              src={post.PostUrl}
+              alt="Post"
+              style={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem',
+              }}
+            />
+          )}
+
+          {/* Post Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <button
+              style={{
+                color: '#3b82f6',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
                 cursor: 'pointer',
               }}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+              onClick={() => handleLike(post._id)}
             >
-              {/* Post Header */}
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                <img
-                  src="https://via.placeholder.com/40" // Replace with user profile picture URL
-                  alt="User Avatar"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    marginRight: '1rem',
-                  }}
-                />
-                <motion.h2
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: '1.25rem',
-                    color: '#3b82f6',
-                    transition: '0.3s',
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  {post.Username}
-                </motion.h2>
-              </div>
+              <FontAwesomeIcon icon={faThumbsUp} />
+              <span>{post.Likes.length}</span>
+            </button>
+            <button
+              style={{
+                color: '#3b82f6',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => openCommentsModal(post._id)}
+            >
+              <FontAwesomeIcon icon={faComment} />
+            </button>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
 
-              {/* Post Content */}
-              <p style={{ color: '#333', marginBottom: '1rem' }}>{post.Content}</p>
-              {post.PostUrl && (
-                <img
-                  src={post.PostUrl}
-                  alt="Post"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    borderRadius: '0.75rem',
-                    marginBottom: '1rem',
-                  }}
-                />
-              )}
-
-              {/* Post Actions */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <button
-                  style={{
-                    color: '#3b82f6',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer',
-                    transition: '0.3s',
-                  }}
-                  onClick={() => handleLike(post._id)}
-                >
-                  <FontAwesomeIcon icon={faThumbsUp} />
-                  <span>{post.Likes.length}</span>
-                </button>
-                <button
-                style={{
-                  color: '#3b82f6',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  cursor: 'pointer',
-                  transition: '0.3s',
-                }}
-                onClick={() => openCommentsModal(post._id)}
-              >
-                <FontAwesomeIcon icon={faComment} />
-              </button>                
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    {/* Comments Modal */}
-    {isModalOpen && (
-      <div style={{
+  {/* Comments Modal */}
+  {isModalOpen && (
+    <div
+      style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 20,
-      }}>
-        <div style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        zIndex: 1000,
+        padding: '1rem',
+      }}
+    >
+      <div
+        style={{
           backgroundColor: 'white',
-          padding: '2rem',
+          padding: '1.5rem',
           borderRadius: '0.75rem',
-          maxWidth: '500px',
-          width: '90%',
+          maxWidth: '400px',
+          width: '100%',
           textAlign: 'center',
-        }}>
-          <h2>Comments</h2>
-          {loadingComments[activePostId] && <p>Loading comments...</p>}
-          <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
-            {comments[activePostId]?.map((comment) => (
-              <div key={comment._id} style={{ marginBottom: '1rem', textAlign: 'left' }}>
-                <p><strong>{comment.username}</strong>: {comment.content}</p>
-              </div>
-            ))}
-          </div>
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            style={{
-              color: 'black',
-              width: '100%',
-              padding: '0.5rem',
-              borderRadius: '0.5rem',
-              marginBottom: '1rem',
-              border: '1px solid #e0e0e0',
-            }}
-          />
-          <button
-            onClick={() => handleAddComment(activePostId)}
-            style={{
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              padding: '0.5rem 1.5rem',
-              borderRadius: '0.5rem',
-              marginBottom: '1rem',
-            }}
-          >
-            Add Comment
-          </button>
-          <button
-            onClick={closeCommentsModal}
-            style={{
-              backgroundColor: 'red',
-              color: 'white',
-              padding: '0.5rem 1.5rem',
-              borderRadius: '0.5rem',
-            }}
-          >
-            Close
-          </button>
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        <h2>Comments</h2>
+        {loadingComments[activePostId] && <p>Loading comments...</p>}
+        <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
+          {comments[activePostId]?.map((comment) => (
+            <div key={comment._id} style={{ marginBottom: '1rem', textAlign: 'left' }}>
+              <p>
+                <strong>{comment.username}</strong>: {comment.content}
+              </p>
+            </div>
+          ))}
         </div>
+        <input
+          type="text"
+          placeholder="Write a comment..."
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '0.5rem',
+            border: '1px solid #ccc',
+            marginBottom: '1rem',
+            color: 'black'
+          }}
+        />
+        <button
+          onClick={() => handleAddComment(activePostId)}
+          style={{
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            padding: '0.75rem',
+            borderRadius: '0.5rem',
+            marginRight: '0.5rem',
+          }}
+        >
+          Add Comment
+        </button>
+        <button
+          onClick={closeCommentsModal}
+          style={{
+            backgroundColor: 'red',
+            color: 'white',
+            padding: '0.75rem',
+            borderRadius: '0.5rem',
+          }}
+        >
+          Close
+        </button>
       </div>
-    )}      
     </div>
+  )}
+</div>
+
   );
 };
 
