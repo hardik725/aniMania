@@ -48,23 +48,31 @@ export const likePost = async (req, res) => {
 // Add a comment to a post
 export const addComment = async (req, res) => {
   const { postId } = req.params;
-  const { Username, Comment } = req.body;
+  const { username, comment } = req.body;
 
   try {
+    // Validate postId
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(400).json({ message: 'Invalid Post ID.' });
+    }
+
     const post = await ImagePost.findById(postId);
 
     if (!post) {
       return res.status(404).json({ message: 'Post not found.' });
     }
 
-    post.Comments.push({ Username, Comment });
+    // Push comment
+    post.Comments.push({ Username: username, Comment: comment });
     await post.save();
+
     res.status(200).json({ message: 'Comment added successfully!', post });
   } catch (error) {
-    console.error('Error adding comment:', error);
-    res.status(500).json({ message: 'Failed to add comment.' });
+    console.error('Error adding comment:', error.message || error);
+    res.status(500).json({ message: 'Failed to add comment.', error: error.message });
   }
 };
+
 
 // Get All Posts
 export const getAllPosts = async (req, res) => {
