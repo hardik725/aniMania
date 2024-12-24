@@ -63,7 +63,7 @@ export const addComment = async (req, res) => {
     }
 
     // Push comment
-    post.Comments.push({ Username: username, Comment: comment });
+    post.Comments.push({ username, comment }); // Use lowercase consistently
     await post.save();
 
     res.status(200).json({ message: 'Comment added successfully!', post });
@@ -72,6 +72,7 @@ export const addComment = async (req, res) => {
     res.status(500).json({ message: 'Failed to add comment.', error: error.message });
   }
 };
+
 
 
 // Get All Posts

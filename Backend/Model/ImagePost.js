@@ -19,8 +19,8 @@ const PostSchema = new mongoose.Schema({
   },
   Comments: [
     {
-      Username: { type: String, required: true },
-      Comment: { type: String, required: true },
+      username: String, // Updated to lowercase
+      comment: String,  // Updated to lowercase
     },
   ],
   
