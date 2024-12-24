@@ -9,6 +9,25 @@ const Forums = ({ username, onLogout }) => {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
   const [newPostImage, setNewPostImage] = useState(null);
+  const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState('');
+  const [showComments, setShowComments] = useState({}); // State to manage visibility
+  const [loadingComments, setLoadingComments] = useState({});  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activePostId, setActivePostId] = useState(null); // Track which post's comments are being shown
+  
+  // Open the modal for comments
+  const openCommentsModal = (postId) => {
+    setActivePostId(postId);
+    setIsModalOpen(true);
+    toggleCommentsVisibility(postId); // Fetch comments if not already loaded
+  };
+  
+  // Close the modal
+  const closeCommentsModal = () => {
+    setIsModalOpen(false);
+    setActivePostId(null);
+  };  
 
   // Fetch all posts from the server
   useEffect(() => {
@@ -101,31 +120,91 @@ const Forums = ({ username, onLogout }) => {
       console.error('Error creating post:', error);
     }
   };
+  const handleAddComment = async (postId) => {
+    if (!newComment) {
+      alert('Please write a comment before submitting');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://animania-backend-dmjs.onrender.com/comment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId,
+          username,
+          content: newComment,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to add comment');
+
+      const data = await response.json();
+      setComments((prev) => ({
+        ...prev,
+        [postId]: [data.comment, ...(prev[postId] || [])],
+      }));
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+
+  const toggleCommentsVisibility = async (postId) => {
+    setShowComments((prev) => ({
+      ...prev,
+      [postId]: !prev[postId], // Toggle visibility
+    }));
+
+    if (!comments[postId]) {
+      // Fetch comments only if they are not already loaded
+      setLoadingComments((prev) => ({
+        ...prev,
+        [postId]: true, // Set loading state to true for this post
+      }));
+
+      try {
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/comment/${postId}`);
+        const data = await response.json();
+        setComments((prev) => ({
+          ...prev,
+          [postId]: data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      } finally {
+        setLoadingComments((prev) => ({
+          ...prev,
+          [postId]: false, // Set loading state to false after fetching
+        }));
+      }
+    }
+  };  
   if(!posts) return <div><Loading message="AniMania Forums"/></div>
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'black', color: 'white', position: 'relative' }}>
       {/* Background Overlay */}
       <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'black',
-        opacity: 0.6,
-        filter: 'blur(8px)',
-        zIndex: 0,
-      }}></div>
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'black',
+      opacity: 0.6,
+      filter: isModalOpen ? 'blur(8px)' : 'none',
+      zIndex: 0,
+    }}></div>
 
       <Navbar username={username} onLogout={onLogout} />
 
       <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '2rem',
-        position: 'relative',
-        zIndex: 10,
-      }}>
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '2rem',
+      position: 'relative',
+      zIndex: isModalOpen ? 0 : 10,
+    }}>
         {/* Title with animation */}
         <motion.h1
           style={{
@@ -274,23 +353,94 @@ const Forums = ({ username, onLogout }) => {
                   <span>{post.Likes.length}</span>
                 </button>
                 <button
-                  style={{
-                    color: '#6b7280',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer',
-                    transition: '0.3s',
-                  }}
-                >
-                  <FontAwesomeIcon icon={faComment} />
-                  <span>Comment</span>
-                </button>
+                style={{
+                  color: '#3b82f6',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  transition: '0.3s',
+                }}
+                onClick={() => openCommentsModal(post._id)}
+              >
+                <FontAwesomeIcon icon={faComment} />
+              </button>                
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+    {/* Comments Modal */}
+    {isModalOpen && (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 20,
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '2rem',
+          borderRadius: '0.75rem',
+          maxWidth: '500px',
+          width: '90%',
+          textAlign: 'center',
+        }}>
+          <h2>Comments</h2>
+          {loadingComments[activePostId] && <p>Loading comments...</p>}
+          <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
+            {comments[activePostId]?.map((comment) => (
+              <div key={comment._id} style={{ marginBottom: '1rem', textAlign: 'left' }}>
+                <p><strong>{comment.username}</strong>: {comment.content}</p>
+              </div>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Write a comment..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            style={{
+              color: 'black',
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '0.5rem',
+              marginBottom: '1rem',
+              border: '1px solid #e0e0e0',
+            }}
+          />
+          <button
+            onClick={() => handleAddComment(activePostId)}
+            style={{
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              padding: '0.5rem 1.5rem',
+              borderRadius: '0.5rem',
+              marginBottom: '1rem',
+            }}
+          >
+            Add Comment
+          </button>
+          <button
+            onClick={closeCommentsModal}
+            style={{
+              backgroundColor: 'red',
+              color: 'white',
+              padding: '0.5rem 1.5rem',
+              borderRadius: '0.5rem',
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )}      
     </div>
   );
 };
