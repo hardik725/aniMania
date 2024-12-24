@@ -11,7 +11,7 @@ export const createPost = async (req, res) => {
     const newPost = new Post({
       username,
       content,
-      postUrl,
+      postUrl: postUrl || null, // If no postUrl, set it to null
     });
 
     await newPost.save();
@@ -21,6 +21,7 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: 'Failed to create post', error: error.message });
   }
 };
+
 
 // Add a comment to a post
 export const addComment = async (req, res) => {

@@ -8,7 +8,7 @@ const CommentSchema = new mongoose.Schema({
 const PostSchema = new mongoose.Schema({
   username: { type: String, required: true },
   content: { type: String, required: true },
-  postUrl: { type: String }, // Optional URL for an image or other media
+  postUrl: { type: String , default: null}, // Optional URL for an image or other media
   likes: { type: [String], default: [] }, // Users who liked the post
   comments: { type: [CommentSchema], default: [] },
 }, { timestamps: true });
