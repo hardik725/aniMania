@@ -49,10 +49,10 @@ export const likePost = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { username, comment } = req.body;
+    const { Username, Comment } = req.body;
 
     // Validate input
-    if (!username || !comment) {
+    if (!Username || !Comment) {
       return res.status(400).json({ message: 'Username and comment are required.' });
     }
 
@@ -68,7 +68,7 @@ export const addComment = async (req, res) => {
     }
 
     // Add the new comment
-    post.Comments.push({ username, comment });
+    post.Comments.push({ Username, Comment });
     await post.save();
 
     res.status(200).json({
