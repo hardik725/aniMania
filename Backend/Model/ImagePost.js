@@ -19,11 +19,11 @@ const PostSchema = new mongoose.Schema({
   },
   Comments: [
     {
-      Username: String,
-      Comment: String,
+      Username: { type: String, required: true },
+      Comment: { type: String, required: true },
     },
-  ]
-  ,
+  ],
+  
 }, { Timestamps: true });
 
 const ImagePost = mongoose.model('Post', PostSchema);
