@@ -17,22 +17,13 @@ const PostSchema = new mongoose.Schema({
     type: [String], // Array of usernames who liked the post
     default: [],
   },
-  Comments: {
-    type: [
-      {
-        Username: {
-          type: String,
-          required: true,
-          trim: true,
-        },
-        Comment: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
-    default: [],
-  },
+  Comments: [
+    {
+      Username: String,
+      Comment: String,
+    },
+  ]
+  ,
 }, { Timestamps: true });
 
 const ImagePost = mongoose.model('Post', PostSchema);
