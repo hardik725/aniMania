@@ -47,10 +47,15 @@ export const likePost = async (req, res) => {
 
 // Add a comment to a post
 export const addComment = async (req, res) => {
-  const { postId } = req.params;
-  const { username, comment } = req.body;
-
   try {
+    const { postId } = req.params;
+    const { username, comment } = req.body;
+
+    // Validate input
+    if (!username || !comment) {
+      return res.status(400).json({ message: 'Username and comment are required.' });
+    }
+
     // Validate postId
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(400).json({ message: 'Invalid Post ID.' });
@@ -62,16 +67,20 @@ export const addComment = async (req, res) => {
       return res.status(404).json({ message: 'Post not found.' });
     }
 
-    // Push comment
-    post.Comments.push({ username, comment }); // Use lowercase consistently
+    // Add the new comment
+    post.Comments.push({ username, comment });
     await post.save();
 
-    res.status(200).json({ message: 'Comment added successfully!', post });
+    res.status(200).json({
+      message: 'Comment added successfully!',
+      updatedPost: post,
+    });
   } catch (error) {
     console.error('Error adding comment:', error.message || error);
     res.status(500).json({ message: 'Failed to add comment.', error: error.message });
   }
 };
+
 
 
 
