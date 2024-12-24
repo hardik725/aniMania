@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion'; // For animations
+import Loading from '../Loading/Loading';
 
 const Forums = ({ username, onLogout }) => {
   const [posts, setPosts] = useState([]);
@@ -30,7 +32,7 @@ const Forums = ({ username, onLogout }) => {
       const response = await fetch(`https://animania-backend-dmjs.onrender.com/post/addlike/${postId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Username : username }),
+        body: JSON.stringify({ Username: username }),
       });
       if (!response.ok) throw new Error('Failed to like post');
 
@@ -44,72 +46,54 @@ const Forums = ({ username, onLogout }) => {
     }
   };
 
-  // Handle dislike functionality
-  const handleDislike = async (postId) => {
-    try {
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/post/adddislike/${postId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username }),
-      });
-      if (!response.ok) throw new Error('Failed to dislike post');
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId
-            ? { ...post, Likes: post.Likes.filter((like) => like !== username) }
-            : post
-        )
-      );
-    } catch (error) {
-      console.error('Error disliking post:', error);
-    }
-  };
-
-  // Handle adding a comment
-  const handleAddComment = async (postId, comment) => {
-    try {
-      const response = await fetch(`https://animania-backend-dmjs.onrender.com/post/addcomment/${postId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, comment }),
-      });
-      if (!response.ok) throw new Error('Failed to add comment');
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId
-            ? { ...post, Comments: [...post.Comments, { Username: username, Comment: comment }] }
-            : post
-        )
-      );
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  };
-
   // Handle creating a new post
   const handleCreatePost = async () => {
     if (!newPost && !newPostImage) {
       alert('Please add text or an image to create a post.');
       return;
     }
-  
-    const formData = {
+
+    let postImageUrl = null;
+
+    // If there is an image, upload it to Cloudinary
+    if (newPostImage) {
+      const formData = new FormData();
+      formData.append('file', newPostImage);
+      formData.append('upload_preset', 'Profile_picture'); // Replace with your Cloudinary preset name
+      formData.append('cloud_name', 'dshjyicig'); // Replace with your Cloudinary cloud name
+
+      try {
+        const response = await fetch('https://api.cloudinary.com/v1_1/dshjyicig/image/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          postImageUrl = data.secure_url; // Cloudinary's hosted URL
+        } else {
+          throw new Error('Failed to upload image to Cloudinary');
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+
+    const formDataToSend = {
       Username: username,
       Content: newPost,
-      PostUrl: newPostImage ? URL.createObjectURL(newPostImage) : null, // Generate a URL for image preview
+      PostUrl: postImageUrl,
     };
-  
+
     try {
       const response = await fetch('https://animania-backend-dmjs.onrender.com/post/createpost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataToSend),
       });
       if (!response.ok) throw new Error('Failed to create post');
       const { post } = await response.json();
-  
+
       setPosts([post, ...posts]); // Add the new post to the beginning of the list
       setNewPost('');
       setNewPostImage(null);
@@ -117,17 +101,74 @@ const Forums = ({ username, onLogout }) => {
       console.error('Error creating post:', error);
     }
   };
-
+  if(!posts) return <div><Loading message="AniMania Forums"/></div>
   return (
-    <div>
+    <div style={{ minHeight: '100vh', backgroundColor: 'black', color: 'white', position: 'relative' }}>
+      {/* Background Overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'black',
+        opacity: 0.6,
+        filter: 'blur(8px)',
+        zIndex: 0,
+      }}></div>
+
       <Navbar username={username} onLogout={onLogout} />
-      <div className="forums-container p-4">
-        <h1 className="text-xl font-bold mb-4">Forums</h1>
+
+      <div style={{
+        maxWidth: '800px',
+        margin: '0 auto',
+        padding: '2rem',
+        position: 'relative',
+        zIndex: 10,
+      }}>
+        {/* Title with animation */}
+        <motion.h1
+          style={{
+            fontSize: '3rem',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: '2rem',
+            background: 'linear-gradient(to right, #6EE7B7, #3B82F6)',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+          }}
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          Forums
+        </motion.h1>
 
         {/* New Post Form */}
-        <div className="new-post-form border p-4 rounded mb-6">
+        <motion.div
+          style={{
+            backgroundColor: 'white',
+            padding: '1.5rem',
+            borderRadius: '0.75rem',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            marginBottom: '2rem',
+          }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <textarea
-            className="w-full border p-2 rounded mb-2"
+            style={{
+              width: '100%',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              border: '1px solid #e0e0e0',
+              marginBottom: '1rem',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              fontSize: '1rem',
+              color: '#333',
+              transition: 'all 0.3s ease',
+            }}
             placeholder="Write something..."
             value={newPost}
             onChange={(e) => setNewPost(e.target.value)}
@@ -135,76 +176,118 @@ const Forums = ({ username, onLogout }) => {
           <input
             type="file"
             accept="image/*"
-            className="mb-2"
+            style={{
+              padding: '0.5rem',
+              marginBottom: '1rem',
+              color: '#3b82f6',
+              transition: '0.3s',
+            }}
             onChange={(e) => setNewPostImage(e.target.files[0])}
           />
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            style={{
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              padding: '0.75rem 2rem',
+              borderRadius: '0.5rem',
+              width: '100%',
+              cursor: 'pointer',
+              transition: '0.3s',
+            }}
             onClick={handleCreatePost}
           >
             Post
           </button>
-        </div>
+        </motion.div>
 
-        {/* Display Posts */}
-        <div className="posts">
+        {/* Display Posts with Animation */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {posts.map((post) => (
-            <div key={post._id} className="post border p-4 rounded mb-4">
-              <div className="post-header flex items-center mb-2">
-                {/* <img
-                  src={post.ProfilePicture}
-                  alt={post.Username}
-                  className="w-10 h-10 rounded-full mr-2"
-                /> */}
-                <h2 className="font-bold">{post.Username}</h2>
+            <motion.div
+              key={post._id}
+              style={{
+                backgroundColor: 'white',
+                padding: '1rem',
+                borderRadius: '0.75rem',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+              }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Post Header */}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                <img
+                  src="https://via.placeholder.com/40" // Replace with user profile picture URL
+                  alt="User Avatar"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    marginRight: '1rem',
+                  }}
+                />
+                <motion.h2
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: '1.25rem',
+                    color: '#3b82f6',
+                    transition: '0.3s',
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {post.Username}
+                </motion.h2>
               </div>
-              <p>{post.Content}</p>
+
+              {/* Post Content */}
+              <p style={{ color: '#333', marginBottom: '1rem' }}>{post.Content}</p>
               {post.PostUrl && (
                 <img
                   src={post.PostUrl}
                   alt="Post"
-                  className="mt-2 max-w-full rounded"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    borderRadius: '0.75rem',
+                    marginBottom: '1rem',
+                  }}
                 />
               )}
 
-              <div className="post-actions flex items-center mt-2">
+              {/* Post Actions */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button
-                  className="text-blue-500 mr-4"
+                  style={{
+                    color: '#3b82f6',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    cursor: 'pointer',
+                    transition: '0.3s',
+                  }}
                   onClick={() => handleLike(post._id)}
                 >
-                  <FontAwesomeIcon icon={faThumbsUp} /> Like ({post.Likes.length})
+                  <FontAwesomeIcon icon={faThumbsUp} />
+                  <span>{post.Likes.length}</span>
                 </button>
                 <button
-                  className="text-red-500"
-                  onClick={() => handleDislike(post._id)}
+                  style={{
+                    color: '#6b7280',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    cursor: 'pointer',
+                    transition: '0.3s',
+                  }}
                 >
-                  <FontAwesomeIcon icon={faThumbsDown} /> Dislike
+                  <FontAwesomeIcon icon={faComment} />
+                  <span>Comment</span>
                 </button>
               </div>
-
-              {/* Comments Section */}
-              <div className="comments mt-4">
-                <h3 className="font-bold mb-2">Comments</h3>
-                {post.Comments.map((comment, index) => (
-                  <div key={index} className="comment mb-2">
-                    <p>
-                      <strong>{comment.Username}:</strong> {comment.Comment}
-                    </p>
-                  </div>
-                ))}
-                <textarea
-                  className="w-full border p-2 rounded mt-2"
-                  placeholder="Add a comment..."
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleAddComment(post._id, e.target.value);
-                      e.target.value = '';
-                    }
-                  }}
-                />
-              </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
