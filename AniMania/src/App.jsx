@@ -17,6 +17,7 @@ import MangaDetails from './components/MangDetails/MangDetails';
 import FriendList from './components/FriendList/FriendList';
 import FriendProfile from './components/FriendProfile/FriendProfile';
 import Forums from './components/Forums/Forums';
+// import VerificationPage from './components/VerificationPage/VerificationPage';
 
 // Import react-toastify components
 import { ToastContainer } from 'react-toastify';
@@ -38,6 +39,7 @@ function App() {
       <Routes>
         <Route path="/" element={username ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
         <Route path="/signup" element={<SignUp />} />
+        {/* <Route path="/verify" element={<VerificationPage/>} /> */}
         <Route path="/home" element={username ? <Home username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/profile" element={username ? <Profile username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/seasonalanime" element={username ? <SeasonalAnime username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />

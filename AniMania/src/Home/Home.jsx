@@ -12,6 +12,17 @@ function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
   const [mangtopGenre, setMangTopGenre] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Check on initial load
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchUserGenreWatched = async () => {
@@ -27,7 +38,6 @@ function Home({ username, onLogout }) {
         const userData = await response.json();
 
         if (response.ok) {
-          // Fetch and set AnimeGenresWatched
           if (userData.AnimeGenresWatched) {
             const genresArray = Object.entries(userData.AnimeGenresWatched);
             const [topGenreKey] = genresArray.reduce(
@@ -37,7 +47,6 @@ function Home({ username, onLogout }) {
             setTopGenre(topGenreKey);
           }
 
-          // Fetch and set MangaGenresRead
           if (userData.MangaGenresRead) {
             const genresArray = Object.entries(userData.MangaGenresRead);
             const [topGenreKey] = genresArray.reduce(
@@ -67,17 +76,25 @@ function Home({ username, onLogout }) {
     <div className="relative">
       <Navbar username={username} onLogout={onLogout} />
       <HeroSection />
-      {/* Background Video */}
+      {/* Background */}
       <div className="fixed inset-0 overflow-hidden -z-10">
-        <video
-          autoPlay
-          muted
-          loop
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="https://motionbgs.com/media/3676/luffy-dark.960x540.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        {isMobile ? (
+          <img
+            src="https://i.pinimg.com/474x/c1/a9/bd/c1a9bd860cc4aa91f536feb65cb635ba.jpg"
+            alt="Mobile Background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="https://motionbgs.com/media/3676/luffy-dark.960x540.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-black opacity-50" />
       </div>
@@ -86,7 +103,6 @@ function Home({ username, onLogout }) {
         {username && <OptionSec username={username} />}
         <TopAnimeSection />
         <TopMangaSection />
-        {/* Pass the top genre dynamically */}
         {topGenre && <RomanceSection genre={topGenre} />}
         {mangtopGenre && <ActionSection genre={mangtopGenre} />}
       </div>
