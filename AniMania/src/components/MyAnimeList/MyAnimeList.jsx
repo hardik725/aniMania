@@ -3,12 +3,24 @@ import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 
-function MyAnimeList({ username , onLogout }) {
+function MyAnimeList({ username, onLogout }) {
     const [UserData, setUserData] = useState([]);
     const [animeDetails, setAnimeDetails] = useState([]);
     const [userScores, setUserScores] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+        };
+
+        handleResize(); // Set initial state
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -49,23 +61,28 @@ function MyAnimeList({ username , onLogout }) {
     }, [username]);
 
     if (loading) {
-        return <div><Loading message="Loading User AnimeList"/></div>;
+        return <div><Loading message="Loading User AnimeList" /></div>;
     }
 
     if (error) {
         return <div>{error}</div>;
     }
+
     return (
         <div
             className="relative min-h-screen bg-cover bg-center"
             style={{
-                backgroundImage: `url('https://img.freepik.com/free-photo/halloween-scene-illustration-anime-style_23-2151794320.jpg?t=st=1724951751~exp=1724955351~hmac=f512b993560276a62aecf54ed8b0e0839973533b38fc965d44967a88362bd394&w=1800')`,
+                backgroundImage: `url(${
+                    isMobile
+                        ? 'https://i.pinimg.com/736x/ee/ec/be/eeecbe07b3d5c5b1614aaf44a7e0c807.jpg'
+                        : 'https://img.freepik.com/free-photo/halloween-scene-illustration-anime-style_23-2151794320.jpg?t=st=1724951751~exp=1724955351~hmac=f512b993560276a62aecf54ed8b0e0839973533b38fc965d44967a88362bd394&w=1800'
+                })`,
                 backgroundAttachment: 'fixed',
                 backgroundSize: 'cover',
             }}
         >
             <div className="relative z-20 p-4">
-            <Navbar username={username} onLogout={onLogout} />
+                <Navbar username={username} onLogout={onLogout} />
                 <div className="container mx-auto mt-5">
                     <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-md">
                         <table className="min-w-full text-white">
@@ -81,7 +98,7 @@ function MyAnimeList({ username , onLogout }) {
                                     <tr key={anime.Name} className="text-center">
                                         <td className="py-2 px-4 border-b border-gray-200">{index + 1}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 flex items-center">
-                                        <Link to={`/AniDetails/${anime.Name}`}>
+                                            <Link to={`/AniDetails/${anime.Name}`}>
                                                 <img src={anime.Photo} alt={anime.Name} className="w-12 h-12 object-cover mr-4" />
                                             </Link>
                                             <div>

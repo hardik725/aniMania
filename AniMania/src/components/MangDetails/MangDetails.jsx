@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
+import Loading from '../Loading/Loading';
 
 function MangDetails({ username, onLogout }) {
   const { mangaName } = useParams();
@@ -178,7 +179,7 @@ function MangDetails({ username, onLogout }) {
 };
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading message="manga details"/></div>;
   if (error) return <div>{error}</div>;
   if (!manga) return <div>No manga data available</div>;
 

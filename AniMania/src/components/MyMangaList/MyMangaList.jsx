@@ -3,12 +3,24 @@ import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 
-function MyMangaList({ username , onLogout }) {
+function MyMangaList({ username, onLogout }) {
     const [UserData, setUserData] = useState([]);
     const [mangaDetails, setMangaDetails] = useState([]);
     const [userScores, setUserScores] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+        };
+
+        handleResize(); // Set initial state
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -48,7 +60,7 @@ function MyMangaList({ username , onLogout }) {
     }, [username]);
 
     if (loading) {
-        return <div><Loading message="Loading User MangaList"/></div>;
+        return <div><Loading message="Loading User MangaList" /></div>;
     }
 
     if (error) {
@@ -59,13 +71,17 @@ function MyMangaList({ username , onLogout }) {
         <div
             className="relative min-h-screen bg-cover bg-center"
             style={{
-                backgroundImage: `url('https://img.freepik.com/free-photo/anime-moon-landscape_23-2151645914.jpg?t=st=1724953611~exp=1724957211~hmac=5b612dc41151b0f26c0e4a4139258e23989224b5c1e8ed5036dd620a8a8082b6&w=1800')`,
+                backgroundImage: `url(${
+                    isMobile
+                        ? 'https://i.pinimg.com/736x/7b/73/c1/7b73c14605a30f95d56b8cbd5e65f676.jpg'
+                        : 'https://img.freepik.com/free-photo/anime-moon-landscape_23-2151645914.jpg?t=st=1724953611~exp=1724957211~hmac=5b612dc41151b0f26c0e4a4139258e23989224b5c1e8ed5036dd620a8a8082b6&w=1800'
+                })`,
                 backgroundAttachment: 'fixed',
                 backgroundSize: 'cover',
             }}
         >
             <div className="relative z-20 p-4">
-            <Navbar username={username} onLogout={onLogout} />
+                <Navbar username={username} onLogout={onLogout} />
                 <div className="container mx-auto mt-5">
                     <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-md">
                         <table className="min-w-full text-white">
@@ -81,7 +97,7 @@ function MyMangaList({ username , onLogout }) {
                                     <tr key={manga.Name} className="text-center">
                                         <td className="py-2 px-4 border-b border-gray-200">{index + 1}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 flex items-center">
-                                        <Link to={`/MangDetails/${manga.Name}`}>
+                                            <Link to={`/MangDetails/${manga.Name}`}>
                                                 <img src={manga.Photo} alt={manga.Name} className="w-12 h-12 object-cover mr-4" />
                                             </Link>
                                             <div>

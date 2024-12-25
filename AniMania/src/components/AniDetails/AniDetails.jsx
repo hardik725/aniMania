@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 function AniDetails({ username , onLogout }) {
   const { animeName } = useParams();
@@ -183,7 +184,7 @@ function AniDetails({ username , onLogout }) {
   
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loading message="Anime Details"/></div>;
   if (error) return <div>{error}</div>;
   if (!anime) return <div>No anime data available</div>;
   return (
