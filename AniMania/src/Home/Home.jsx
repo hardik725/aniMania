@@ -11,55 +11,56 @@ import Loading from '../components/Loading/Loading';
 function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
   const [mangtopGenre, setMangTopGenre] = useState(null);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserGenreWatched = async () => {
-      if (username) {
-        try {
-          const response = await fetch(
-            `https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`
-          );
-          const userData = await response.json();
+      if (!username) {
+        setLoading(false); // No username, nothing to load
+        return;
+      }
 
-          if (response.ok) {
-            // Fetch and set AnimeGenresWatched
-            if (userData.AnimeGenresWatched) {
-              const genresArray = Object.entries(userData.AnimeGenresWatched);
-              const [topGenreKey] = genresArray.reduce(
-                (max, genre) => (genre[1] > max[1] ? genre : max),
-                ["", 0]
-              );
-              setTopGenre(topGenreKey);
-            }
+      try {
+        const response = await fetch(
+          `https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`
+        );
+        const userData = await response.json();
 
-            // Fetch and set MangaGenresRead
-            if (userData.MangaGenresRead) {
-              const genresArray = Object.entries(userData.MangaGenresRead);
-              const [topGenreKey] = genresArray.reduce(
-                (max, genre) => (genre[1] > max[1] ? genre : max),
-                ["", 0]
-              );
-              setMangTopGenre(topGenreKey);
-            }
-          } else {
-            console.error('Failed to fetch user data or genres are missing.');
+        if (response.ok) {
+          // Fetch and set AnimeGenresWatched
+          if (userData.AnimeGenresWatched) {
+            const genresArray = Object.entries(userData.AnimeGenresWatched);
+            const [topGenreKey] = genresArray.reduce(
+              (max, genre) => (genre[1] > max[1] ? genre : max),
+              ["", 0]
+            );
+            setTopGenre(topGenreKey);
           }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        } finally {
-          setLoading(false); // Set loading to false once data fetching is complete
+
+          // Fetch and set MangaGenresRead
+          if (userData.MangaGenresRead) {
+            const genresArray = Object.entries(userData.MangaGenresRead);
+            const [topGenreKey] = genresArray.reduce(
+              (max, genre) => (genre[1] > max[1] ? genre : max),
+              ["", 0]
+            );
+            setMangTopGenre(topGenreKey);
+          }
+        } else {
+          console.error('Failed to fetch user data or genres are missing.');
         }
-      } else {
-        setLoading(false); // Handle case where username is not provided
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false); // Set loading to false once data fetching is complete
       }
     };
 
     fetchUserGenreWatched();
   }, [username]);
 
-  if (!topGenre || !mangtopGenre) {
-    return <Loading message="Loading Home Page"/>; // Show loading spinner while data is being fetched
+  if (loading) {
+    return <Loading message="Loading Home Page" />;
   }
 
   return (

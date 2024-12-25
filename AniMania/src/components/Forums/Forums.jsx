@@ -17,6 +17,10 @@ const Forums = ({ username, onLogout }) => {
   const [activePostId, setActivePostId] = useState(null); // Track which post's comments are being shown
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
 
+  const handleInputChange = (event) => {
+    setNewComment(event.target.value);
+  }
+  
   useEffect(() => {
       const handleResize = () => {
           setIsMobile(window.innerWidth <= 768);
@@ -415,7 +419,7 @@ const Forums = ({ username, onLogout }) => {
         <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
           {comments[activePostId]?.map((comment) => (
             <div key={comment._id} style={{ marginBottom: '1rem', textAlign: 'left' }}>
-              <p>
+              <p className='text-black'>
                 <strong>{comment.username}</strong>: {comment.content}
               </p>
             </div>
@@ -424,6 +428,8 @@ const Forums = ({ username, onLogout }) => {
         <input
           type="text"
           placeholder="Write a comment..."
+          value={newComment} // Controlled component
+          onChange={handleInputChange} // Update state on input change          
           style={{
             width: '100%',
             padding: '0.75rem',

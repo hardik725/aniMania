@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
+import Loading from '../Loading/Loading';
 
 function FriendProfile({ username, onLogout }) {
   const { profileUsername } = useParams();
@@ -108,7 +109,7 @@ function FriendProfile({ username, onLogout }) {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Loading message="Friends Profile"/></div>;
   }
 
   if (error) {
