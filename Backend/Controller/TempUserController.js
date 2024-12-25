@@ -36,7 +36,11 @@ export const signUpUser = async (req, res) => {
             text: `Your verification code is: ${verificationCode}`,
         };
 
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions).catch((err) => {
+            console.error('Email sending error:', err);
+            throw new Error('Failed to send verification email.');
+        });
+        
 
         res.status(200).json({ message: 'Verification email sent!' });
     } catch (error) {
