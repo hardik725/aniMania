@@ -13,6 +13,7 @@ import GenRouter from "./Router/GenRouter.js";
 import MangGenRouter from "./Router/MangGenRouter.js";
 import PostRouter from "./Router/PostRouter.js";
 import CommentRouter from "./Router/CommentRouter.js";
+import TempUserRouter from "./Router/TempUserRouter.js";
 
 dotenv.config();
 const app = express();
@@ -49,6 +50,7 @@ app.use("/genrouter",GenRouter);
 app.use("/mangenrouter",MangGenRouter);
 app.use("/post",PostRouter);
 app.use("/comment",CommentRouter);
+app.use("/tempuser",TempUserRouter);
 
 app.get('/', (req,res) => {
     res.send("Welcome")
