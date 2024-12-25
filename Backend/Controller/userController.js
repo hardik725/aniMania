@@ -1,52 +1,52 @@
 import User from '../Model/UserModel.js';
 
-// export const signUp = async (req, res) => {
-//     try {
-//         const { Username, Email, Password, ProfilePicture, Gender, Age } = req.body;
+export const signUp = async (req, res) => {
+    try {
+        const { Username, Email, Password, ProfilePicture, Gender, Age } = req.body;
 
-//         // Check if username already exists
-//         const existingUsername = await User.findOne({ Username });
-//         if (existingUsername) {
-//             return res.status(400).json({ message: "Username Already Exists" });
-//         }
+        // Check if username already exists
+        const existingUsername = await User.findOne({ Username });
+        if (existingUsername) {
+            return res.status(400).json({ message: "Username Already Exists" });
+        }
 
-//         // Check if email already exists
-//         const existingEmail = await User.findOne({ Email });
-//         if (existingEmail) {
-//             return res.status(400).json({ message: "Email Already Exists" });
-//         }
+        // Check if email already exists
+        const existingEmail = await User.findOne({ Email });
+        if (existingEmail) {
+            return res.status(400).json({ message: "Email Already Exists" });
+        }
 
-//         // Use the provided ProfilePicture or a default one
-//         const profilePictureUrl = ProfilePicture || "https://c4.wallpaperflare.com/wallpaper/164/852/842/jujutsu-kaisen-anime-boys-anime-satoru-gojo-hd-wallpaper-preview.jpg";
+        // Use the provided ProfilePicture or a default one
+        const profilePictureUrl = ProfilePicture || "https://c4.wallpaperflare.com/wallpaper/164/852/842/jujutsu-kaisen-anime-boys-anime-satoru-gojo-hd-wallpaper-preview.jpg";
 
-//         // Create a new user with the full schema
-//         const createUser = new User({
-//             Username,
-//             Email,
-//             Password,
-//             ProfilePicture: profilePictureUrl,
-//             Gender,
-//             Age,
-//             AnimeWatched: 0,
-//             MangaRead: 0,
-//             TotalEpisodes: 0,
-//             TotalChapters: 0,
-//             MeanAnimeScoreGiven: 0.0,
-//             MeanMangaScoreGiven: 0.0,
-//         });
+        // Create a new user with the full schema
+        const createUser = new User({
+            Username,
+            Email,
+            Password,
+            ProfilePicture: profilePictureUrl,
+            Gender,
+            Age,
+            AnimeWatched: 0,
+            MangaRead: 0,
+            TotalEpisodes: 0,
+            TotalChapters: 0,
+            MeanAnimeScoreGiven: 0.0,
+            MeanMangaScoreGiven: 0.0,
+        });
 
-//         await createUser.save();
+        await createUser.save();
 
-//         res.status(201).json({ message: "User Successfully Created" });
-//     } catch (error) {
-//         console.error("Error creating user:", error.message);
-//         if (error.name === "ValidationError") {
-//             res.status(400).json({ message: "Validation Error", details: error.errors });
-//         } else {
-//             res.status(500).json({ message: "Internal Server Error" });
-//         }
-//     }
-// };
+        res.status(201).json({ message: "User Successfully Created" });
+    } catch (error) {
+        console.error("Error creating user:", error.message);
+        if (error.name === "ValidationError") {
+            res.status(400).json({ message: "Validation Error", details: error.errors });
+        } else {
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+};
 
 export const Login = async (req, res) => {
     try {

@@ -1,5 +1,5 @@
 import express from 'express';
-import { Login, Userdata, searchUsersByUsername, updateUser,     getUserData, 
+import { signUp, Login, Userdata, searchUsersByUsername, updateUser,     getUserData, 
     addToAnimeList, 
     getUserAnimeList, 
     getUserMangaList, 
@@ -12,7 +12,7 @@ import { Login, Userdata, searchUsersByUsername, updateUser,     getUserData,
 const router = express.Router();
 
 // Route for sign up
-//router.post("/signup", signUp);
+router.post("/signup", signUp);
 
 // Route for login
 router.post("/login", Login);
