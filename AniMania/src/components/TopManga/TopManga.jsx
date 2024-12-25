@@ -41,31 +41,29 @@ const TopManga = ({ username, onLogout }) => {
 
     useEffect(() => {
         const fetchTopManga = async () => {
-            const fetchedMangaList = [];
-            const initialStatuses = {};
-
             try {
-                for (let rank = 1; rank <= 50; rank++) {
-                    const response = await fetch(`https://animania-backend-dmjs.onrender.com/manga/rank/${rank}`);
-                    const data = await response.json();
-                    if (data && typeof data === 'object') {
-                        fetchedMangaList.push(data);
-                        initialStatuses[data.Name] = true; // Initialize all as true
-                    } else {
-                        console.error(`Unexpected data format for rank ${rank}:`, data);
-                    }
-                }
+              const response = await fetch('https://animania-backend-dmjs.onrender.com/manga/top/all');
+              const data = await response.json();  
+              if (Array.isArray(data)) {
+                setMangaList(data);
 
-                setMangaList(fetchedMangaList);
+                // Set initial statuses for anime
+                const initialStatuses = {};
+                data.forEach(manga => {
+                    initialStatuses[manga.Name] = true;
+                });
 
-                const updatedStatuses = { ...initialStatuses };
+                // Update statuses based on user's anime list
                 userMangaList.forEach(userManga => {
-                    if (updatedStatuses[userManga.title]) {
-                        updatedStatuses[userManga.title] = false; // Mark as added
+                    if (initialStatuses[userManga.title]) {
+                        initialStatuses[userManga.title] = false;
                     }
                 });
 
-                setMangaStatuses(updatedStatuses);
+                setMangaStatuses(initialStatuses);
+            } else {
+                console.error("Unexpected data format for top anime list:", data);
+            }
             } catch (error) {
                 console.error("Error fetching manga list:", error);
             } finally {
@@ -106,106 +104,117 @@ const TopManga = ({ username, onLogout }) => {
     if (loading) return <div><Loading meassage="Fetching the Top Manga Data"/></div>;
     if (!mangaList.length) return <div>No manga data available</div>;
 
-    return (
-        <>
-{/* Background Video */}
-<video
-  className={`fixed inset-0 w-full h-full object-cover z-0 `}
-  src="https://motionbgs.com/media/3272/luffys-resolve-under-the-night-sky.960x540.mp4"
-  autoPlay
-  loop
-  muted
-></video>
+return (
+  <>
+    {/* Background Video */}
+    <video
+      className="fixed inset-0 w-full h-full object-cover z-0"
+      src="https://motionbgs.com/media/3272/luffys-resolve-under-the-night-sky.960x540.mp4"
+      autoPlay
+      loop
+      muted
+    ></video>
 
-{/* Content Container */}
-<div className={`relative z-10 ${isMobile ? 'p-2' : 'p-4'} backdrop-blur-lg`}>
-  <Navbar username={username} onLogout={onLogout} />
-  <div className={`${isMobile ? 'px-2' : 'container mx-auto mt-5'}`}>
-    <table
-      className={`min-w-full bg-white/70 backdrop-blur-lg rounded-md ${
-        isMobile ? 'text-sm' : ''
-      }`}
+    {/* Content Container */}
+    <div className={`relative z-10 ${isMobile ? 'p-2' : 'p-4'} backdrop-blur-lg`}>
+      <Navbar username={username} onLogout={onLogout} />
+      <div className={`${isMobile ? 'px-2' : 'container mx-auto mt-5'}`}>
+        <table
+          className={`min-w-full bg-white/70 backdrop-blur-lg rounded-md ${
+            isMobile ? 'text-sm' : ''
+          }`}
+        >
+          <thead>
+            <tr>
+              <th className="py-1 px-2 border-b-2 border-gray-300">Rank</th>
+              <th className="py-1 px-2 border-b-2 border-gray-300">Title</th>
+              <th className="py-1 px-2 border-b-2 border-gray-300">Score</th>
+              <th className="py-1 px-2 border-b-2 border-gray-300">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mangaList.map((manga, index) => (
+              <tr key={index} className="text-center">
+<td className="py-2 px-2 h-16 border-b border-gray-200">
+  {index + 1}
+</td>
+<td className="py-2 px-2 h-16 border-b border-gray-200 flex items-center">
+  <Link to={`/MangDetails/${manga.Name}`}>
+    <img
+      src={manga.Photo}
+      alt={manga.Name}
+      className={`${
+        isMobile ? 'w-8 h-8' : 'w-12 h-12'
+      } object-cover mr-2 transition-transform duration-300 ease-in-out hover:scale-105`}
+    />
+  </Link>
+  <div>
+    <div className={`font-bold text-start ${isMobile ? 'text-xs' : ''}`}>
+      {manga.Name.length > 20 ? `${manga.Name.slice(0, 20)}...` : manga.Name}
+    </div>
+    <div
+      className={`text-gray-500 ${isMobile ? 'text-xs' : 'text-sm'} text-start`}
     >
-      <thead>
-        <tr>
-          <th className="py-1 px-2 border-b-2 border-gray-300">Rank</th>
-          <th className="py-1 px-2 border-b-2 border-gray-300">Title</th>
-          <th className="py-1 px-2 border-b-2 border-gray-300">Score</th>
-          <th className="py-1 px-2 border-b-2 border-gray-300">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {mangaList.map((manga, index) => (
-          <tr key={index} className="text-center">
-            <td className="py-1 px-2 border-b border-gray-200">{index + 1}</td>
-            <td className="py-1 px-2 border-b border-gray-200 flex items-center">
-              <Link to={`/MangDetails/${manga.Name}`}>
-                <img
-                  src={manga.Photo}
-                  alt={manga.Name}
-                  className={`${
-                    isMobile ? 'w-8 h-8' : 'w-12 h-12'
-                  } object-cover mr-2 transition-transform duration-300 ease-in-out hover:scale-105`}
-                />
-              </Link>
-              <div>
-                <div className={`font-bold text-start ${isMobile ? 'text-xs' : ''}`}>
-                  {manga.Name}
-                </div>
-                <div
-                  className={`text-gray-500 ${isMobile ? 'text-xs' : 'text-sm'} text-start`}
-                >
-                  {manga.aired_on}
-                </div>
-              </div>
-            </td>
-            <td className="py-1 px-2 border-b border-gray-200">{manga.Rating}</td>
-            <td className="py-1 px-2 border-b border-gray-200">
-              {mangaStatuses[manga.Name] ? (
-                <>
-                  <button
-                    className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} rounded bg-blue-500 text-white cursor-pointer`}
-                    onClick={() => {
-                      const score = selectedScores[manga.Name];
-                      if (score) {
-                        handleAddToList(manga.Name, score);
-                      }
-                    }}
-                  >
-                    Add to list
-                  </button>
-                  <select
-                    value={selectedScores[manga.Name] || ''}
-                    onChange={(e) => setSelectedScores({
-                      ...selectedScores,
-                      [manga.Name]: e.target.value
-                    })}
-                    className={`ml-2 ${isMobile ? 'text-xs' : ''}`}
-                  >
-                    <option value="" disabled>Score</option>
-                    {Array.from({ length: 10 }, (_, i) => i + 1).map(score => (
-                      <option key={score} value={score}>{score}</option>
-                    ))}
-                  </select>
-                </>
-              ) : (
-                <button
-                  className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} rounded bg-green-500 text-white cursor-not-allowed`}
-                  disabled
-                >
-                  Added
-                </button>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      {manga.aired_on}
+    </div>
   </div>
-</div>
+</td>
+<td className="py-2 px-2 h-16 border-b border-gray-200">
+  {manga.Rating}
+</td>
+<td className="py-2 px-2 h-16 border-b border-gray-200">
+  {mangaStatuses[manga.Name] ? (
+    <>
+      <button
+        className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} rounded bg-blue-500 text-white cursor-pointer`}
+        onClick={() => {
+          const score = selectedScores[manga.Name];
+          if (score) {
+            handleAddToList(manga.Name, score);
+          }
+        }}
+      >
+        Add to list
+      </button>
+      <select
+        value={selectedScores[manga.Name] || ''}
+        onChange={(e) =>
+          setSelectedScores({
+            ...selectedScores,
+            [manga.Name]: e.target.value,
+          })
+        }
+        className={`ml-2 ${isMobile ? 'text-xs' : ''}`}
+      >
+        <option value="" disabled>
+          Score
+        </option>
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((score) => (
+          <option key={score} value={score}>
+            {score}
+          </option>
+        ))}
+      </select>
+    </>
+  ) : (
+    <button
+      className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} rounded bg-green-500 text-white cursor-not-allowed`}
+      disabled
+    >
+      Added
+    </button>
+  )}
+</td>
 
-        </>
-    );
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </>
+);
+
 };
 
 export default TopManga;
