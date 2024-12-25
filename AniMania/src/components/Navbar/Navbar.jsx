@@ -80,7 +80,7 @@ function Navbar({ username, onLogout }) {
 
   const toggleMobileDropdown = () => setIsMobileDropdownOpen(!isMobileDropdownOpen);
 
-  const isBlurredBackground = (location.pathname === "/userAnimeList" || location.pathname === "/userMangaList");
+  const isBlurredBackground = (location.pathname === "/userAnimeList" || location.pathname === "/userMangaList" || location.pathname === "/topAnime" || location.pathname === "/topManga");
   const navbarClass = `relative z-30 ${isBlurredBackground ? 'bg-black bg-opacity-50 backdrop-blur-md mt-4 mx-2 md:mx-20 rounded-md' : 'bg-black'}`;
 
   return (

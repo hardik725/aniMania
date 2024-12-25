@@ -106,14 +106,19 @@ const TopManga = ({ username, onLogout }) => {
 
 return (
   <>
-    {/* Background Video */}
-    <video
-      className="fixed inset-0 w-full h-full object-cover z-0"
-      src="https://motionbgs.com/media/3272/luffys-resolve-under-the-night-sky.960x540.mp4"
-      autoPlay
-      loop
-      muted
-    ></video>
+      {isMobile ? (
+        <img
+          src="https://i.pinimg.com/474x/a9/9a/c8/a99ac838fea8a591546b2004a7b05106.jpg"
+          alt="Mobile Background"
+          className="fixed inset-0 w-full h-full object-cover z-0"
+        />
+      ) : (
+        <img
+          src="https://i.pinimg.com/736x/2e/29/87/2e2987941d68cac7c9edd837a913da0e.jpg"
+          alt="Desktop Background"
+          className="fixed inset-0 w-full h-full object-cover z-0"
+        />
+      )}
 
     {/* Content Container */}
     <div className={`relative z-10 ${isMobile ? 'p-2' : 'p-4'} backdrop-blur-lg`}>

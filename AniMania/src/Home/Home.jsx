@@ -13,6 +13,7 @@ function Home({ username, onLogout }) {
   const [mangtopGenre, setMangTopGenre] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const allgenre = ['Action','Romance','Comedy','Drama','Fantasy'];
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,6 +47,10 @@ function Home({ username, onLogout }) {
             );
             setTopGenre(topGenreKey);
           }
+          if (topGenre === null) {
+            const randomNumber = Math.floor(Math.random() * 5);
+            setTopGenre(allgenre[randomNumber]);
+          }
 
           if (userData.MangaGenresRead) {
             const genresArray = Object.entries(userData.MangaGenresRead);
@@ -54,6 +59,10 @@ function Home({ username, onLogout }) {
               ["", 0]
             );
             setMangTopGenre(topGenreKey);
+          }
+          if (mangtopGenre === null) {
+            const randomNumber = Math.floor(Math.random() * 5);
+            setMangTopGenre(allgenre[randomNumber]);
           }
         } else {
           console.error('Failed to fetch user data or genres are missing.');
@@ -67,7 +76,7 @@ function Home({ username, onLogout }) {
 
     fetchUserGenreWatched();
   }, [username]);
-
+  
   if (loading) {
     return <Loading message="Loading Home Page" />;
   }
