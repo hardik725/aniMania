@@ -24,14 +24,18 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState(() => localStorage.getItem('username'));
 
+  // Function to handle login
   const handleLogin = (user) => {
     setUsername(user);
+    localStorage.setItem('username', user); // Save to localStorage
   };
 
+  // Function to handle logout
   const handleLogout = () => {
-    setUsername(null); // Clear the username to log out the user
+    setUsername(null);
+    localStorage.removeItem('username'); // Remove from localStorage
   };
 
   return (
