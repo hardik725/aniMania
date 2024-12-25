@@ -1,4 +1,6 @@
 import express from "express";
+import http from 'http';
+import {Server} from 'socket.io';
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import UserRouter from "./Router/UserRouter.js";
@@ -16,6 +18,28 @@ import CommentRouter from "./Router/CommentRouter.js";
 
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server,{
+  cors: {
+    origin: "http://annmania.netlify.app/",
+    methods: ["GET","POST"],
+  },
+});
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  // Listen for new messages
+  socket.on('sendMessage', (messageData) => {
+      console.log('Message received:', messageData);
+
+      // Broadcast the message to all connected clients
+      io.emit('receiveMessage', messageData);
+  });
+
+  socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+  });
+});
 const PORT = process.env.PORT || 4001;
 const URI = process.env.MongoDBURI;
 
@@ -54,7 +78,11 @@ app.get('/', (req,res) => {
     res.send("Welcome")
 })
 
+app.use((req,res) => {
+  res.status(404).json({error: "Route not found"});
+});
+
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
