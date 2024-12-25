@@ -1,28 +1,20 @@
 import Anime from "../Model/AnimeData.js";
 
 // GET: Fetch anime data by name
-export const getTopAnime = async (req, res) => {
+export const getAllAnime = async (req, res) => {
     try {
-        const limit = 50; // Fixed limit of 50 anime
-        console.log(`Fetching top ${limit} anime by rank...`);
+        // Fetch all anime from the database
+        const allAnime = await Anime.find({});
         
-        const topAnime = await Anime.find().sort({ Rank: 1 }).limit(limit);
-        console.log("Fetched anime:", topAnime);
-
-        if (topAnime && topAnime.length > 0) {
-            res.status(200).json(topAnime);
-        } else {
-            res.status(404).json({ message: "No anime data found" });
-        }
+        // Respond with the list of anime
+        res.status(200).json(allAnime);
     } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ message: "Internal Server Error" });
+        console.error('Error fetching all anime:', error);
+        
+        // Respond with an error message
+        res.status(500).json({ message: 'Error fetching all anime' });
     }
 };
-
-
-
-
 
 export const getAnimeData = async (req, res) => {
     try {

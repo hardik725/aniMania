@@ -1,11 +1,11 @@
 import express from "express";
-import { getAnimeByRank, getTopAnime, getAnimeData , searchAnimeByName} from "../Controller/AnimeController.js";
+import { getAnimeByRank, getAllAnime, getAnimeData , searchAnimeByName} from "../Controller/AnimeController.js";
 
 const router = express.Router();
 
 router.get("/:Name", getAnimeData);
 router.get("/rank/:Rank", getAnimeByRank);
-router.get("/top", getTopAnime);
+router.get("/all", getAllAnime);
 router.get('/search/:name', searchAnimeByName);
 // router.post("/update-genres", async (req, res) => {
 //     const { animeName, genresList } = req.body;
