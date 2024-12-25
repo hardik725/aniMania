@@ -68,7 +68,7 @@ const FriendsList = ({ username, onLogout }) => {
       <div
         className="min-h-screen bg-fixed bg-cover bg-center p-2 sm:p-4 relative"
         style={{
-          backgroundImage: `url('https://img.freepik.com/free-photo/beautiful-anime-character-cartoon-scene_23-2151035176.jpg?ga=GA1.1.1729476715.1720013001&semt=ais_hybrid')`,
+          backgroundImage:`url('${isMobile ? "https://i.pinimg.com/736x/37/e6/e8/37e6e83b6ab12c9a7aa086bf53ab751f.jpg": "https://i.pinimg.com/736x/14/9f/c7/149fc77b1f039b058cbf6c3c1d108430.jpg"}')`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
