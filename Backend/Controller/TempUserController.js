@@ -50,16 +50,16 @@ export const signUpUser = async (req, res) => {
 };
 
 export const verifyUser = async (req, res) => {
-    const { email, verificationCode } = req.body;
+    const { Email, VerificationCode } = req.body;
 
     try {
         // Check if the temporary user exists
-        const tempUser = await TemporaryUser.findOne({ email, verificationCode });
+        const tempUser = await TemporaryUser.findOne({ Email, VerificationCode });
 
         if (!tempUser) {
             return res.status(400).json({ message: 'Invalid verification code or email.' });
         }
-        const existingUsername = await User.findOne({ Username : tempUser.username });
+        const existingUsername = await User.findOne({ Username : tempUser.Username });
         if (existingUsername) {
             return res.status(400).json({ message: "Username Already Exists" });
         }
@@ -68,9 +68,9 @@ export const verifyUser = async (req, res) => {
        
         // Move the user to the permanent user collection
         const createUser = new User({
-            Username : tempUser.username,
-            Email : tempUser.email,
-            Password : tempUser.password,
+            Username : tempUser.Username,
+            Email : tempUser.Email,
+            Password : tempUser.Password,
             ProfilePicture: profilePictureUrl,
             Gender,
             Age,
@@ -83,7 +83,7 @@ export const verifyUser = async (req, res) => {
         });
 
         await createUser.save();
-        await TemporaryUser.deleteOne({ email });
+        await TemporaryUser.deleteOne({ Email });
 
         res.status(200).json({ message: 'User verified and created successfully!' });
     } catch (error) {
