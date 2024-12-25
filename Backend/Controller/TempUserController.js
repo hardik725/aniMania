@@ -4,18 +4,18 @@ import TemporaryUser from '../Model/TemporaryUser.js';
 import User from '../Model/UserModel.js';
 
 export const signUpUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { Username, Email, Password } = req.body;
 
     try {
         // Generate a verification code
-        const verificationCode = crypto.randomBytes(16).toString('hex');
+        const VerificationCode = crypto.randomBytes(16).toString('hex');
 
         // Save temporary user
         const tempUser = new TemporaryUser({
-            username,
-            email,
-            password,
-            verificationCode,
+            Username,
+            Email,
+            Password,
+            VerificationCode,
         });
 
         await tempUser.save();
@@ -31,9 +31,9 @@ export const signUpUser = async (req, res) => {
 
         const mailOptions = {
             from: 'animania714@gmail.com',
-            to: email,
+            to: Email,
             subject: 'Email Verification',
-            text: `Your verification code is: ${verificationCode}`,
+            text: `Your verification code is: ${VerificationCode}`,
         };
 
         await transporter.sendMail(mailOptions).catch((err) => {
