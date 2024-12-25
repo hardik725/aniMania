@@ -1,20 +1,18 @@
 import Manga from "../Model/MangaData.js";
 
-// GET: Fetch anime data by name
-export const getTopManga = async (req, res) => {
+// GET: Fetch manga data by name
+export const getAllManga = async (req, res) => {
     try {
-        console.log("Fetching top 6 Manga by rank...");
-        const topManga = await Manga.find().sort({ Rank: 1 }).limit(6);
-        console.log("Fetched Manga:", topManga);
-
-        if (topManga && topManga.length > 0) {
-            res.status(200).json(topManga);
-        } else {
-            res.status(404).json({ message: "No Manga data found" });
-        }
+        // Fetch all manga from the database
+        const allManga = await Manga.find({});
+        
+        // Respond with the list of manga
+        res.status(200).json(allManga);
     } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ message: "Internal Server Error" });
+        console.error('Error fetching all manga:', error);
+        
+        // Respond with an error message
+        res.status(500).json({ message: 'Error fetching all manga' });
     }
 };
 
