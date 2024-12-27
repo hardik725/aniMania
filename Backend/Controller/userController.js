@@ -493,20 +493,24 @@ export const getProfilePictures = async (req, res) => {
     }
 
     try {
-        // If we're receiving a User object with UserFriend array, extract usernames
+        // Extract FriendNames (usernames)
         const usernamesArray = usernames.map(user => user.FriendName);
 
-        // Find users with the given usernames
-        const profilePictures = await Promise.all(usernamesArray.map(async (user) => {
-            const userData = await User.findOne({ Username: user.Username });
-            return userData ? userData.ProfilePicture : null; // Return profile picture or null if not found
+        // Fetch profile pictures for each username
+        const profilePictures = await Promise.all(usernamesArray.map(async (username) => {
+            const userData = await User.findOne({ Username: username });  // Find user by Username
+
+            // Return profile picture or a default image if not found
+            return userData ? userData.ProfilePicture : "https://c4.wallpaperflare.com/wallpaper/164/852/842/jujutsu-kaisen-anime-boys-anime-satoru-gojo-hd-wallpaper-preview.jpg";
         }));
 
-        res.status(200).json(profilePictures); // Send only the profile picture URLs in the order of usernames
+        // Send profile pictures as the response
+        res.status(200).json(profilePictures);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while fetching profile pictures" });
     }
 };
+
 
 
