@@ -21,7 +21,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server,{
   cors: {
-    origin: "https://annmania.netlify.app",
+    origin: ["http://localhost:5173", "https://annmania.netlify.app"],
     methods: ["GET","POST"],
   },
 });
