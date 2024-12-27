@@ -496,15 +496,19 @@ export const getProfilePictures = async (req, res) => {
         // Find users with the given usernames
         const users = await User.find(
             { Username: { $in: usernames } }, // Match any of the usernames
-            { ProfilePicture: 1, _id: 0 } // Only return ProfilePicture
+            { ProfilePicture: 1, _id: 0, Username: 1 } // Only return ProfilePicture and Username
         );
 
-        // Extract only profile picture URLs
-        const profilePictures = users.map(user => user.ProfilePicture);
+        // Map the profile pictures to the order of the usernames array
+        const profilePictures = usernames.map(username => {
+            const user = users.find(u => u.Username === username);
+            return user ? user.ProfilePicture : null; // Return profile picture or null if not found
+        });
 
-        res.status(200).json(profilePictures); // Send only the profile picture URLs
+        res.status(200).json(profilePictures); // Send only the profile picture URLs in the order of usernames
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while fetching profile pictures" });
     }
 };
+
