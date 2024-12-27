@@ -52,6 +52,6 @@ router.get('/data/user/:username/messages/:friendName', getMessages);
 router.post('/data/user/:username/messages/:friendName', postMessage);
 
 // route to get the profile picture from an array of usernames
-router.get('/profilepictures',getProfilePictures);
+router.post('/profilepictures',getProfilePictures);
 
 export default router;
