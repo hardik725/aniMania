@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
   try {
     const newPost = new ImagePost({
       Username,
-      UserPhoto,
+      UserPhoto : UserPhoto,
       Content,
       PostUrl: PostUrl || null, // Handle optional PostUrl
     });
