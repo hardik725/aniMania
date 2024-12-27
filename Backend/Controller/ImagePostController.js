@@ -2,11 +2,12 @@ import ImagePost from '../Model/ImagePost.js';
 
 // Create a new post
 export const createPost = async (req, res) => {
-  const { Username, Content, PostUrl } = req.body;
+  const { Username, UserPhoto, Content, PostUrl } = req.body;
 
   try {
     const newPost = new ImagePost({
       Username,
+      UserPhoto,
       Content,
       PostUrl: PostUrl || null, // Handle optional PostUrl
     });
