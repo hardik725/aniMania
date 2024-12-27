@@ -111,7 +111,7 @@ const ChatBox = ({ username, friend, friendPic, userPic, onClose }) => {
                                         : 'bg-gray-600 text-gray-200'
                                 }`}
                             >
-                                <strong className="text-gray-100">{msg.sender}:</strong> {msg.content}
+                                {msg.content}
                             </p>
                         </div>
                     </div>
