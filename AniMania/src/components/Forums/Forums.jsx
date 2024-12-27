@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion'; // For animations
 import Loading from '../Loading/Loading';
+import { Link } from 'react-router-dom';
 
 const Forums = ({ username, onLogout }) => {
+  const [userphoto, setuserphoto] = useState(null);
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
   const [newPostImage, setNewPostImage] = useState(null);
@@ -43,7 +45,8 @@ const Forums = ({ username, onLogout }) => {
     setActivePostId(null);
   };  
 
-  // Fetch all posts from the server
+  // Fetch all posts and user Photo from the server
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -55,8 +58,18 @@ const Forums = ({ username, onLogout }) => {
         console.error('Error fetching posts:', error);
       }
     };
-
+    const fetchuserPhoto = async() => {
+      try{
+        const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/Userdata/${username}`);
+        if(!response.ok) throw new Error('Failed to fetch userdata');
+        const data = await response.json();
+        setuserphoto(data.ProfilePicture);
+      } catch(error){
+        console.error('Error fetching User Photo, error');
+      }
+    };
     fetchPosts();
+    fetchuserPhoto();
   }, []);
 
   // Handle like functionality
@@ -114,6 +127,7 @@ const Forums = ({ username, onLogout }) => {
 
     const formDataToSend = {
       Username: username,
+      UserPhoto: userphoto,
       Content: newPost,
       PostUrl: postImageUrl,
     };
@@ -316,27 +330,30 @@ const Forums = ({ username, onLogout }) => {
         >
           {/* Post Header */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-            <img
-              src="https://via.placeholder.com/40" // Replace with user profile picture URL
-              alt="User Avatar"
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                marginRight: '0.5rem',
-              }}
-            />
-            <motion.h2
-              style={{
-                fontWeight: 'bold',
-                fontSize: '1.25rem',
-                color: '#3b82f6',
-              }}
-              whileHover={{ scale: 1.05 }}
-            >
-              {post.Username}
-            </motion.h2>
-          </div>
+  <img
+    src={post.UserPhoto} // Replace with user profile picture URL
+    alt="User Avatar"
+    style={{
+      width: '40px',
+      height: '40px',
+      borderRadius: '50%',
+      marginRight: '0.5rem',
+    }}
+  />
+  <motion.h2
+    style={{
+      fontWeight: 'bold',
+      fontSize: '1.25rem',
+      color: '#3b82f6',
+    }}
+    whileHover={{ scale: 1.05 }}
+  >
+    <Link to={`/friendprofile/${post.Username}`} style={{ textDecoration: 'none', color: '#3b82f6' }}>
+      {post.Username}
+    </Link>
+  </motion.h2>
+</div>
+
 
           {/* Post Content */}
           <p style={{ color: '#333', marginBottom: '1rem' }}>{post.Content}</p>
