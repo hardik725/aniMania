@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://animania-backend-dmjs.onrender.com'); // Replace with your backend URL
 
-const ChatBox = ({ username, friend, onClose }) => {
+const ChatBox = ({ username, friend, friendPic, userPic, onClose }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
@@ -47,6 +47,7 @@ const ChatBox = ({ username, friend, onClose }) => {
             receiver: friend,
             content: newMessage.trim(),
             timestamp: new Date().toISOString(),
+            senderProfilePic: friendPic, // Use the passed friend picture
         };
 
         try {
@@ -72,30 +73,52 @@ const ChatBox = ({ username, friend, onClose }) => {
 
     return (
         <div className="bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-lg max-w-3xl mx-auto mt-6">
+            {/* Header with flexbox to align items */}
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-100">Chat with {friend}</h2>
+                <div className="flex items-center">
+                    {/* Friend's profile picture and username */}
+                    <img
+                        src={friendPic}
+                        alt={`${friend}'s profile`}
+                        className="w-10 h-10 rounded-full mr-2"
+                    />
+                    <h2 className="text-2xl font-bold text-gray-100">{friend}</h2>
+                </div>
+                {/* Close button aligned to the right */}
                 <button onClick={onClose} className="text-red-400 hover:text-red-300">
                     Close
                 </button>
             </div>
+
+            {/* Chat message area */}
             <div className="max-h-60 overflow-y-scroll border border-gray-500 p-4 rounded-lg mb-4 bg-gray-900">
                 {messages.map((msg, index) => (
                     <div
                         key={index}
                         className={`mb-2 ${msg.sender === username ? 'text-right' : 'text-left'}`}
                     >
-                        <p
-                            className={`p-2 rounded-lg ${
-                                msg.sender === username
-                                    ? 'bg-blue-700 text-white'
-                                    : 'bg-gray-600 text-gray-200'
-                            }`}
-                        >
-                            <strong className="text-gray-100">{msg.sender}:</strong> {msg.content}
-                        </p>
+                        <div className={`flex ${msg.sender === username ? 'justify-end' : 'justify-start'}`}>
+                            {/* Display profile picture on the left of the message */}
+                            <img
+                                src={msg.sender === username ? userPic : friendPic}
+                                alt={`${msg.sender}'s profile`}
+                                className="w-8 h-8 rounded-full mr-2" // Margin to the right of the image
+                            />
+                            <p
+                                className={`p-2 rounded-lg ${
+                                    msg.sender === username
+                                        ? 'bg-blue-700 text-white'
+                                        : 'bg-gray-600 text-gray-200'
+                                }`}
+                            >
+                                <strong className="text-gray-100">{msg.sender}:</strong> {msg.content}
+                            </p>
+                        </div>
                     </div>
                 ))}
             </div>
+
+            {/* Message input area */}
             <div className="flex">
                 <input
                     type="text"

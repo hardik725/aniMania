@@ -7,11 +7,14 @@ import ChatBox from '../ChatBox/ChatBox';
 import Loading from '../Loading/Loading';
 
 const FriendsList = ({ username, onLogout }) => {
-  const [friends, setFriends] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedFriend, setSelectedFriend] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [friendPic, setFriendPic] = useState([]); // Store profile pictures
+  const [friends, setFriends] = useState([]); // Store friends list
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [selectedFriend, setSelectedFriend] = useState(null); // Selected friend for messaging
+  const [userPic, setUserPic] = useState(null);
+  const [selectedFriendPic, setSelectedFriendPic] = useState(null); // Store the selected friend's profile picture
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Check for mobile view
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,16 +28,36 @@ const FriendsList = ({ username, onLogout }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Fetch the user data and friends list
         const response = await fetch(`https://animania-backend-dmjs.onrender.com/user/data/user-data/${username}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
         const data = await response.json();
-        setFriends(data.UserFriend);
+        setFriends(data.UserFriend); // Update friends list
+        setUserPic(data.ProfilePicture);
+        // Prepare array of friend usernames for profile picture request
+        const usernames = data.UserFriend.map(friend => ({ FriendName: friend.FriendName }));
+
+        // Fetch profile pictures for the list of usernames
+        const newResponse = await fetch('https://animania-backend-dmjs.onrender.com/user/profilepictures', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ usernames }) // Send array of friend usernames
+        });
+
+        if (!newResponse.ok) {
+          throw new Error('Failed to fetch profile pictures');
+        }
+
+        const profileData = await newResponse.json();
+        setFriendPic(profileData); // Set the profile pictures based on the response
       } catch (err) {
-        setError(err.message);
+        setError(err.message); // Handle errors
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
@@ -43,9 +66,9 @@ const FriendsList = ({ username, onLogout }) => {
 
   useEffect(() => {
     if (selectedFriend) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'; // Disable scrolling when chat is open
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''; // Enable scrolling when chat is closed
     }
   }, [selectedFriend]);
 
@@ -55,7 +78,7 @@ const FriendsList = ({ username, onLogout }) => {
   };
 
   if (loading) {
-    return <div><Loading message="Loading User Friend List"/></div>;
+    return <div><Loading message="Loading User Friend List" /></div>;
   }
 
   if (error) {
@@ -68,7 +91,7 @@ const FriendsList = ({ username, onLogout }) => {
       <div
         className="min-h-screen bg-fixed bg-cover bg-center p-2 sm:p-4 relative"
         style={{
-          backgroundImage:`url('${isMobile ? "https://i.pinimg.com/736x/37/e6/e8/37e6e83b6ab12c9a7aa086bf53ab751f.jpg": "https://i.pinimg.com/736x/14/9f/c7/149fc77b1f039b058cbf6c3c1d108430.jpg"}')`,
+          backgroundImage: `url('${isMobile ? "https://i.pinimg.com/736x/37/e6/e8/37e6e83b6ab12c9a7aa086bf53ab751f.jpg" : "https://i.pinimg.com/736x/14/9f/c7/149fc77b1f039b058cbf6c3c1d108430.jpg"}')`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -89,8 +112,7 @@ const FriendsList = ({ username, onLogout }) => {
               <table className="w-full bg-white border border-gray-300 shadow-lg rounded-lg">
                 <thead className="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white">
                   <tr>
-                    <th className="py-2 sm:py-3 px-4 text-left font-semibold">#</th>
-                    <th className="py-2 sm:py-3 px-4 text-left font-semibold">Friend Name</th>
+                    <th className="py-2 sm:py-3 px-4 text-left font-semibold">Profile</th>
                     <th className="py-2 sm:py-3 px-4 text-left font-semibold">Message</th>
                     <th className="py-2 sm:py-3 px-4 text-left font-semibold">View Profile</th>
                   </tr>
@@ -98,12 +120,21 @@ const FriendsList = ({ username, onLogout }) => {
                 <tbody>
                   {friends.map((friend, index) => (
                     <tr key={index} className="border-t border-gray-300 hover:bg-gray-100 transition-all">
-                      <td className="py-2 px-4">{index + 1}</td>
-                      <td className="py-2 px-4 text-gray-800">{friend.FriendName}</td>
+                      <td className="py-2 px-4 flex items-center space-x-2">
+                        <img
+                          src={friendPic[index] || "https://via.placeholder.com/50"}
+                          alt={`${friend.FriendName}'s profile`}
+                          className="w-10 h-10 rounded-full"
+                        />
+                        <span className="text-gray-800">{friend.FriendName}</span>
+                      </td>
                       <td className="py-2 px-4">
                         <button
                           className="text-blue-600 hover:text-blue-800 transition-all"
-                          onClick={() => setSelectedFriend(friend.FriendName)}
+                          onClick={() => {
+                            setSelectedFriend(friend.FriendName);
+                            setSelectedFriendPic(friendPic[index] || "https://via.placeholder.com/50");
+                          }}
                         >
                           <FontAwesomeIcon icon={faMessage} /> Message
                         </button>
@@ -130,6 +161,8 @@ const FriendsList = ({ username, onLogout }) => {
               <ChatBox
                 username={username}
                 friend={selectedFriend}
+                friendPic={selectedFriendPic}
+                userPic={userPic}
                 onClose={() => setSelectedFriend(null)}
                 isMobile={isMobile}
               />
