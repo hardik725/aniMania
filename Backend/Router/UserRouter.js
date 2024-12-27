@@ -1,5 +1,5 @@
 import express from 'express';
-import { signUp, Login, Userdata, searchUsersByUsername, updateUser,     getUserData, 
+import { signUp, Login, Userdata, searchUsersByUsername, updateUser, getUserData, getProfilePictures,
     addToAnimeList, 
     getUserAnimeList, 
     getUserMangaList, 
@@ -50,5 +50,8 @@ router.get('/data/user/:username/messages/:friendName', getMessages);
 
 // Route to post a new message from a user to a friend
 router.post('/data/user/:username/messages/:friendName', postMessage);
+
+// route to get the profile picture from an array of usernames
+router.get('/profilepictures',getProfilePictures);
 
 export default router;

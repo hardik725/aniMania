@@ -367,7 +367,7 @@ export const addFriend = async (req, res) => {
   }
 };
 
-  
+
 
   export const removeFriend = async (req, res) => {
     try {
@@ -480,5 +480,37 @@ export const postMessage = async (req, res) => {
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// Controller function to fetch profile pictures for an array of usernames
+export const getProfilePictures = async (req, res) => {
+    const { usernames } = req.body;
+
+    // Validate input
+    if (!Array.isArray(usernames)) {
+        return res.status(400).json({ error: "Invalid input, expected an array of usernames" });
+    }
+
+    try {
+        // Find users with the given usernames
+        const users = await User.find(
+            { Username: { $in: usernames } }, // Match any of the usernames
+            { Username: 1, ProfilePicture: 1, _id: 0 } // Only return Username and ProfilePicture
+        );
+
+        // Map to ensure all usernames in the request are included in the response
+        const response = usernames.map(username => {
+            const user = users.find(u => u.Username === username);
+            return {
+                username,
+                profilePicture: user ? user.ProfilePicture : null, // Null if user not found
+            };
+        });
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching profile pictures" });
     }
 };
