@@ -497,16 +497,10 @@ export const getProfilePictures = async (req, res) => {
         const usernamesArray = usernames.map(user => user.FriendName);
 
         // Find users with the given usernames
-        const users = await User.find(
-            { Username: { $in: usernamesArray } }, // Match any of the usernames
-            { ProfilePicture: 1, _id: 0, Username: 1 } // Only return ProfilePicture and Username
-        );
-
-        // Map the profile pictures to the order of the usernames array
-        const profilePictures = usernames.map(username => {
-            const user = users.find(u => u.Username === username.FriendName);
-            return user ? user.ProfilePicture : null; // Return profile picture or null if not found
-        });
+        const profilePictures = await Promise.all(usernamesArray.map(async (user) => {
+            const userData = await User.findOne({ Username: user.Username });
+            return userData ? userData.ProfilePicture : null; // Return profile picture or null if not found
+        }));
 
         res.status(200).json(profilePictures); // Send only the profile picture URLs in the order of usernames
     } catch (error) {
