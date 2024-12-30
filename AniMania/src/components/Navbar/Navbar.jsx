@@ -236,6 +236,12 @@ function Navbar({ username, onLogout }) {
 
       {/* Mobile View */}
       <div className="sm:hidden flex items-center">
+      <img
+      src={profilePicture}
+      alt="Profile"
+      className="w-11 h-11 rounded-full mr-2 border-2 border-white"
+      />
+    
   <button
     onClick={toggleMobileDropdown}
     className="text-white focus:outline-none"
@@ -243,60 +249,63 @@ function Navbar({ username, onLogout }) {
     <FontAwesomeIcon icon={faList} style={{ fontSize: '36px' }} />
   </button>
   {isMobileDropdownOpen && (
-    <div
-      className="absolute top-full right-0 w-1/2 bg-gray-800 shadow-lg z-40 rounded-md transform scale-y-0 origin-top transition-transform ease-out duration-300"
-      style={{ transform: isMobileDropdownOpen ? 'scaleY(1)' : 'scaleY(0)' }}
+  <div
+    className="absolute top-full right-0 w-1/2 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 shadow-2xl z-50 rounded-md transform scale-x-0 origin-right transition-transform ease-out duration-700 border border-gray-600"
+    style={{ transform: isMobileDropdownOpen ? 'scaleX(1)' : 'scaleX(0)', backdropFilter: 'blur(8px)' }}
+  >
+    <Link
+      to="/userAnimeList"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
     >
-      <Link
-        to="/userAnimeList"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        Anime List
-      </Link>
-      <Link
-        to="/userMangaList"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        Manga List
-      </Link>
-      <Link
-        to="/favourite"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        Favourite
-      </Link>
-      <Link
-        to="/interested-genre"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        Interested Genre
-      </Link>
-      <Link
-        to="/MyFriends"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        My Friends
-      </Link>
-      <Link
-        to="/profile"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        Profile
-      </Link>
-      <Link
-        to="/MyReviews"
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200"
-      >
-        My Reviews
-      </Link>
-      <button
-        onClick={onLogout}
-        className="block bg-gray-600 px-4 py-2 text-gray-100 hover:bg-white hover:text-black transition duration-200 w-full text-left"
-      >
-        Logout
-      </button>
-    </div>
-  )}
+      Anime List
+    </Link>
+    <Link
+      to="/userMangaList"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      Manga List
+    </Link>
+    <Link
+      to="/favourite"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      Favourite
+    </Link>
+    <Link
+      to="/interested-genre"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      Interested Genre
+    </Link>
+    <Link
+      to="/MyFriends"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      My Friends
+    </Link>
+    <Link
+      to="/profile"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      Profile
+    </Link>
+    <Link
+      to="/MyReviews"
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+    >
+      My Reviews
+    </Link>
+    <button
+      onClick={onLogout}
+      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white transition-all duration-300 rounded-md w-full text-left"
+    >
+      Logout
+    </button>
+  </div>
+)}
+
+
+
 </div>
 
 
