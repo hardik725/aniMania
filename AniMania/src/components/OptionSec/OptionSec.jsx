@@ -105,41 +105,41 @@ function OptionSec({ username }) {
             {/* Options Section */}
             <div className={`flex ${isMobile ? 'flex-row w-full justify-evenly' : 'flex-row justify-evenly w-1/2'} items-center z-20`}>
                 {/* Anime Menu */}
-                <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
+                <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Anime</a>
-                    <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
-                        <a href="#" onClick={() => handleCategorySelect('Anime')} className="block px-4 py-3 hover:bg-gray-200">Anime Search</a>
-                        <Link to="/topAnime" className="block px-4 py-3 hover:bg-gray-200">Top Anime</Link>
-                        <Link to="/seasonalanime" className="block px-4 py-3 hover:bg-gray-200">Seasonal Anime</Link>
-                        <Link to="/MyReviews" className="block px-4 py-3 hover:bg-gray-200">Reviews</Link>
+                    <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
+                        <a href="#" onClick={() => handleCategorySelect('Anime')} className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Anime Search</a>
+                        <Link to="/topAnime" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Top Anime</Link>
+                        <Link to="/seasonalanime" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Seasonal Anime</Link>
+                        <Link to="/MyReviews" className={`block px-4 hover:bg-gray-200 hover:text-black ${isMobile ? 'py-[2px]' : 'py-3'}`}>Reviews</Link>
                     </div>
                 </div>
                 {/* Manga Menu */}
-                <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
+                <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Manga</a>
-                    <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
-                        <a href="#" onClick={() => handleCategorySelect('Manga')} className="block px-4 py-3 hover:bg-gray-200">Manga Search</a>
-                        <Link to="/topManga" className="block px-4 py-3 hover:bg-gray-200">Top Manga</Link>
-                        <Link to="/seasonalmanga" className="block px-4 py-3 hover:bg-gray-200">Seasonal Mangas</Link>
-                        <Link to="/MyMangaReview" className="block px-4 py-3 hover:bg-gray-200">Reviews</Link>
+                    <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
+                        <a href="#" onClick={() => handleCategorySelect('Manga')} className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Manga Search</a>
+                        <Link to="/topManga" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Top Manga</Link>
+                        <Link to="/seasonalmanga" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Seasonal Mangas</Link>
+                        <Link to="/MyMangaReview" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Reviews</Link>
                     </div>
                 </div>
                 {/* Industry Menu */}
-                <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
+                <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Industry</a>
-                    <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
-                        <a href="#" className="block px-4 py-3 hover:bg-gray-200">News</a>
-                        <Link to="/forums" className="block px-4 py-3 hover:bg-gray-200">Forums</Link>
-                        <Link to="/MyFriends" className="block px-4 py-3 hover:bg-gray-200">Friends</Link>
+                    <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
+                        <a href="#" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>News</a>
+                        <Link to="/forums" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Forums</Link>
+                        <Link to="/MyFriends" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Friends</Link>
                     </div>
                 </div>
                 {/* Help Menu */}
-                <div className="relative group hover:bg-gray-700 h-full w-1/4 flex justify-center items-center">
+                <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Help</a>
-                    <div className="absolute left-0 top-full mt-0 w-full bg-white text-gray-700 shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
-                        <a href="#" className="block px-4 py-3 hover:bg-gray-200">About Us</a>
-                        <a href="#" className="block px-4 py-3 hover:bg-gray-200">FAQ</a>
-                        <a href="#" onClick={handleContactUsClick} className="block px-4 py-3 hover:bg-gray-200">Contact Us</a>
+                    <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
+                        <a href="#" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>About Us</a>
+                        <a href="#" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>FAQ</a>
+                        <a href="#" onClick={handleContactUsClick} className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Contact Us</a>
                     </div>
                 </div>
             </div>
