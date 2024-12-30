@@ -202,7 +202,7 @@ function Navbar({ username, onLogout }) {
               <img
                 src={profilePicture}
                 alt="Profile"
-                className="w-8 h-8 rounded-full mr-2"
+                className="w-10 h-10 rounded-full mr-2 border-2 border-white"
               />
             ) : (
               <span>{username}</span>
