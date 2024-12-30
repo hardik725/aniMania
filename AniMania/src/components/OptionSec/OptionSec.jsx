@@ -146,75 +146,90 @@ function OptionSec({ username }) {
 
             {/* Search Section */}
             <div className={`relative ${isMobile ? 'w-full mt-2' : 'w-1/2 h-full'} flex items-center justify-start`}>
-                <div className="relative bg-gray-700 px-2 h-[1.7rem] flex items-center rounded-l-md">
-                    <a href="#" onClick={toggleOptionDropdown} className="flex items-center text-white space-x-1">
-                        <span className="mr-1 text-sm">{searchCategory}</span>
-                        <FontAwesomeIcon
-                            icon={OptionDropdown ? faCaretUp : faCaretDown}
-                            className="text-sm"
-                        />
-                    </a>
-                    {OptionDropdown && (
-                        <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-lg z-20">
-                            <div className="bg-gray-700 px-4 py-3 text-white">
-                                <h3 className="font-bold">Search Options</h3>
-                            </div>
-                            <div className="px-4 py-3 text-black">
-                                <a href="#" onClick={() => handleCategorySelect('Anime')} className="block py-2">Anime</a>
-                                <a href="#" onClick={() => handleCategorySelect('Manga')} className="block py-2">Manga</a>
-                                <a href="#" onClick={() => handleCategorySelect('User')} className="block py-2">User</a>
-                            </div>
-                        </div>
+    <div className={`relative bg-gray-700 px-2 ${isMobile ? 'h-[2.55rem]' : 'h-[1.7rem]'} flex items-center rounded-l-md`}>
+        <a href="#" onClick={toggleOptionDropdown} className="flex items-center text-white space-x-1">
+            <span className="mr-1 text-sm">{searchCategory}</span>
+            <FontAwesomeIcon
+                icon={OptionDropdown ? faCaretUp : faCaretDown}
+                className="text-sm"
+            />
+        </a>
+        {OptionDropdown && (
+            <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-lg z-20">
+                <div className="bg-gray-700 px-4 py-3 text-white">
+                    <h3 className="font-bold">Search Options</h3>
+                </div>
+                <div className="px-4 py-3 text-black">
+                    <a href="#" onClick={() => handleCategorySelect('Anime')} className="block py-2">Anime</a>
+                    <a href="#" onClick={() => handleCategorySelect('Manga')} className="block py-2">Manga</a>
+                    <a href="#" onClick={() => handleCategorySelect('User')} className="block py-2">User</a>
+                </div>
+            </div>
+        )}
+    </div>
+
+    <div className={`flex items-center bg-gray-600 ${isMobile ? 'h-[2.55rem]' : 'h-[1.7rem]'} rounded-r-md flex-grow relative`}>
+        <input
+            type="text"
+            className="bg-gray-600 text-sm text-white pl-2 flex-grow h-full focus:outline-none"
+            placeholder="Search Anime, Manga & more..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <button
+            className={`p-1 ${isMobile ? 'w-[2.5rem] h-[2.5rem] text-lg' : 'w-[1.7rem] h-[1.7rem] text-base'} flex items-center justify-center`}
+            onClick={handleSearch}
+        >
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-white" />
+        </button>
+    </div>
+
+    {searchResults.length > 0 && (
+        <div className="absolute top-full mt-2 w-full bg-white shadow-lg rounded-lg z-10 max-h-64 overflow-auto">
+            {/* Close button */}
+            <div className="flex justify-between items-center px-4 py-2 bg-gray-100 border-b">
+                <span className="font-bold text-sm">Search Results</span>
+                <button
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => setSearchResults([])} // Clear search results
+                >
+                    ✕
+                </button>
+            </div>
+            {searchResults.map((result, index) => (
+                <div key={index} className="px-4 py-2">
+                    {result.Username && ( // Render user results
+                        <Link
+                            to={`/friendprofile/${result.Username}`}
+                            state={{ isFriend: friendsList.includes(result.Username) }} // Determine if they are friends
+                            className="text-blue-700 hover:underline"
+                        >
+                            {result.Username}
+                        </Link>
+                    )}
+                    {result.Name && searchCategory === 'Anime' && ( // Render anime results
+                        <Link
+                            to={`/AniDetails/${result.Name}`}
+                            className="text-blue-700 hover:underline"
+                        >
+                            {result.Name}
+                        </Link>
+                    )}
+                    {result.Name && searchCategory === 'Manga' && ( // Render manga results
+                        <Link
+                            to={`/MangDetails/${result.Name}`}
+                            className="text-blue-700 hover:underline"
+                        >
+                            {result.Name}
+                        </Link>
                     )}
                 </div>
+            ))}
+        </div>
+    )}
+</div>
 
-                <div className="flex items-center bg-gray-600 h-[1.7rem] rounded-r-md flex-grow relative">
-                    <input
-                        type="search"
-                        className="bg-gray-600 text-sm text-white pl-2 flex-grow h-full focus:outline-none"
-                        placeholder="Search Anime, Manga & more..."
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                    />
-                    <button className="p-1" onClick={handleSearch}>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} className="text-white" />
-                    </button>
-                </div>
 
-                {searchResults.length > 0 && (
-                    <div className="absolute top-full mt-2 w-full bg-white shadow-lg rounded-lg z-10 max-h-64 overflow-auto">
-                        {searchResults.map((result, index) => (
-                            <div key={index} className="px-4 py-2">
-                                {result.Username && ( // Render user results
-                                    <Link
-                                        to={`/friendprofile/${result.Username}`}
-                                        state={{ isFriend: friendsList.includes(result.Username) }} // Determine if they are friends
-                                        className="text-blue-700 hover:underline"
-                                    >
-                                        {result.Username}
-                                    </Link>
-                                )}
-                                {result.Name && searchCategory === 'Anime' && ( // Render anime results
-                                    <Link
-                                        to={`/AniDetails/${result.Name}`}
-                                        className="text-blue-700 hover:underline"
-                                    >
-                                        {result.Name}
-                                    </Link>
-                                )}
-                                {result.Name && searchCategory === 'Manga' && ( // Render manga results
-                                    <Link
-                                        to={`/MangDetails/${result.Name}`}
-                                        className="text-blue-700 hover:underline"
-                                    >
-                                        {result.Name}
-                                    </Link>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
             {showContactForm && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-70 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg contact-form-container">
