@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
+import { Link } from "react-router-dom";
 
 const AboutUs = ({ username, onLogout }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -104,12 +105,11 @@ const AboutUs = ({ username, onLogout }) => {
             We’re more than just an anime list. AniMania is a community. Dive into discussions, discover hidden gems, and connect with fellow fans.
           </p>
           <div className="text-center">
-            <a
-              href="/home"
+            <Link to={"/home"}
               className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
 
