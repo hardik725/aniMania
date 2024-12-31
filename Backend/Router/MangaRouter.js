@@ -1,5 +1,5 @@
 import express from "express";
-import { getMangaByRank, getAllManga , getMangaData , searchMangaByName } from "../Controller/MangaController.js";
+import { getMangaByRank, getAllManga , getMangaData , searchMangaByName, updateManga } from "../Controller/MangaController.js";
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.get("/rank/:Rank", getMangaByRank);
 router.get("/top/all", getAllManga);
 
 router.get("/search/:name", searchMangaByName);
+
+router.put("/update/:Name", updateManga);
 
 export default router;

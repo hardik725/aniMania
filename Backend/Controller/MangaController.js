@@ -51,25 +51,35 @@ export const getMangaByRank = async (req, res) => {
 };
 
 // PUT: Update an existing anime entry
+const updateRanks = async () => {
+    const mangas = await Manga.find().sort({ Rating: -1, TotalUsersRead: -1 });
+
+    for (let i = 0; i < mangas.length; i++) {
+        await Manga.findByIdAndUpdate(mangas[i]._id, { Rank: i + 1 });
+    }
+};
+
 export const updateManga = async (req, res) => {
     try {
         const { Name } = req.params;
-        const { newRating } = req.body; // Assuming the new rating is sent in the request body
+        const { newRating } = req.body;
 
-        const manga = await Anime.findOne({ Name });
+        const manga = await Manga.findOne({ Name });
         if (!manga) {
             return res.status(404).json({ message: 'Manga not found' });
         }
 
-        manga.Rating = (anime.Rating * anime.TotalUsersWatched + newRating) / (anime.TotalUsersWatched + 1);
-        manga.TotalUsersWatched += 1;
-        manga.Rank = anime.Rating;
+        manga.Rating = (manga.Rating * manga.TotalUsersRead + newRating) / (manga.TotalUsersRead + 1);
+        manga.TotalUsersRead += 1;
 
         await manga.save();
 
-        res.status(200).json(manga);
+        // Update ranks after modifying the anime
+        await updateRanks();
+
+        res.status(200).json({ message: 'Manga updated successfully!' });
     } catch (error) {
-        console.error('Error updating anime:', error.message);
+        console.error('Error updating manga:', error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
