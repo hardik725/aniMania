@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import ActionSection from '../components/ActionSection/ActionSection';
+import Footer from '../components/Footer/Footer';
 
 function SeasonalManga({ username, onLogout }) {
     const [selectedGenre, setSelectedGenre] = useState('Action');
@@ -71,6 +72,7 @@ function SeasonalManga({ username, onLogout }) {
                     onClick={() => setIsGenreListOpen(false)}
                 ></div>
             )}
+            <Footer/>
         </div>
     );
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 function FriendProfile({ username, onLogout }) {
   const { profileUsername } = useParams();
@@ -399,6 +400,7 @@ function FriendProfile({ username, onLogout }) {
         </div>
       </div>
 }
+<Footer/>
     </>
   );
 }

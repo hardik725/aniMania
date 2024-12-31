@@ -5,6 +5,7 @@ import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion'; // For animations
 import Loading from '../Loading/Loading';
 import { Link } from 'react-router-dom';
+import Footer from '../Footer/Footer';
 
 const Forums = ({ username, onLogout }) => {
   const [userphoto, setuserphoto] = useState(null);
@@ -482,6 +483,7 @@ const Forums = ({ username, onLogout }) => {
       </div>
     </div>
   )}
+  <Footer/>
 </div>
 
   );

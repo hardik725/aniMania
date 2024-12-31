@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 const TopManga = ({ username, onLogout }) => {
     const [mangaList, setMangaList] = useState([]);
@@ -216,7 +217,9 @@ return (
           </tbody>
         </table>
       </div>
+      <Footer/>
     </div>
+    
   </>
 );
 

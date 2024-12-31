@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 function MyMangaReview({ username, onLogout }) {
   const [reviews, setReviews] = useState([]);
@@ -90,6 +91,7 @@ function MyMangaReview({ username, onLogout }) {
           )}
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

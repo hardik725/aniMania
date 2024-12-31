@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading/Loading';
+import Footer from '../components/Footer/Footer';
 
 function Profile({ username, onLogout }) {
   const [userData, setUserData] = useState(null);
@@ -548,6 +549,7 @@ function Profile({ username, onLogout }) {
         </div>
       </div>
 }
+<Footer/>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { faUser, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import ChatBox from '../ChatBox/ChatBox';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 const FriendsList = ({ username, onLogout }) => {
   const [friendPic, setFriendPic] = useState([]); // Store profile pictures
@@ -170,6 +171,7 @@ const FriendsList = ({ username, onLogout }) => {
           </div>
         )}
       </div>
+      <Footer/>
     </>
   );
 };

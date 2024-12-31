@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 function MyAnimeList({ username, onLogout }) {
     const [UserData, setUserData] = useState([]);
@@ -116,6 +117,7 @@ function MyAnimeList({ username, onLogout }) {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
 
 const TopAnime = ({ username, onLogout }) => {
     const [animeList, setAnimeList] = useState([]);
@@ -230,7 +231,9 @@ const TopAnime = ({ username, onLogout }) => {
                 </tbody>
             </table>
         </div>
+        <Footer/>
     </div>
+    
 </>
 
 

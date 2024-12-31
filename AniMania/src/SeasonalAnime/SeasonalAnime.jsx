@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import RomanceSection from '../components/RomanceSection/RomanceSection';
+import Footer from '../components/Footer/Footer';
+
 function SeasonalAnime({ username, onLogout }) {
     const [selectedGenre, setSelectedGenre] = useState('Action');
     const [isGenreListOpen, setIsGenreListOpen] = useState(true); // New state to manage mobile genre list visibility
@@ -70,6 +72,7 @@ function SeasonalAnime({ username, onLogout }) {
                     onClick={() => setIsGenreListOpen(false)}
                 ></div>
             )}
+            <Footer/>
         </div>
     );
 }

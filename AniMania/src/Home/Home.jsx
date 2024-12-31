@@ -7,6 +7,7 @@ import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
 import RomanceSection from '../components/RomanceSection/RomanceSection';
 import ActionSection from '../components/ActionSection/ActionSection';
 import Loading from '../components/Loading/Loading';
+import Footer from '../components/Footer/Footer'
 
 function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
@@ -115,6 +116,7 @@ function Home({ username, onLogout }) {
         {topGenre && <RomanceSection genre={topGenre} />}
         {mangtopGenre && <ActionSection genre={mangtopGenre} />}
       </div>
+      <Footer/>
     </div>
   );
 }
