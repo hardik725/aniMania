@@ -7,7 +7,8 @@ import { signUp, Login, Userdata, searchUsersByUsername, updateUser, getUserData
     addFriend, 
     removeFriend,
     getMessages,       // Import the new controller function
-    postMessage } from '../Controller/userController.js';
+    postMessage,
+    getAllUsers } from '../Controller/userController.js';
 
 const router = express.Router();
 
@@ -53,5 +54,8 @@ router.post('/data/user/:username/messages/:friendName', postMessage);
 
 // route to get the profile picture from an array of usernames
 router.post('/profilepictures',getProfilePictures);
+
+// router to get all the users details
+router.get('/alluser',getAllUsers);
 
 export default router;
