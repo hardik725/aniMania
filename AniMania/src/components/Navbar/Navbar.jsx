@@ -14,6 +14,17 @@ function Navbar({ username, onLogout }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+      const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
+  
+      useEffect(() => {
+          const handleResize = () => {
+              setIsMobile(window.innerWidth <= 768);
+          };
+  
+          window.addEventListener("resize", handleResize);
+          return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      }, []);
+  
 
   useEffect(() => {
     if (!username) {
@@ -88,13 +99,16 @@ function Navbar({ username, onLogout }) {
       <div className="h-[4rem] container mx-auto flex flex-wrap items-center justify-between relative z-30">
         {/* Logo */}
         <Link to="/home">
-          <div
-            className="w-[15.84rem] h-[3rem] bg-cover bg-center mr-2 sm:mr-8 cursor-pointer"
-            style={{
-              backgroundImage: "url('https://i.postimg.cc/YSY5xP9n/Logo.png')",
-            }}
-          ></div>
+        <div
+        className={`bg-cover bg-center mr-2 sm:mr-8 cursor-pointer ${
+        isMobile ? "w-[13.2rem] h-[2.5rem]" : "w-[15.84rem] h-[3rem]"
+        }`}
+        style={{
+        backgroundImage: "url('https://i.postimg.cc/YSY5xP9n/Logo.png')",
+        }}
+        ></div> 
         </Link>
+
 
         {/* Additional Image */}
         <div
@@ -303,9 +317,6 @@ function Navbar({ username, onLogout }) {
     </button>
   </div>
 )}
-
-
-
 </div>
 
 
