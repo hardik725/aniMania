@@ -50,10 +50,18 @@ export const getAnimeByRank = async (req, res) => {
 };
 
 // PUT: Update an existing anime entry
+const updateRanks = async () => {
+    const animes = await Anime.find().sort({ Rating: -1, TotalUsersWatched: -1 });
+
+    for (let i = 0; i < animes.length; i++) {
+        await Anime.findByIdAndUpdate(animes[i]._id, { Rank: i + 1 });
+    }
+};
+
 export const updateAnime = async (req, res) => {
     try {
         const { Name } = req.params;
-        const { newRating } = req.body; // Assuming the new rating is sent in the request body
+        const { newRating } = req.body;
 
         const anime = await Anime.findOne({ Name });
         if (!anime) {
@@ -62,11 +70,13 @@ export const updateAnime = async (req, res) => {
 
         anime.Rating = (anime.Rating * anime.TotalUsersWatched + newRating) / (anime.TotalUsersWatched + 1);
         anime.TotalUsersWatched += 1;
-        anime.Rank = anime.Rating;
 
         await anime.save();
 
-        res.status(200).json(anime);
+        // Update ranks after modifying the anime
+        await updateRanks();
+
+        res.status(200).json({ message: 'Anime updated successfully!' });
     } catch (error) {
         console.error('Error updating anime:', error.message);
         res.status(500).json({ message: "Internal Server Error" });
@@ -83,33 +93,3 @@ export const searchAnimeByName = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-// export async function updateAnimeGenres(animeName, genresList) {
-//     const animeGenres = []; // To store the genres for the anime
-
-//     try {
-//         for (const genre of genresList) {
-//             const response = await fetch(`https://animania-backend-dmjs.onrender.com/genrouter/${genre}`);
-//             const genreData = await response.json();
-
-//             // Check if genreData matches the expected schema
-//             if (genreData && genreData.genre === genre && Array.isArray(genreData.Names)) {
-//                 // Check if the animeName exists in the Names array
-//                 if (genreData.titles.some(anime => anime.title === animeName)) {
-//                     animeGenres.push(genre); // Add genre if anime belongs to it
-//                 }
-//             }
-//         }
-
-//         // Update the Anime document with the collected genres
-//         const updatedAnime = await Anime.findOneAndUpdate(
-//             { Name: animeName }, // Find the anime by its name
-//             { Genres: animeGenres }, // Update the Genres field
-//             { new: true } // Return the updated document
-//         );
-
-//         console.log(`Genres updated for ${animeName}:`, updatedAnime.Genres);
-//     } catch (error) {
-//         console.error(`Error updating genres for ${animeName}:`, error);
-//     }
-// }
