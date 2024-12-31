@@ -7,7 +7,7 @@ router.get("/:Name", getAnimeData);
 router.get("/rank/:Rank", getAnimeByRank);
 router.get("/top/all", getAllAnime);
 router.get('/search/:name', searchAnimeByName);
-router.put('/update/anime', updateAnime);
+router.put('/update/:Name', updateAnime);
 // router.post("/update-genres", async (req, res) => {
 //     const { animeName, genresList } = req.body;
 
