@@ -131,6 +131,7 @@ function OptionSec({ username }) {
                         <Link to="/news" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>News</Link>
                         <Link to="/forums" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Forums</Link>
                         <Link to="/MyFriends" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Friends</Link>
+                        <Link to="/allusers" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>All Users</Link>
                     </div>
                 </div>
                 {/* Help Menu */}

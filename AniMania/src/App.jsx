@@ -19,6 +19,7 @@ import FriendProfile from './components/FriendProfile/FriendProfile';
 import Forums from './components/Forums/Forums';
 import AboutUs from './components/AboutUs/AboutUs';
 import NewsComponent from './components/NewsComponent/NewsComponent';
+import AllUsers from './components/AllUsers/AllUsers';
 // import VerificationPage from './components/VerificationPage/VerificationPage';
 
 // Import react-toastify components
@@ -62,6 +63,7 @@ function App() {
         <Route path="/MyFriends" element={username ? <FriendList username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/forums" element={username ? <Forums username={username} onLogout={handleLogout} />: <Navigate to="/"/>}/>
         <Route path="/aboutus" element={username ? <AboutUs username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
+        <Route path="/allusers" element={username ? <AllUsers username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
         <Route
           path="/friendprofile/:profileUsername"
           element={
