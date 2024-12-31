@@ -137,7 +137,7 @@ function OptionSec({ username }) {
                 <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
                     <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Help</a>
                     <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
-                        <a href="#" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>About Us</a>
+                        <Link to="/aboutus" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>About Us</Link>
                         <a href="#" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>FAQ</a>
                         <a href="#" onClick={handleContactUsClick} className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Contact Us</a>
                     </div>
