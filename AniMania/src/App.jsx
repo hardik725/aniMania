@@ -18,6 +18,7 @@ import FriendList from './components/FriendList/FriendList';
 import FriendProfile from './components/FriendProfile/FriendProfile';
 import Forums from './components/Forums/Forums';
 import AboutUs from './components/AboutUs/AboutUs';
+import NewsComponent from './components/NewsComponent/NewsComponent';
 // import VerificationPage from './components/VerificationPage/VerificationPage';
 
 // Import react-toastify components
@@ -45,6 +46,7 @@ function App() {
         <Route path="/" element={username ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
         <Route path="/signup" element={<SignUp />} />
         {/* <Route path="/verify" element={<VerificationPage/>} /> */}
+        <Route path="/news" element={username ? <NewsComponent username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/home" element={username ? <Home username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/profile" element={username ? <Profile username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
         <Route path="/seasonalanime" element={username ? <SeasonalAnime username={username} onLogout={handleLogout} /> : <Navigate to="/" />} />
