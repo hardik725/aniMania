@@ -46,6 +46,9 @@ const TopManga = ({ username, onLogout }) => {
               const response = await fetch('https://animania-backend-dmjs.onrender.com/manga/top/all');
               const data = await response.json();  
               if (Array.isArray(data)) {
+
+                const sortedData = data.sort((a, b) => a.Rank - b.Rank);
+                
                 setMangaList(data);
 
                 // Set initial statuses for anime
@@ -93,6 +96,23 @@ const TopManga = ({ username, onLogout }) => {
 
             const data = await response.json();
             console.log('Manga added successfully:', data);
+
+            const newResponse = await fetch(`https://animania-backend-dmjs.onrender.com/manga/update/${mangaTitle}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ newRating: mangaScore }) // Include the score in the request body
+          });
+      
+          if (!newResponse.ok) {
+              const errorText = await newResponse.text();
+              console.error('Error updating manga statistics:', errorText);
+              throw new Error('Failed to update manga statistics');
+          }
+      
+          const updateData = await newResponse.json();
+          console.log('Manga statistics updated successfully:', updateData);            
 
             setUserMangaList(prevList => [...prevList, { title: mangaTitle, score: mangaScore }]);
             setMangaStatuses(prevStatuses => ({ ...prevStatuses, [mangaTitle]: false }));

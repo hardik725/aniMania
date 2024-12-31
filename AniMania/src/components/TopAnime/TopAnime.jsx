@@ -46,23 +46,26 @@ const TopAnime = ({ username, onLogout }) => {
             try {
                 const response = await fetch('https://animania-backend-dmjs.onrender.com/anime/top/all');
                 const data = await response.json();
-
+    
                 if (Array.isArray(data)) {
-                    setAnimeList(data);
-
+                    // Sort data by Rank in ascending order
+                    const sortedData = data.sort((a, b) => a.Rank - b.Rank);
+    
+                    setAnimeList(sortedData);
+    
                     // Set initial statuses for anime
                     const initialStatuses = {};
-                    data.forEach(anime => {
+                    sortedData.forEach(anime => {
                         initialStatuses[anime.Name] = true;
                     });
-
+    
                     // Update statuses based on user's anime list
                     userAnimeList.forEach(userAnime => {
                         if (initialStatuses[userAnime.title]) {
                             initialStatuses[userAnime.title] = false;
                         }
                     });
-
+    
                     setAnimeStatuses(initialStatuses);
                 } else {
                     console.error("Unexpected data format for top anime list:", data);
@@ -73,9 +76,10 @@ const TopAnime = ({ username, onLogout }) => {
                 setLoading(false);
             }
         };
-
+    
         fetchTopAnime();
     }, [userAnimeList]);
+    
 
     const handleAddToList = async (animeTitle, animeScore) => {
         try {
@@ -95,6 +99,23 @@ const TopAnime = ({ username, onLogout }) => {
 
             const data = await response.json();
             console.log('Anime added successfully:', data);
+
+            const newResponse = await fetch(`https://animania-backend-dmjs.onrender.com/anime/update/${animeTitle}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ newRating: animeScore }) // Include the score in the request body
+            });
+        
+            if (!newResponse.ok) {
+                const errorText = await newResponse.text();
+                console.error('Error updating anime statistics:', errorText);
+                throw new Error('Failed to update anime statistics');
+            }
+        
+            const updateData = await newResponse.json();
+            console.log('Anime statistics updated successfully:', updateData);            
 
             setUserAnimeList(prevList => [...prevList, { title: animeTitle, score: animeScore }]);
             setAnimeStatuses(prevStatuses => ({ ...prevStatuses, [animeTitle]: false }));

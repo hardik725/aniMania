@@ -82,6 +82,23 @@ function AniDetails({ username , onLogout }) {
   
           const data = await response.json();
           console.log('Anime added successfully:', data);
+
+          const newResponse = await fetch(`https://animania-backend-dmjs.onrender.com/anime/update/${animeTitle}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newRating: animeScore }) // Include the score in the request body
+        });
+    
+        if (!newResponse.ok) {
+            const errorText = await newResponse.text();
+            console.error('Error updating anime statistics:', errorText);
+            throw new Error('Failed to update anime statistics');
+        }
+    
+        const updateData = await newResponse.json();
+        console.log('Anime statistics updated successfully:', updateData);
   
           // Update the state to reflect that this anime has been added
           setAnimeStatus(true); // Assuming anime is successfully added

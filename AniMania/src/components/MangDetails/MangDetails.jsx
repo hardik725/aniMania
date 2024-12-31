@@ -82,6 +82,23 @@ function MangDetails({ username, onLogout }) {
   
           const data = await response.json();
           console.log('Manga added successfully:', data);
+
+          const newResponse = await fetch(`https://animania-backend-dmjs.onrender.com/manga/update/${mangaTitle}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newRating: mangaScore }) // Include the score in the request body
+        });
+    
+        if (!newResponse.ok) {
+            const errorText = await newResponse.text();
+            console.error('Error updating manga statistics:', errorText);
+            throw new Error('Failed to update manga statistics');
+        }
+    
+        const updateData = await newResponse.json();
+        console.log('Manga statistics updated successfully:', updateData); 
   
           // Update the state to reflect that this manga has been added
           setMangaStatus(true); // Assuming manga is successfully added
