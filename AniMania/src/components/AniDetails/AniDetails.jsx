@@ -134,6 +134,7 @@ function AniDetails({ username , onLogout }) {
           if (charactersResponse.ok) {
             const charactersData = await charactersResponse.json();
             setCharacters(Array.isArray(charactersData) ? charactersData : []);
+            console.log(charactersData);
           } else {
             throw new Error('Failed to fetch characters');
           }
