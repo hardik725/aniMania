@@ -68,7 +68,7 @@ export const updateAnime = async (req, res) => {
             return res.status(404).json({ message: 'Anime not found' });
         }
 
-        anime.Rating = (anime.Rating * anime.TotalUsersWatched + newRating) / (anime.TotalUsersWatched + 1);
+        anime.Rating = ((anime.Rating * anime.TotalUsersWatched) + newRating) / (anime.TotalUsersWatched + 1);
         anime.TotalUsersWatched += 1;
 
         await anime.save();

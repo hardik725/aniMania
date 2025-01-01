@@ -69,7 +69,7 @@ export const updateManga = async (req, res) => {
             return res.status(404).json({ message: 'Manga not found' });
         }
 
-        manga.Rating = (manga.Rating * manga.TotalUsersRead + newRating) / (manga.TotalUsersRead + 1);
+        manga.Rating = ((manga.Rating * manga.TotalUsersRead) + newRating) / (manga.TotalUsersRead + 1);
         manga.TotalUsersRead += 1;
 
         await manga.save();
