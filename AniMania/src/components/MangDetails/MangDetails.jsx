@@ -222,7 +222,7 @@ function MangDetails({ username, onLogout }) {
             <p><strong>Chapters:</strong> {manga.Chapters}</p>
             <p><strong>Rank:</strong> #{manga.Rank}</p>
             <p><strong>Total Users Watched:</strong> {manga.TotalUsersRead}</p>
-            <p><strong>Aired On:</strong> {manga.published_on}</p>
+            <p><strong>Aired On:</strong> {manga.aired_on}</p>
             <div className='flex justify-center mt-3'>
             {!mangaStatus ? (
                 <>
@@ -317,10 +317,10 @@ function MangDetails({ username, onLogout }) {
             <img src={manga.Photo} alt={manga.Name} className="rounded-lg mb-4" />
             <div className="bg-gray-800 p-4 rounded-lg">
               <h2 className="text-xl font-bold mb-2">Manga Information</h2>
-              <p><strong>Chapters:</strong> {manga.chapters}</p>
+              <p><strong>Chapters:</strong> {manga.Chapters}</p>
               <p><strong>Rank:</strong> #{manga.Rank}</p>
               <p><strong>Total Users Read:</strong> {manga.TotalUsersRead}</p>
-              <p><strong>Published On:</strong> {manga.published_on}</p>
+              <p><strong>Published On:</strong> {manga.aired_on}</p>
             </div>
             <div className='flex justify-center mt-3'>
             {!mangaStatus ? (
