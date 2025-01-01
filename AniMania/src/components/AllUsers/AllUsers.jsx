@@ -48,10 +48,14 @@ const AllUsers = ({ username, onLogout }) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {users.map((user, index) => (
                 <Link
-                  to={`/friendprofile/${user.Username}`}
-                  key={index}
-                  className="group"
-                >
+                to={
+                  user.Username === username 
+                    ? "/profile" 
+                    : `/friendprofile/${user.Username}`
+                }
+                key={index}
+                className="group"
+              >
                   <div
                     className="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl group-hover:bg-gradient-to-r from-purple-700 via-blue-700 to-indigo-700"
                     style={{

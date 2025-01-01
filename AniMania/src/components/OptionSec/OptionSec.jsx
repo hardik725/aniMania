@@ -200,14 +200,23 @@ function OptionSec({ username }) {
             {searchResults.map((result, index) => (
                 <div key={index} className="px-4 py-2">
                     {result.Username && ( // Render user results
-                        <Link
-                            to={`/friendprofile/${result.Username}`}
-                            state={{ isFriend: friendsList.includes(result.Username) }} // Determine if they are friends
-                            className="text-blue-700 hover:underline"
-                        >
-                            {result.Username}
-                        </Link>
-                    )}
+    <Link
+        to={
+            result.Username === username 
+                ? "/profile" 
+                : `/friendprofile/${result.Username}`
+        }
+        state={
+            result.Username === username 
+                ? undefined 
+                : { isFriend: friendsList.includes(result.Username) }
+        } // Pass state only if not the current user
+        className="text-blue-700 hover:underline"
+    >
+        {result.Username}
+    </Link>
+)}
+
                     {result.Name && searchCategory === 'Anime' && ( // Render anime results
                         <Link
                             to={`/AniDetails/${result.Name}`}

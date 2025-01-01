@@ -349,7 +349,11 @@ const Forums = ({ username, onLogout }) => {
     }}
     whileHover={{ scale: 1.05 }}
   >
-    <Link to={`/friendprofile/${post.Username}`} style={{ textDecoration: 'none', color: '#3b82f6' }}>
+    <Link to={
+                  post.Username === username 
+                    ? "/profile" 
+                    : `/friendprofile/${post.Username}`
+                } style={{ textDecoration: 'none', color: '#3b82f6' }}>
       {post.Username}
     </Link>
   </motion.h2>
