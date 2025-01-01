@@ -6,6 +6,18 @@ const socket = io('https://animania-backend-dmjs.onrender.com'); // Replace with
 const ChatBox = ({ username, friend, friendPic, userPic, onClose }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+        useEffect(() => {
+            const handleResize = () => {
+                setIsMobile(window.innerWidth <= 768);
+            };
+    
+            window.addEventListener("resize", handleResize);
+    
+            return () => {
+                window.removeEventListener("resize", handleResize);
+            };
+        }, []);
 
     useEffect(() => {
         // Fetch initial chat messages
@@ -72,7 +84,7 @@ const ChatBox = ({ username, friend, friendPic, userPic, onClose }) => {
     };
 
     return (
-        <div className="bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-lg max-w-3xl mx-auto mt-6">
+        <div className={`bg-gray-800 bg-opacity-80 rounded-lg shadow-lg max-w-3xl mx-auto mt-6 ${isMobile ? "p-2" : "p-6"}`}>
             {/* Header with flexbox to align items */}
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
