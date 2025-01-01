@@ -64,17 +64,25 @@ export const updateManga = async (req, res) => {
         const { Name } = req.params;
         const { newRating } = req.body;
 
+        // Ensure newRating is a number
+        const rating = parseFloat(newRating);
+        if (isNaN(rating)) {
+            return res.status(400).json({ message: 'Invalid rating value' });
+        }
+
         const manga = await Manga.findOne({ Name });
         if (!manga) {
             return res.status(404).json({ message: 'Manga not found' });
         }
 
-        manga.Rating = ((manga.Rating * manga.TotalUsersRead) + newRating) / (manga.TotalUsersRead + 1);
+        // Calculate the new average rating
+        const totalRatings = manga.Rating * manga.TotalUsersRead;
         manga.TotalUsersRead += 1;
+        manga.Rating = (totalRatings + rating) / manga.TotalUsersRead;
 
         await manga.save();
 
-        // Update ranks after modifying the anime
+        // Update ranks after modifying the manga
         await updateRanks();
 
         res.status(200).json({ message: 'Manga updated successfully!' });
@@ -83,6 +91,7 @@ export const updateManga = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 
 export const searchMangaByName = async (req, res) => {
     const { name } = req.params;

@@ -63,13 +63,21 @@ export const updateAnime = async (req, res) => {
         const { Name } = req.params;
         const { newRating } = req.body;
 
+        // Ensure newRating is a number
+        const rating = parseFloat(newRating);
+        if (isNaN(rating)) {
+            return res.status(400).json({ message: 'Invalid rating value' });
+        }
+
         const anime = await Anime.findOne({ Name });
         if (!anime) {
             return res.status(404).json({ message: 'Anime not found' });
         }
 
-        anime.Rating = ((anime.Rating * anime.TotalUsersWatched) + newRating) / (anime.TotalUsersWatched + 1);
+        // Calculate the new average rating
+        const totalRatings = anime.Rating * anime.TotalUsersWatched;
         anime.TotalUsersWatched += 1;
+        anime.Rating = (totalRatings + rating) / anime.TotalUsersWatched;
 
         await anime.save();
 
@@ -82,6 +90,7 @@ export const updateAnime = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 
 export const searchAnimeByName = async (req, res) => {
     const { name } = req.params;
