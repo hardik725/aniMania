@@ -54,7 +54,7 @@ const AnimeCardName = ({ animeName, className }) => {
             >
                 <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-2 rounded-md">
                     <h2 className={`font-semibold text-white ${isMobile ? "text-[10px]" : "text-md"}`}>{animeData.Name}</h2>
-                    <p className={`text-white ${isMobile ? "text-[10px]" : "text-md"}`}>Rating: {animeData.Rating}</p>
+                    <p className={`text-white ${isMobile ? "text-[10px]" : "text-md"}`}>Rating: {animeData.Rating.toFixed(2)}</p>
                 </div>
             </div>
         </Link>

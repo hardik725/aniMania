@@ -223,7 +223,7 @@ function AniDetails({ username , onLogout }) {
           </div>
           <div className="flex-grow text-sm">
             <h1 className="text-md font-bold mb-2">{anime.Name}</h1>
-            <p><strong>Rating:</strong> {anime.Rating} / 10</p>
+            <p><strong>Rating:</strong> {anime.Rating.toFixed(2)} / 10</p>
             <p><strong>Episodes:</strong> {anime.episodes}</p>
             <p><strong>Rank:</strong> #{anime.Rank}</p>
             <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
@@ -370,7 +370,7 @@ function AniDetails({ username , onLogout }) {
             </div>
             <div className="bg-gray-800 p-4 rounded-lg mb-4">
               <h2 className="text-2xl font-bold mb-2">Rating</h2>
-              <p>{anime.Rating} / 10</p>
+              <p>{anime.Rating.toFixed(2)} / 10</p>
             </div>
 
             {/* Character Images */}

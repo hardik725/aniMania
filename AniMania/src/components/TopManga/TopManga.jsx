@@ -48,7 +48,7 @@ const TopManga = ({ username, onLogout }) => {
               if (Array.isArray(data)) {
 
                 const sortedData = data.sort((a, b) => a.Rank - b.Rank);
-                
+
                 setMangaList(data);
 
                 // Set initial statuses for anime
@@ -186,7 +186,7 @@ return (
   </div>
 </td>
 <td className="py-2 px-2 h-16 border-b border-gray-200">
-  {manga.Rating}
+  {manga.Rating.toFixed(2)}
 </td>
 <td className="py-2 px-2 h-16 border-b border-gray-200">
   {mangaStatuses[manga.Name] ? (

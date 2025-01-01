@@ -218,7 +218,7 @@ function MangDetails({ username, onLogout }) {
           </div>
           <div className="flex-grow">
             <h1 className="text-xl font-bold mb-2">{manga.Name}</h1>
-            <p><strong>Rating:</strong> {manga.Rating} / 10</p>
+            <p><strong>Rating:</strong> {manga.Rating.toFixed(2)} / 10</p>
             <p><strong>Chapters:</strong> {manga.Chapters}</p>
             <p><strong>Rank:</strong> #{manga.Rank}</p>
             <p><strong>Total Users Watched:</strong> {manga.TotalUsersRead}</p>
@@ -366,7 +366,7 @@ function MangDetails({ username, onLogout }) {
             </div>
             <div className="bg-gray-800 p-4 rounded-lg mb-4">
               <h2 className="text-2xl font-bold mb-2">Rating</h2>
-              <p>{manga.Rating} / 10</p>
+              <p>{manga.Rating.toFixed(2)} / 10</p>
             </div>
 
             {/* Character Images */}

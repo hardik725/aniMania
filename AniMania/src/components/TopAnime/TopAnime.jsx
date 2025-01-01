@@ -209,7 +209,7 @@ const TopAnime = ({ username, onLogout }) => {
                                     </div>
                                 </div>
                             </td>
-                            <td className="py-1 px-2">{anime.Rating}</td>
+                            <td className="py-1 px-2">{anime.Rating.toFixed(2)}</td>
                             <td className="py-1 px-2">
                                 {animeStatuses[anime.Name] ? (
                                     <>

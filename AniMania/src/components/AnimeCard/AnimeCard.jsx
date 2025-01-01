@@ -73,7 +73,7 @@ const AnimeCard = ({ rank, className }) => {
                                 isMobile ? "text-[10px]" : "text-md"
                             }`}
                         >
-                            Rating: {animeData.Rating}
+                            Rating: {animeData.Rating.toFixed(2)}
                         </p>
                     </div>
                 )}

@@ -73,7 +73,7 @@ const MangaCard = ({ rank, className }) => {
                                 isMobile ? "text-[10px]" : "text-md"
                             }`}
                         >
-                            Rating: {mangaData.Rating}
+                            Rating: {mangaData.Rating.toFixed(2)}
                         </p>
                     </div>
                 )}
