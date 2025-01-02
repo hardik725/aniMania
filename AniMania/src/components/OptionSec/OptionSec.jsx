@@ -126,7 +126,7 @@ function OptionSec({ username }) {
                 </div>
                 {/* Industry Menu */}
                 <div className="relative group hover:bg-black h-full w-1/4 flex justify-center items-center">
-                    <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Industry</a>
+                    <a href="#" className="font-bold text-base text-white shadow-md tracking-wide uppercase">Community</a>
                     <div className="absolute left-0 top-full mt-0 w-full bg-black text-white shadow-lg rounded transform scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-200 ease-out">
                         <Link to="/news" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>News</Link>
                         <Link to="/forums" className={`block px-4 hover:bg-gray-200 hover:text-black border-b border-white ${isMobile ? 'py-[2px]' : 'py-3'}`}>Forums</Link>

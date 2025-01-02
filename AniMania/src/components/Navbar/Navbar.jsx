@@ -145,10 +145,10 @@ function Navbar({ username, onLogout }) {
                 Manga List
               </Link>
               <Link
-                to="/favourite"
+                to="/forums"
                 className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
               >
-                Favourite
+                Forums
               </Link>
               <Link
                 to="/interested-genre"
@@ -280,17 +280,45 @@ function Navbar({ username, onLogout }) {
       Manga List
     </Link>
     <Link
-      to="/favourite"
+      to="/forums"
       className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
     >
-      Favourite
+      Forums
     </Link>
-    <Link
-      to="/interested-genre"
-      className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
-    >
-      Interested Genre
-    </Link>
+    <div className="relative z-30 flex flex-col">
+  {/* Notification Header */}
+  <a
+    href="#"
+    onClick={toggleThirdDropdown}
+    className="flex items-center px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
+  >
+    <p className="mr-2">Notifications</p>
+    {unreadCount > 0 && (
+      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-red-100 bg-red-600 rounded-full">
+        {unreadCount}
+      </span>
+    )}
+  </a>
+
+  {/* Dropdown Menu */}
+  {isThirdDropdownOpen && (
+    <div className="absolute top-full mt-2 right-0 w-72 bg-gray-900 text-white shadow-xl rounded-lg z-40 border border-gray-700">
+      {notifications.length > 0 ? (
+        notifications.map((notification, index) => (
+          <div
+            key={index}
+            className="px-4 py-3 border-b border-gray-700 hover:bg-gray-800 transition-colors duration-200"
+          >
+            {notification.message}
+          </div>
+        ))
+      ) : (
+        <div className="px-4 py-3 text-gray-400">No notifications</div>
+      )}
+    </div>
+  )}
+</div>
+
     <Link
       to="/MyFriends"
       className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
