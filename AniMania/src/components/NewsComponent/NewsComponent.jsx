@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import Loading from "../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 const NewsComponent = ({ username, onLogout }) => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
   const API_URL = "https://animania-backend-dmjs.onrender.com/news/allnews";
+
+  const handleReadMore = (article) => {
+    navigate(`/article/${article.id}`, { state: { article } });
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -130,16 +136,12 @@ const NewsComponent = ({ username, onLogout }) => {
             >
               {item.Content.substring(0, 100)}...
             </p>
-            <a
-              href={item.Url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`text-blue-400 mt-4 hover:underline ${
-                isMobile ? "text-xs" : "text-sm"
-              }`}
+            <button
+            onClick={() => handleReadMore(item)}
+            className="text-blue-400 mt-4 hover:underline"
             >
-              Read more
-            </a>
+            Read more
+          </button>
           </div>
         </div>
       ))}
