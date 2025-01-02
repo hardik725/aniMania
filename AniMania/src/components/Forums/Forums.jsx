@@ -54,7 +54,7 @@ const Forums = ({ username, onLogout }) => {
         const response = await fetch('https://animania-backend-dmjs.onrender.com/post/allpost');
         if (!response.ok) throw new Error('Failed to fetch posts');
         const data = await response.json();
-        setPosts(data);
+        setPosts(data.reverse());
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
