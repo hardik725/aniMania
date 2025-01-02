@@ -220,8 +220,8 @@ const Forums = ({ username, onLogout }) => {
       left: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: 'white',
-      opacity: 0,
+      backgroundColor: 'black',
+      opacity: 0.6,
       filter: isModalOpen ? 'blur(8px)' : 'none',
       zIndex: 0,
     }}
@@ -229,35 +229,24 @@ const Forums = ({ username, onLogout }) => {
 
   <Navbar username={username} onLogout={onLogout} />
 
-  <div className='bg-slate-800'
-  style={{
-     // Soft gradient background
-    minHeight: '100vh', // Full viewport height
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '2rem',
-    boxSizing: 'border-box',
-  }}
->
   <div
     style={{
       maxWidth: '800px',
-      width: '100%',
       margin: '0 auto',
-      padding: '1.5rem',
-      backgroundColor: 'black',
-      borderRadius: '1rem',
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+      padding: '1rem', // Adjust padding for smaller screens
+      position: 'relative',
+      zIndex: isModalOpen ? 0 : 10,
+      width: '90%', // Ensures content fits smaller screens
+      boxSizing: 'border-box',
     }}
   >
-    {/* Title with Animation */}
+    {/* Title with animation */}
     <motion.h1
       style={{
-        fontSize: '2.5rem',
+        fontSize: '2rem', // Adjust font size for smaller screens
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: '2rem',
+        marginBottom: '1.5rem',
         background: 'linear-gradient(to right, #6EE7B7, #3B82F6)',
         WebkitBackgroundClip: 'text',
         color: 'transparent',
@@ -272,11 +261,12 @@ const Forums = ({ username, onLogout }) => {
     {/* New Post Form */}
     <motion.div
       style={{
-        marginBottom: '2rem',
-        backgroundColor: '#fff',
-        padding: '1.5rem',
-        borderRadius: '1rem',
+        backgroundColor: 'white',
+        padding: '1rem', // Adjust padding for smaller screens
+        borderRadius: '0.5rem',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        marginBottom: '1.5rem',
+        width: '100%', // Fit to screen width
       }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -285,64 +275,63 @@ const Forums = ({ username, onLogout }) => {
       <textarea
         style={{
           width: '100%',
-          padding: '1rem',
+          padding: '0.75rem',
           borderRadius: '0.5rem',
-          border: '1px solid #ddd',
+          border: '1px solid #e0e0e0',
           marginBottom: '1rem',
           fontSize: '1rem',
-          resize: 'none',
+          color: '#333',
         }}
-        placeholder="What's on your mind?"
+        placeholder="Write something..."
+        value={newPost}
+        onChange={(e) => setNewPost(e.target.value)}
       />
       <input
         type="file"
         accept="image/*"
         style={{
-          display: 'block',
+          width: '100%', // Make input stretch full width
+          padding: '0.5rem',
           marginBottom: '1rem',
+          color: '#3b82f6',
         }}
+        onChange={(e) => setNewPostImage(e.target.files[0])}
       />
       <button
         style={{
-          width: '100%',
-          padding: '0.75rem',
           backgroundColor: '#3b82f6',
           color: 'white',
-          fontSize: '1rem',
+          padding: '0.75rem',
           borderRadius: '0.5rem',
+          width: '100%', // Make button stretch full width
           cursor: 'pointer',
-          transition: 'background-color 0.3s',
         }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = '#2563eb')}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = '#3b82f6')}
+        onClick={handleCreatePost}
       >
         Post
       </button>
     </motion.div>
 
     {/* Display Posts */}
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-  {posts.map((post) => (
-    <motion.div
-      key={post._id}
-      style={{
-        backgroundColor: '#ffffff',
-        padding: '2rem',
-        borderRadius: '1.5rem',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
-        transition: 'transform 0.3s, box-shadow 0.3s',
-      }}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.3)',
-      }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Post Header */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-        <img
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {posts.map((post) => (
+        <motion.div
+          key={post._id}
+          style={{
+            backgroundColor: 'white',
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.3s ease',
+            width: '100%',
+          }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* Post Header */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', backgroundColor: 'Black', padding: '5px', borderRadius: '10px' }}>
+          <img
           src={post.UserPhoto || 'https://via.placeholder.com/40'}
           alt="User"
           style={{
@@ -353,110 +342,103 @@ const Forums = ({ username, onLogout }) => {
             marginRight: '1rem',
           }}
         />
-        <motion.h2
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            color: '#3b82f6',
-          }}
-          whileHover={{ scale: 1.1, color: '#2563eb' }}
-        >
-          <Link
-            to={
-              post.Username === username
-                ? '/profile'
-                : `/friendprofile/${post.Username}`
-            }
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            {post.Username}
-          </Link>
-        </motion.h2>
-      </div>
-
-      {/* Post Content */}
-      <p
-        style={{
-          marginBottom: '1rem',
-          fontSize: '1.1rem',
-          lineHeight: '1.6',
-          color: '#555',
-        }}
-      >
-        {post.Content}
-      </p>
-      {post.PostUrl && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: '1rem',
-            backgroundColor: '#f3f4f6',
-            padding: '1rem',
-            borderRadius: '0.5rem',
-          }}
-        >
-          <img
-            src={post.PostUrl}
-            alt="Post"
-            style={{
-              width: '100%',
-              maxHeight: isMobile ? '200px' : '400px',
-              objectFit: 'cover',
-              borderRadius: '0.5rem',
-            }}
-          />
-        </div>
-      )}
-
-      {/* Actions */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          gap: '1.5rem',
-        }}
-      >
-        <button
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            color: '#3b82f6',
-            backgroundColor: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
-          onClick={() => handleLike(post._id)}
-        >
-          <FontAwesomeIcon icon={faThumbsUp} />
-          {post.Likes.length}
-        </button>
-        <button
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            color: '#3b82f6',
-            backgroundColor: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
-          onClick={() => openCommentsModal(post._id)}
-        >
-          <FontAwesomeIcon icon={faComment} />
-        </button>
-      </div>
-    </motion.div>
-  ))}
+  <motion.h2
+    style={{
+      fontWeight: 'bold',
+      fontSize: '1.25rem',
+      color: '#3b82f6',
+    }}
+    whileHover={{ scale: 1.05 }}
+  >
+    <Link to={
+                  post.Username === username 
+                    ? "/profile" 
+                    : `/friendprofile/${post.Username}`
+                } style={{ textDecoration: 'none', color: '#3b82f6' }}>
+      {post.Username}
+    </Link>
+  </motion.h2>
 </div>
 
+
+          {/* Post Content */}
+          <div
+  style={{
+    backgroundColor: '#ffffff', // White background for the post box
+    padding: '1rem',
+    borderRadius: '1rem',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+    transition: 'all 0.3s ease', // Smooth transition for hover effect
+  }}
+  className="hover:shadow-lg transform hover:scale-105" // Hover effects for interactivity
+>
+  {post.PostUrl && (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: '1rem', // Spacing below image
+      }}
+    >
+      <img
+        src={post.PostUrl}
+        alt="Post"
+        style={{
+          maxWidth: '100%',
+          maxHeight: isMobile ? '200px' : '400px', // Maintain aspect ratio
+          borderRadius: '1rem', // Rounded edges for image
+          border: '3px solid #3b82f6', // Accent border color
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow for the image
+        }}
+      />
+    </div>
+  )}
+  <p
+    style={{
+      color: '#555555', // Slightly darker text color for readability
+      fontSize: '1rem', // Standard text size
+      textAlign: 'justify', // Justify alignment for cleaner text presentation
+      marginBottom: '0.5rem', // Spacing below the content
+    }}
+  >
+    {post.Content}
+  </p>
+</div>
+
+
+          {/* Post Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <button
+              style={{
+                color: '#3b82f6',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleLike(post._id)}
+            >
+              <FontAwesomeIcon icon={faThumbsUp} />
+              <span>{post.Likes.length}</span>
+            </button>
+            <button
+              style={{
+                color: '#3b82f6',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => openCommentsModal(post._id)}
+            >
+              <FontAwesomeIcon icon={faComment} />
+            </button>
+          </div>
+        </motion.div>
+      ))}
+    </div>
   </div>
-</div>
-
 
   {/* Comments Modal */}
   {isModalOpen && (
