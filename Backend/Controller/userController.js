@@ -528,7 +528,7 @@ export const getAllUsers = async (req, res) => {
   export const addtoFavAnime = async (req, res) => {
     try {
         const { username } = req.params; // Extract the username from request params
-        const { title } = req.body; // Extract the anime title from request body
+        const { animeTitle } = req.body; // Extract the anime title from request body
 
         // Find the user
         const user = await User.findOne({ Username: username });
@@ -543,12 +543,12 @@ export const getAllUsers = async (req, res) => {
         }
 
         // Check if the anime already exists in FavAnime
-        if (user.FavAnime.some(fav => fav.title === title)) {
+        if (user.FavAnime.some(fav => fav.title === animeTitle)) {
             return res.status(400).json({ message: "Anime already in favorites" });
         }
 
         // Add the anime to the FavAnime list
-        user.FavAnime.push({ title });
+        user.FavAnime.push({ title: animeTitle });
 
         // Save the updated user document
         await user.save();
@@ -563,7 +563,7 @@ export const getAllUsers = async (req, res) => {
 export const removeFromFavAnime = async (req, res) => {
     try {
         const { username } = req.params; // Extract the username from request params
-        const { title } = req.body; // Extract the anime title from request body
+        const { animeTitle } = req.body; // Extract the anime title from request body
 
         // Find the user
         const user = await User.findOne({ Username: username });
@@ -573,7 +573,7 @@ export const removeFromFavAnime = async (req, res) => {
         }
 
         // Check if the anime exists in FavAnime
-        const animeIndex = user.FavAnime.findIndex(fav => fav.title === title);
+        const animeIndex = user.FavAnime.findIndex(fav => fav.title === animeTitle);
         if (animeIndex === -1) {
             return res.status(400).json({ message: "Anime not found in favorites" });
         }
