@@ -524,6 +524,73 @@ export const getAllUsers = async (req, res) => {
       res.status(500).json({ message: 'Internal server error.' });
     }
   };
+
+  export const addtoFavAnime = async (req, res) => {
+    try {
+        const { username } = req.params; // Extract the username from request params
+        const { title } = req.body; // Extract the anime title from request body
+
+        // Find the user
+        const user = await User.findOne({ Username: username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the FavAnime list already has 10 anime
+        if (user.FavAnime.length >= 10) {
+            return res.status(400).json({ message: "Cannot add more than 10 favorite anime" });
+        }
+
+        // Check if the anime already exists in FavAnime
+        if (user.FavAnime.some(fav => fav.title === title)) {
+            return res.status(400).json({ message: "Anime already in favorites" });
+        }
+
+        // Add the anime to the FavAnime list
+        user.FavAnime.push({ title });
+
+        // Save the updated user document
+        await user.save();
+
+        res.status(200).json({ message: "Anime added to favorites" });
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+export const removeFromFavAnime = async (req, res) => {
+    try {
+        const { username } = req.params; // Extract the username from request params
+        const { title } = req.body; // Extract the anime title from request body
+
+        // Find the user
+        const user = await User.findOne({ Username: username });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the anime exists in FavAnime
+        const animeIndex = user.FavAnime.findIndex(fav => fav.title === title);
+        if (animeIndex === -1) {
+            return res.status(400).json({ message: "Anime not found in favorites" });
+        }
+
+        // Remove the anime from the FavAnime list
+        user.FavAnime.splice(animeIndex, 1);
+
+        // Save the updated user document
+        await user.save();
+
+        res.status(200).json({ message: "Anime removed from favorites" });
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
   
 
 

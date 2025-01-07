@@ -123,6 +123,16 @@ const UserDataSchema = mongoose.Schema({
             Romance: 0,
         },
     },
+    FavAnime: [
+        {
+            title:{type: String, required: true}, 
+        }
+    ],
+    FavManga: [
+        {
+            title:{type:String, required: true},
+        }
+    ],
 });
 
 const User = mongoose.model("MergedUser", UserDataSchema);

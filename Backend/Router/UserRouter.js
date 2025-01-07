@@ -8,7 +8,8 @@ import { signUp, Login, Userdata, searchUsersByUsername, updateUser, getUserData
     removeFriend,
     getMessages,       // Import the new controller function
     postMessage,
-    getAllUsers } from '../Controller/userController.js';
+    getAllUsers,
+    addtoFavAnime, removeFromFavAnime } from '../Controller/userController.js';
 
 const router = express.Router();
 
@@ -57,5 +58,11 @@ router.post('/profilepictures',getProfilePictures);
 
 // router to get all the users details
 router.get('/alluser',getAllUsers);
+
+// router to add to Fav Anime
+router.post('/addfavanime/:username',addtoFavAnime);
+
+// router to delete from Fav Anime
+router.delete('/removefavanime/:username',removeFromFavAnime);
 
 export default router;
