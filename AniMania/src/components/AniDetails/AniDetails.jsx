@@ -14,6 +14,7 @@ function AniDetails({ username , onLogout }) {
   const [selectedScore, setSelectedScore] = useState();
   const [newReview, setNewReview] = useState("");
   const [animeStatus, setAnimeStatus] = useState();
+  const [favAnimeStatus, setFavAnimeStatus] = useState();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
 
   useEffect(() => {
@@ -31,10 +32,11 @@ function AniDetails({ username , onLogout }) {
           try {
             // Fetch user anime list from the backend
             const response = await fetch(
-              `https://animania-backend-dmjs.onrender.com/user/data/user/${username}/animelist`
+              `https://animania-backend-dmjs.onrender.com/user/Userdata/${username}`
             );
-            const data = await response.json();
-    
+            const predata = await response.json();
+            const data = predata.AnimeList;
+            const favdata = predata.FavAnime;
             // Check if the fetched data is an array
             if (Array.isArray(data)) {
               // Search for the animeName in the list
@@ -54,6 +56,23 @@ function AniDetails({ username , onLogout }) {
             } else {
               console.error("Unexpected data format for user anime list:", data);
             }
+            if(Array.isArray(favdata)){
+              // search if it is added to fav anime list or not
+              const isAnimeFav = favdata.some(
+                (item) => item.title.toUpperCase() === animeName.toUpperCase() // check if it is fav or not
+              );
+              setFavAnimeStatus(isAnimeFav);
+
+              //log if anime is not favourite
+              if(!isAnimeFav){
+                console.log("Anime is not present in the Fav Anime list.");
+              }else{
+                console.log("Anime is present in the Fav Anime list.");
+              }
+            }else{
+              console.error("Unexpected data format for user fav anime list:", favdata);
+            }
+            
           } catch (error) {
             console.error("Error fetching user anime list:", error);
           }
@@ -106,6 +125,64 @@ function AniDetails({ username , onLogout }) {
       } catch (error) {
           console.error('Error:', error);
       }
+  };
+
+  const handleAddToFavList = async (animeTitle) => {
+    try {
+      const response = await fetch(
+        `https://animania-backend-dmjs.onrender.com/user/addfavanime/${username}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ animeTitle }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error adding anime to favorite list:', errorText);
+        throw new Error('Failed to add anime to favorite list');
+      }
+  
+      const data = await response.json();
+      console.log('Anime added to favorite list successfully:', data);
+  
+      // Update the state to reflect that this anime has been added to the favorite list
+      setFavAnimeStatus(true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleRemoveFromFavList = async (animeTitle) => {
+    try {
+      const response = await fetch(
+        `https://animania-backend-dmjs.onrender.com/user/removefavanime/${username}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ animeTitle }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error removing anime from favorite list:', errorText);
+        throw new Error('Failed to remove anime from favorite list');
+      }
+  
+      const data = await response.json();
+      console.log('Anime removed from favorite list successfully:', data);
+  
+      // Update the state to reflect that this anime has been removed from the favorite list
+      setFavAnimeStatus(false);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
   
   const handleScoreChange = (e) => {
@@ -229,6 +306,7 @@ function AniDetails({ username , onLogout }) {
             <p><strong>Rank:</strong> #{anime.Rank}</p>
             <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
             <p><strong>Aired On:</strong> {anime.aired_on}</p>
+            <div>
             <div className='flex justify-center mt-3'>
             {!animeStatus ? (
                 <>
@@ -259,6 +337,24 @@ function AniDetails({ username , onLogout }) {
                   Added
                 </button>
               )}    
+              </div>
+              <div className='flex justify-center mr-3 mt-2'>
+              {!favAnimeStatus ? (
+      <button
+      className={`ml-3 px-4 py-2 text-xs font-semibold bg-blue-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+      onClick={() => handleAddToFavList(animeName)}
+    >
+      Add to Fav
+    </button>
+    ):(
+    <button
+      className={`ml-3 px-4 py-2 text-xs font-semibold bg-red-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400`}
+      onClick={() => handleRemoveFromFavList(animeName)}
+    >
+      Remove from Fav
+    </button>
+    )}
+              </div>
               </div>
           </div>
         </div>
@@ -327,39 +423,61 @@ function AniDetails({ username , onLogout }) {
               <p><strong>Total Users Watched:</strong> {anime.TotalUsersWatched}</p>
               <p><strong>Aired On:</strong> {anime.aired_on}</p>
             </div>
-            <div className='flex justify-center mt-3'>
-            {!animeStatus ? (
-                <>
-                  <button
-                    className={`px-2 py-1 ${
-                      isMobile ? 'text-xs' : ''
-                    } bg-pink-500 text-white rounded`}
-                    onClick={() => handleScoreSubmit(animeName)}
-                  >
-                    Add to list
-                  </button>
-                  <select
-                    value={selectedScore || 'Select Score'}
-                    onChange={(e) => handleScoreChange(e, animeName)}
-                    className={`ml-2 border rounded px-2 py-1 text-black`}
-                  >
-                    <option value="" className='text-black'>Select score</option>
-                    {[...Array(10).keys()].map((num) => (
-                      <option key={num + 1} value={num + 1}>
-                        {num + 1}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              ) : (
-                <button
-                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
-                  disabled
-                >
-                  Added
-                </button>
-              )}    
-              </div>
+            <div className='flex justify-center mt-3 flex-col'>
+  {/* First row: Add to list and score */}
+  <div className='flex flex-row justify-center'>
+    {!animeStatus ? (
+      <>
+        <button
+          className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} bg-pink-500 text-white rounded`}
+          onClick={() => handleScoreSubmit(animeName)}
+        >
+          Add to list
+        </button>
+        <select
+          value={selectedScore || 'Select Score'}
+          onChange={(e) => handleScoreChange(e, animeName)}
+          className={`ml-2 border rounded px-2 py-1 text-black`}
+        >
+          <option value="" className='text-black'>Select score</option>
+          {[...Array(10).keys()].map((num) => (
+            <option key={num + 1} value={num + 1}>
+              {num + 1}
+            </option>
+          ))}
+        </select>
+      </>
+    ) : (
+      <button
+        className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+        disabled
+      >
+        Added
+      </button>
+    )}
+  </div>
+
+  {/* Second row: Add to favorites */}
+  <div className='flex justify-center mt-2'>
+    {!favAnimeStatus ? (
+      <button
+      className={`ml-3 px-4 py-2 text-lg font-semibold bg-blue-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+      onClick={() => handleAddToFavList(animeName)}
+    >
+      Add to Fav
+    </button>
+    ):(
+    <button
+      className={`ml-3 px-4 py-2 text-lg font-semibold bg-red-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400`}
+      onClick={() => handleRemoveFromFavList(animeName)}
+    >
+      Remove from Fav
+    </button>
+    )}
+  </div>
+</div>
+
+
           </div>
 
           {/* Right Column */}
