@@ -337,7 +337,7 @@ function Profile({ username, onLogout }) {
     <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-4">
       <h2 className="text-xl font-bold mb-4 px-7 text-white">Anime Watched</h2>
       <div className="grid grid-cols-3 gap-4 px-2">
-        {animeDetails.slice(0, 3).map(anime => (
+        {animeDetails.slice(0, 6).map(anime => (
           <Link
             to={`/AniDetails/${anime.Name}`}
             key={anime._id}
@@ -359,7 +359,7 @@ function Profile({ username, onLogout }) {
     <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4 px-7 text-white">Manga Read</h2>
       <div className="grid grid-cols-3 gap-4 px-2">
-        {mangaDetails.slice(0, 3).map(manga => (
+        {mangaDetails.slice(0, 6).map(manga => (
           <Link
             to={`/MangDetails/${manga.Name}`}
             key={manga._id}
