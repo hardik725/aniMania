@@ -13,6 +13,7 @@ function MangDetails({ username, onLogout }) {
   const [newReview, setNewReview] = useState("");
   const [selectedScore, setSelectedScore] = useState();
   const [mangaStatus, setMangaStatus] = useState();
+  const [favMangaStatus, setFavMangaStatus] = useState();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -31,9 +32,11 @@ function MangDetails({ username, onLogout }) {
           try {
             // Fetch user manga list from the backend
             const response = await fetch(
-              `https://animania-backend-dmjs.onrender.com/user/data/user/${username}/mangalist`
+              `https://animania-backend-dmjs.onrender.com/user/Userdata/${username}`
             );
-            const data = await response.json();
+            const predata = await response.json();
+            const data = predata.MangaList;
+            const favdata = predata.FavManga;
     
             // Check if the fetched data is an array
             if (Array.isArray(data)) {
@@ -51,6 +54,22 @@ function MangDetails({ username, onLogout }) {
               } else {
                 console.log("Manga is present in the user's list.");
               }
+            }else{
+              console.error("Unexpected data format for user manga list:", data);
+            }
+              if(Array.isArray(favdata)){
+                // search if it is added to fav manga list or not
+                const isMangaFav = favdata.some(
+                  (item) => item.title.toUpperCase() === mangaName.toUpperCase() // check if it is fav or not
+                );
+                setFavMangaStatus(isMangaFav);
+  
+                //log if manga is not favourite
+                if(!isMangaFav){
+                  console.log("Manga is not present in the Fav Manga list.");
+                }else{
+                  console.log("Manga is present in the Fav Manga list.");
+                }              
             } else {
               console.error("Unexpected data format for user manga list:", data);
             }
@@ -107,6 +126,64 @@ function MangDetails({ username, onLogout }) {
           console.error('Error:', error);
       }
   };
+
+  const handleAddToFavList = async (mangaTitle) => {
+    try {
+      const response = await fetch(
+        `https://animania-backend-dmjs.onrender.com/user/addfavmanga/${username}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ mangaTitle }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error adding manga to favorite list:', errorText);
+        throw new Error('Failed to add manga to favorite list');
+      }
+  
+      const data = await response.json();
+      console.log('Manga added to favorite list successfully:', data);
+  
+      // Update the state to reflect that this manga has been added to the favorite list
+      setFavMangaStatus(true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleRemoveFromFavList = async (mangaTitle) => {
+    try {
+      const response = await fetch(
+        `https://animania-backend-dmjs.onrender.com/user/removefavmanga/${username}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ mangaTitle }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error removing manga from favorite list:', errorText);
+        throw new Error('Failed to remove manga from favorite list');
+      }
+  
+      const data = await response.json();
+      console.log('Manga removed from favorite list successfully:', data);
+  
+      // Update the state to reflect that this anime has been removed from the favorite list
+      setFavMangaStatus(false);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };  
   
   const handleScoreChange = (e) => {
       setSelectedScore(e.target.value); // Set the score directly
@@ -223,6 +300,7 @@ function MangDetails({ username, onLogout }) {
             <p><strong>Rank:</strong> #{manga.Rank}</p>
             <p><strong>Total Users Watched:</strong> {manga.TotalUsersRead}</p>
             <p><strong>Aired On:</strong> {manga.aired_on}</p>
+            <div>
             <div className='flex justify-center mt-3'>
             {!mangaStatus ? (
                 <>
@@ -253,7 +331,25 @@ function MangDetails({ username, onLogout }) {
                   Added
                 </button>
               )}    
-              </div>            
+              </div>
+              <div className='flex justify-center mr-3 mt-2'>
+              {!favMangaStatus ? (
+      <button
+      className={`ml-3 px-4 py-2 text-xs font-semibold bg-blue-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+      onClick={() => handleAddToFavList(mangaName)}
+    >
+      Add to Fav
+    </button>
+    ):(
+    <button
+      className={`ml-3 px-4 py-2 text-xs font-semibold bg-red-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400`}
+      onClick={() => handleRemoveFromFavList(mangaName)}
+    >
+      Remove from Fav
+    </button>
+    )}
+              </div>
+              </div>           
           </div>
         </div>
 
@@ -322,39 +418,59 @@ function MangDetails({ username, onLogout }) {
               <p><strong>Total Users Read:</strong> {manga.TotalUsersRead}</p>
               <p><strong>Published On:</strong> {manga.aired_on}</p>
             </div>
-            <div className='flex justify-center mt-3'>
-            {!mangaStatus ? (
-                <>
-                  <button
-                    className={`px-2 py-1 ${
-                      isMobile ? 'text-xs' : ''
-                    } bg-pink-500 text-white rounded`}
-                    onClick={() => handleScoreSubmit(mangaName)}
-                  >
-                    Add to list
-                  </button>
-                  <select
-                    value={selectedScore || 'Select Score'}
-                    onChange={(e) => handleScoreChange(e, mangaName)}
-                    className={`ml-2 border rounded px-2 py-1 text-black`}
-                  >
-                    <option value="" className='text-black'>Select score</option>
-                    {[...Array(10).keys()].map((num) => (
-                      <option key={num + 1} value={num + 1}>
-                        {num + 1}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              ) : (
-                <button
-                  className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
-                  disabled
-                >
-                  Added
-                </button>
-              )}    
-              </div>            
+            <div className='flex justify-center mt-3 flex-col'>
+  {/* First row: Add to list and score */}
+  <div className='flex flex-row justify-center'>
+    {!mangaStatus ? (
+      <>
+        <button
+          className={`px-2 py-1 ${isMobile ? 'text-xs' : ''} bg-pink-500 text-white rounded`}
+          onClick={() => handleScoreSubmit(mangaName)}
+        >
+          Add to list
+        </button>
+        <select
+          value={selectedScore || 'Select Score'}
+          onChange={(e) => handleScoreChange(e, mangaName)}
+          className={`ml-2 border rounded px-2 py-1 text-black`}
+        >
+          <option value="" className='text-black'>Select score</option>
+          {[...Array(10).keys()].map((num) => (
+            <option key={num + 1} value={num + 1}>
+              {num + 1}
+            </option>
+          ))}
+        </select>
+      </>
+    ) : (
+      <button
+        className={`px-2 text-xl py-1 bg-green-500 text-white rounded cursor-not-allowed`}
+        disabled
+      >
+        Added
+      </button>
+    )}
+  </div>
+
+  {/* Second row: Add to favorites */}
+  <div className='flex justify-center mt-2'>
+    {!favMangaStatus ? (
+      <button
+      className={`ml-3 px-4 py-2 text-lg font-semibold bg-blue-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
+      onClick={() => handleAddToFavList(mangaName)}
+    >
+      Add to Fav
+    </button>
+    ):(
+    <button
+      className={`ml-3 px-4 py-2 text-lg font-semibold bg-red-500 text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400`}
+      onClick={() => handleRemoveFromFavList(mangaName)}
+    >
+      Remove from Fav
+    </button>
+    )}
+  </div>
+</div>          
           </div>
 
           {/* Right Column */}
