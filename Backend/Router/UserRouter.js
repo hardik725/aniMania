@@ -9,7 +9,8 @@ import { signUp, Login, Userdata, searchUsersByUsername, updateUser, getUserData
     getMessages,       // Import the new controller function
     postMessage,
     getAllUsers,
-    addtoFavAnime, removeFromFavAnime } from '../Controller/userController.js';
+    addtoFavAnime, removeFromFavAnime,
+    addtoFavManga, removeFromFavManga } from '../Controller/userController.js';
 
 const router = express.Router();
 
@@ -64,5 +65,11 @@ router.post('/addfavanime/:username',addtoFavAnime);
 
 // router to delete from Fav Anime
 router.post('/removefavanime/:username',removeFromFavAnime);
+
+// router to add to Fav Manga
+router.post('/addfavmanga/:username',addtoFavManga);
+
+// router to delete from Fav Manga
+router.post('/removefavmanga/:username',removeFromFavManga);
 
 export default router;
