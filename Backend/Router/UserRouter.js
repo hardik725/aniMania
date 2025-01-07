@@ -63,6 +63,6 @@ router.get('/alluser',getAllUsers);
 router.post('/addfavanime/:username',addtoFavAnime);
 
 // router to delete from Fav Anime
-router.delete('/removefavanime/:username',removeFromFavAnime);
+router.post('/removefavanime/:username',removeFromFavAnime);
 
 export default router;
