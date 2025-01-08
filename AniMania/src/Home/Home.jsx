@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar/Navbar';
-import OptionSec from '../components/OptionSec/OptionSec';
-import HeroSection from '../components/HeroSection/HeroSection';
-import TopAnimeSection from '../components/TopAnimeSection/TopAnimeSection';
-import TopMangaSection from '../components/TopMangaSection/TopMangaSection';
-import RomanceSection from '../components/RomanceSection/RomanceSection';
-import ActionSection from '../components/ActionSection/ActionSection';
-import Loading from '../components/Loading/Loading';
-import Footer from '../components/Footer/Footer'
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/Navbar/Navbar";
+import OptionSec from "../components/OptionSec/OptionSec";
+import HeroSection from "../components/HeroSection/HeroSection";
+import TopAnimeSection from "../components/TopAnimeSection/TopAnimeSection";
+import TopMangaSection from "../components/TopMangaSection/TopMangaSection";
+import RomanceSection from "../components/RomanceSection/RomanceSection";
+import ActionSection from "../components/ActionSection/ActionSection";
+import Loading from "../components/Loading/Loading";
+import Footer from "../components/Footer/Footer";
+import ChatBot from "../components/ChatBot/ChatBot";
 
 function Home({ username, onLogout }) {
   const [topGenre, setTopGenre] = useState(null);
   const [mangtopGenre, setMangTopGenre] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const allgenre = ['Action','Romance','Comedy','Drama','Fantasy'];
+  const [showChatBot, setShowChatBot] = useState(true); // Chatbot initially open
+
+  const allgenre = ["Action", "Romance", "Comedy", "Drama", "Fantasy"];
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,14 +25,14 @@ function Home({ username, onLogout }) {
     };
 
     handleResize(); // Check on initial load
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
     const fetchUserGenreWatched = async () => {
       if (!username) {
-        setLoading(false); // No username, nothing to load
+        setLoading(false);
         return;
       }
 
@@ -66,18 +69,18 @@ function Home({ username, onLogout }) {
             setMangTopGenre(allgenre[randomNumber]);
           }
         } else {
-          console.error('Failed to fetch user data or genres are missing.');
+          console.error("Failed to fetch user data or genres are missing.");
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
-        setLoading(false); // Set loading to false once data fetching is complete
+        setLoading(false);
       }
     };
 
     fetchUserGenreWatched();
   }, [username]);
-  
+
   if (loading) {
     return <Loading message="Loading Home Page" />;
   }
@@ -116,7 +119,15 @@ function Home({ username, onLogout }) {
         {topGenre && <RomanceSection genre={topGenre} />}
         {mangtopGenre && <ActionSection genre={mangtopGenre} />}
       </div>
-      <Footer/>
+
+      {/* ChatBot Component */}
+      {showChatBot && (
+        <div className="fixed bottom-6 right-6 w-80 bg-white shadow-lg rounded-lg border border-gray-300 z-50">
+          <ChatBot />
+        </div>
+      )}
+
+      <Footer />
     </div>
   );
 }
