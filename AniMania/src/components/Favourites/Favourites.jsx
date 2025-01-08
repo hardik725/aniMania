@@ -85,7 +85,7 @@ function Favourites({ username, onLogout }) {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {favAnime.map((anime) => (
                   <Link
-                    to={`/AnimeDetails/${anime.Name}`}
+                    to={`/AniDetails/${anime.Name}`}
                     key={anime._id}
                     className="group block transform transition duration-300 hover:scale-105"
                   >
@@ -110,7 +110,7 @@ function Favourites({ username, onLogout }) {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {favManga.map((manga) => (
                   <Link
-                    to={`/MangaDetails/${manga.Name}`}
+                    to={`/MangDetails/${manga.Name}`}
                     key={manga._id}
                     className="group block transform transition duration-300 hover:scale-105"
                   >
