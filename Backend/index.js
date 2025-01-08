@@ -77,38 +77,6 @@ app.use("/mangenrouter",MangGenRouter);
 app.use("/post",PostRouter);
 app.use("/comment",CommentRouter);
 app.use("/news", NewsRouter);
-app.post("/generateMessage", async (req, res) => {
-  try {
-    // Fetch response from Gemini API
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-turbo:generateMessage?key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(req.body),
-      }
-    );
-
-    // Check if the response is successful
-    if (!response.ok) {
-      throw new Error(`Failed to fetch from Gemini API: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    // Ensure the response is structured correctly
-    if (data?.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-      console.log(data);
-      res.json({ text: data.candidates[0].content.parts[0].text });
-    } else {
-      res.status(500).json({ error: "Invalid response structure" });
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
-
 
 app.get('/', (req,res) => {
     res.send("Welcome")
