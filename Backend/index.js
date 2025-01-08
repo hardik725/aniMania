@@ -2,6 +2,7 @@ import express from "express";
 import http from 'http';
 import {Server} from 'socket.io';
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 import mongoose from "mongoose";
 import UserRouter from "./Router/UserRouter.js";
 import cors from "cors";
@@ -43,6 +44,7 @@ io.on('connection', (socket) => {
 });
 const PORT = process.env.PORT || 4001;
 const URI = process.env.MongoDBURI;
+const API_KEY = process.env.API_KEY;
 
 // Middleware
 app.use(cors());
@@ -75,6 +77,23 @@ app.use("/mangenrouter",MangGenRouter);
 app.use("/post",PostRouter);
 app.use("/comment",CommentRouter);
 app.use("/news", NewsRouter);
+app.post("/generateMessage", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-turbo:generateMessage?key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req.body),
+      }
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 
 app.get('/', (req,res) => {
     res.send("Welcome")
