@@ -151,10 +151,10 @@ function Navbar({ username, onLogout }) {
                 Forums
               </Link>
               <Link
-                to="/interested-genre"
+                to="/favourites"
                 className="block bg-gray-700 px-4 py-2 text-white hover:bg-white hover:text-black"
               >
-                Interested Genre
+                Favourites
               </Link>
             </div>
           )}
@@ -332,10 +332,10 @@ function Navbar({ username, onLogout }) {
       Profile
     </Link>
     <Link
-      to="/MyReviews"
+      to="/favourites"
       className="block px-4 py-2 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 rounded-md"
     >
-      My Reviews
+      Favourites
     </Link>
     <button
       onClick={onLogout}
