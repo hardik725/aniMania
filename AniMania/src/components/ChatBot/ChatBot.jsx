@@ -74,7 +74,7 @@ const ChatBot = () => {
 
       {/* Chatbot Window */}
       {isChatOpen && (
-        <div className="w-96 bg-gray-100 rounded-lg shadow-md overflow-hidden">
+        <div className="w-full sm:w-96 bg-gray-100 rounded-lg shadow-md overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between bg-blue-500 text-white px-4 py-2">
             <h3 className="font-bold text-lg">
@@ -92,7 +92,7 @@ const ChatBot = () => {
           {/* Chat Messages */}
           <div
             ref={chatContainerRef}
-            className="h-80 overflow-y-scroll p-4 bg-white"
+            className="h-64 sm:h-80 overflow-y-scroll p-4 bg-white"
           >
             {messages.map((message, index) => (
               <div
