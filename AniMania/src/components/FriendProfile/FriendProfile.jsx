@@ -11,6 +11,8 @@ function FriendProfile({ username, onLogout }) {
   const [error, setError] = useState(null);
   const [aniDetails, setAniDetails] = useState([]);
   const [mangDetails, setMangDetails] = useState([]);
+  const [favAnime, setFavAnime] = useState([]);
+  const [favManga, setFavManga] = useState([]);
   const [isFriend, setIsFriend] = useState(false);
   const [FriendId, setFriendId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Adjust breakpoint as needed
@@ -46,10 +48,27 @@ function FriendProfile({ username, onLogout }) {
       const mangaPromises = data.MangaList.map(({ title }) =>
         fetch(`https://animania-backend-dmjs.onrender.com/manga/${title}`).then((res) => res.json())
       );
+      const favanimePromises = data.FavAnime.map(({ title }) =>
+        fetch(`https://animania-backend-dmjs.onrender.com/anime/${title}`).then((res) => {
+          if(res.ok) return res.json();
+          throw new Error(`Failed to fetch anime: ${title}`);
+        })
+      );
+      const favmangaPromises = data.FavManga.map(({ title }) => 
+        fetch(`https://animania-backend-dmjs.onrender.com/manga/${title}`).then((res) => {
+          if(res.ok) return res.json();
+          throw new Error(`Failed to fetch manga: ${title}`);
+        })
+      );      
 
+
+      const favmangaData = await Promise.all(favmangaPromises);
+      const favanimeData = await Promise.all(favanimePromises);
       const [animeData, mangaData] = await Promise.all([Promise.all(animePromises), Promise.all(mangaPromises)]);
       setAniDetails(animeData);
       setMangDetails(mangaData);
+      setFavAnime(favanimeData);
+      setFavManga(favmangaData);
     } catch (error) {
       setError(error.message);
     }
@@ -220,51 +239,96 @@ function FriendProfile({ username, onLogout }) {
           {/* Black Background with Blur */}
           <div className="absolute inset-0 bg-black backdrop-blur-md"></div>
 
-  <div className="relative flex flex-col">
-  {/* Anime Watched Section */}
-  {aniDetails.length > 0 && (
-    <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-4">
-      <h2 className="text-xl font-bold mb-4 px-7 text-white">Anime Watched</h2>
-      <div className="grid grid-cols-3 gap-4 px-2">
-        {aniDetails.slice(0, 3).map(anime => (
-          <Link
-            to={`/AniDetails/${anime.Name}`}
-            key={anime._id}
-            className="flex justify-center px-1"
-          >
-            <img
-              src={anime.Photo}
-              alt={anime.Name}
-              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
-            />
-          </Link>
-        ))}
+    <div className="relative flex flex-col">
+    {/* Anime Watched Section */}
+    {aniDetails.length > 0 && (
+      <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-1">
+        <h2 className="text-xl font-bold mb-4 px-7 text-white">Anime Watched</h2>
+        <div className="grid grid-cols-3 gap-4 px-2">
+          {aniDetails.slice(0, 3).map(anime => (
+            <Link
+              to={`/AniDetails/${anime.Name}`}
+              key={anime._id}
+              className="flex justify-center px-1"
+            >
+              <img
+                src={anime.Photo}
+                alt={anime.Name}
+                className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              />
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
-  )}
-
-  {/* Manga Read Section */}
-  {mangDetails.length > 0 && (
-    <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4 px-7 text-white">Manga Read</h2>
-      <div className="grid grid-cols-3 gap-4 px-2">
-        {mangDetails.slice(0, 3).map(manga => (
-          <Link
-            to={`/MangDetails/${manga.Name}`}
-            key={manga._id}
-            className="flex justify-center px-1"
-          >
-            <img
-              src={manga.Photo}
-              alt={manga.Name}
-              className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
-            />
-          </Link>
-        ))}
+    )}
+  
+    {/* Favourite Anime Section */}
+    {favAnime.length > 0 && (
+      <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-1">
+        <h2 className="text-xl font-bold mb-4 px-7 text-white">Favourite Anime</h2>
+        <div className="grid grid-cols-3 gap-4 px-2">
+          {favAnime.slice(0, 3).map(anime => (
+            <Link
+              to={`/AniDetails/${anime.Name}`}
+              key={anime._id}
+              className="flex justify-center px-1"
+            >
+              <img
+                src={anime.Photo}
+                alt={anime.Name}
+                className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              />
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
-  )}
-</div>
+    )}  
+  
+    {/* Manga Read Section */}
+    {mangDetails.length > 0 && (
+      <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md mb-1">
+        <h2 className="text-xl font-bold mb-4 px-7 text-white">Manga Read</h2>
+        <div className="grid grid-cols-3 gap-4 px-2">
+          {mangDetails.slice(0, 3).map(manga => (
+            <Link
+              to={`/MangDetails/${manga.Name}`}
+              key={manga._id}
+              className="flex justify-center px-1"
+            >
+              <img
+                src={manga.Photo}
+                alt={manga.Name}
+                className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              />
+            </Link>
+          ))}
+        </div>
+      </div>
+    )}
+  
+    {/* Favourite Manga Section */}
+    {favManga.length > 0 && (
+      <div className="flex-1 bg-gray-800 bg-opacity-70 p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold mb-4 px-7 text-white">Favourite Manga</h2>
+        <div className="grid grid-cols-3 gap-4 px-2">
+          {favManga.slice(0, 3).map(manga => (
+            <Link
+              to={`/MangDetails/${manga.Name}`}
+              key={manga._id}
+              className="flex justify-center px-1"
+            >
+              <img
+                src={manga.Photo}
+                alt={manga.Name}
+                className="w-full h-32 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+              />
+            </Link>
+          ))}
+        </div>
+      </div>
+    )} 
+  
+  </div>
 
         </div>      
       </div>      
@@ -362,7 +426,7 @@ function FriendProfile({ username, onLogout }) {
           <div className='relative flex flex-col'>
             {/* Anime Watched Section */}
             {aniDetails.length > 0 && (
-  <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md mb-4'>
+  <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md mb-1'>
     <h2 className="text-xl font-bold mb-4 px-7 text-white">Anime Watched</h2>
     <div className="grid grid-cols-6 gap-4 px-2">
       {aniDetails.slice(0, 6).map(anime => (
@@ -379,9 +443,27 @@ function FriendProfile({ username, onLogout }) {
   </div>
 )}
 
+              {/* Fav Anime Section */}
+              {favAnime.length > 0 && (
+              <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md mb-1'>
+                <h2 className="text-xl font-bold mb-4 px-7 text-white">Favourite Anime</h2>
+                <div className="grid grid-cols-6 gap-4 px-2">
+                  {favAnime.slice(0, 6).map(anime => (
+                    <Link to={`/AniDetails/${anime.Name}`} key={anime._id} className="flex justify-center px-1">
+                      <img
+                        src={anime.Photo}
+                        alt={anime.Name}
+                        className="w-30 h-60 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Manga Read Section */}
             {mangDetails.length > 0 && (
-              <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md'>
+              <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md mb-1'>
                 <h2 className="text-xl font-bold mb-4 px-7 text-white">Manga Read</h2>
                 <div className="grid grid-cols-6 gap-4 px-2">
                   {mangDetails.slice(0, 6).map(manga => (
@@ -396,6 +478,25 @@ function FriendProfile({ username, onLogout }) {
                 </div>
               </div>
             )}
+
+              {/* Fav Manga Section */}
+              {favManga.length > 0 && (
+              <div className='flex-1 bg-gray-800 bg-opacity-70 h-1/2 p-6 rounded-lg shadow-md'>
+                <h2 className="text-xl font-bold mb-4 px-7 text-white">Favourite Manga</h2>
+                <div className="grid grid-cols-6 gap-4 px-2">
+                  {favManga.slice(0, 6).map(manga => (
+                    <Link to={`/MangDetails/${manga.Name}`} key={manga._id} className="flex justify-center px-1">
+                      <img
+                        src={manga.Photo}
+                        alt={manga.Name}
+                        className="w-30 h-60 object-cover rounded-md transition-transform duration-300 transform hover:scale-110"
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
