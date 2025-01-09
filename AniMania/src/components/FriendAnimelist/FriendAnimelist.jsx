@@ -1,0 +1,123 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar';
+import Loading from '../Loading/Loading';
+import Footer from '../Footer/Footer';
+
+function FriendsAnimeList({ username, onLogout }) {
+  const { friendUsername } = useParams();
+  const [animeDetails, setAnimeDetails] = useState([]);
+  const [userScores, setUserScores] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Handle screen resize
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch friend's anime list and details
+  useEffect(() => {
+    const fetchFriendData = async () => {
+      try {
+        const response = await fetch(
+          `https://animania-backend-dmjs.onrender.com/user/data/user-data/${friendUsername}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Sort AnimeList by score
+          const sortedAnimeList = data.AnimeList.sort((a, b) => b.score - a.score);
+
+          // Extract scores and fetch anime details
+          const scores = sortedAnimeList.map(({ score }) => score);
+          setUserScores(scores);
+
+          const animePromises = sortedAnimeList.map(({ title }) =>
+            fetch(`https://animania-backend-dmjs.onrender.com/anime/${title}`).then(res => res.json())
+          );
+          const animeData = await Promise.all(animePromises);
+
+          setAnimeDetails(animeData);
+        } else {
+          setError('Failed to fetch friend data');
+        }
+      } catch (err) {
+        setError('An error occurred while fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (friendUsername) fetchFriendData();
+  }, [friendUsername]);
+
+  // Handle loading and error states
+  if (loading) {
+    return <Loading message="Loading Friend's Anime List..." />;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500 mt-4">{error}</div>;
+  }
+
+  return (
+    <div
+      className="relative min-h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${
+          isMobile
+            ? 'https://i.pinimg.com/736x/ee/ec/be/eeecbe07b3d5c5b1614aaf44a7e0c807.jpg'
+            : 'https://img.freepik.com/free-photo/halloween-scene-illustration-anime-style_23-2151794320.jpg?t=st=1724951751~exp=1724955351~hmac=f512b993560276a62aecf54ed8b0e0839973533b38fc965d44967a88362bd394&w=1800'
+        })`,
+        backgroundAttachment: 'fixed',
+      }}
+    >
+      <Navbar username={username} onLogout={onLogout} />
+      <div className="container mx-auto mt-5">
+        <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-md">
+          <table className="min-w-full text-white">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b-2 border-gray-300">Rank</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300">Title</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {animeDetails.map((anime, index) => (
+                <tr key={anime.Name} className="text-center">
+                  <td className="py-2 px-4 border-b border-gray-200">{index + 1}</td>
+                  <td className="py-2 px-4 border-b border-gray-200 flex items-center">
+                    <Link to={`/AniDetails/${anime.Name}`}>
+                      <img
+                        src={anime.Photo}
+                        alt={anime.Name}
+                        className="w-12 h-12 object-cover mr-4"
+                      />
+                    </Link>
+                    <div>
+                      <Link to={`/AniDetails/${anime.Name}`} className="font-bold text-start">
+                        {anime.Name}
+                      </Link>
+                      <div className="text-gray-500 text-sm text-start">{anime.aired_on}</div>
+                    </div>
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-200">{userScores[index]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+export default FriendsAnimeList;

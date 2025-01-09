@@ -22,6 +22,8 @@ import NewsComponent from './components/NewsComponent/NewsComponent';
 import AllUsers from './components/AllUsers/AllUsers';
 import Article from './components/Article/Article';
 import Favourites from './components/Favourites/Favourites';
+import FriendsAnimeList from './components/FriendAnimelist/FriendAnimelist';
+import FriendsMangaList from './components/FriendMangaList/FriendMangaList';
 // import VerificationPage from './components/VerificationPage/VerificationPage';
 
 // Import react-toastify components
@@ -68,6 +70,8 @@ function App() {
         <Route path="/allusers" element={username ? <AllUsers username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
         <Route path="/favourites" element={username ? <Favourites username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
         <Route path="/article/:articleid" element={username ? <Article username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
+        <Route path="/friendAnimeList/:friendUsername" element={username ? <FriendsAnimeList username={username} onLogout={handleLogout} /> : <Navigate to="/" />}/>
+        <Route path="/friendMangaList/:friendUsername" element={username ? <FriendsMangaList username={username} onLogout={handleLogout} /> : <Navigate to="/" />}/>
         <Route
           path="/friendprofile/:profileUsername"
           element={

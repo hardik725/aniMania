@@ -220,9 +220,9 @@ function FriendProfile({ username, onLogout }) {
         <p className="text-sm text-gray-300 mb-1"><strong>Mean Score:</strong> {meanMangaScore.toFixed(2)}</p>
         <p className="text-sm text-gray-300 mb-1"><strong>Total Chapters:</strong> {totalChapters}</p>
         <div className="mt-4 text-center">
-          <Link to="/userMangaList" className="bg-white text-gray-900 hover:bg-pink-300 px-4 py-2 rounded-md font-semibold transition duration-300">
-            Manga List
-          </Link>
+        <Link to={`/friendMangaList/${profileUsername}`} className="bg-white text-gray-900 hover:bg-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 px-4 py-2 rounded-md text-sm font-semibold transition duration-300">
+              Manga List
+        </Link>
         </div>
       </div>
     </div>
@@ -385,7 +385,7 @@ function FriendProfile({ username, onLogout }) {
                   <p className="text-base text-gray-300 mb-2"><strong>Mean Anime Score:</strong> {meanAnimeScore.toFixed(2)}</p>
                   <p className="text-base text-gray-300 mb-2"><strong>Total Episodes:</strong> {totalEpisodes}</p>
                   <div className="mt-4 text-center">
-                    <Link to="/userAnimeList" className="bg-white text-gray-900 hover:bg-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 px-4 py-2 rounded-md text-sm font-semibold transition duration-300">
+                    <Link to={`/friendAnimeList/${profileUsername}`} className="bg-white text-gray-900 hover:bg-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 px-4 py-2 rounded-md text-sm font-semibold transition duration-300">
                       Anime List
                     </Link>
                   </div>
@@ -400,9 +400,9 @@ function FriendProfile({ username, onLogout }) {
                   <p className="text-base text-gray-300 mb-2"><strong>Mean Manga Score:</strong> {meanMangaScore.toFixed(2)}</p>
                   <p className="text-base text-gray-300 mb-2"><strong>Total Chapters:</strong> {totalChapters}</p>
                   <div className="mt-4 text-center">
-                    <Link to="/userMangaList" className="bg-white text-gray-900 hover:bg-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 px-4 py-2 rounded-md text-sm font-semibold transition duration-300">
+                  <Link to={`/friendMangaList/${profileUsername}`} className="bg-white text-gray-900 hover:bg-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 px-4 py-2 rounded-md text-sm font-semibold transition duration-300">
                       Manga List
-                    </Link>
+                  </Link>
                   </div>
                 </div>
               </div>
