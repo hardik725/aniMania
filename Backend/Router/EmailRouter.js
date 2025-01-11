@@ -24,8 +24,8 @@ const transporter = nodemailer.createTransport({
       const mailOptions = {
         from: Email,
         to: process.env.EMAIL_USER,
-        subject: `New Contact Us Message from ${Name}`, // Custom subject
-        text: `Name: ${Name}\nEmail: ${Email}\n\nMessage:\n${Message}`,
+        subject: `New Contact Us Message from ${Username}`, // Custom subject
+        text: `Name: ${Username}\nEmail: ${Email}\n\nMessage:\n${Message}`,
       };
   
       // Send email
