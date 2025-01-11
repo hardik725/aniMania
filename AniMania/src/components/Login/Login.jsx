@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -26,16 +25,36 @@ const Login = ({ onLogin }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('User Logged In:', data);
-        toast.success('Login successful!', { position: 'top-center' });
-        onLogin(username); // Pass the username to the parent component
-        navigate('/home');
+
+        // Trigger SweetAlert success alert
+        Swal.fire({
+          title: 'Login Successful!',
+          text: `Welcome back, ${username}!`,
+          icon: 'success', // SweetAlert2 inbuilt success icon
+          showConfirmButton: false, // No confirm button
+          timer: 1500, // Wait for 1.5 seconds before redirecting
+          timerProgressBar: true, // Show progress bar
+        }).then(() => {
+          onLogin(username); // Pass the username to the parent component
+          navigate('/home'); // Redirect to home page
+        });
       } else {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
+        Swal.fire({
+          title: 'Error!',
+          text: errorData.message || 'An error occurred during login.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred during login.', { position: 'top-center' });
+      Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred during login.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
 
@@ -60,7 +79,6 @@ const Login = ({ onLogin }) => {
       {/* Login Box */}
       <div className="relative z-10 w-11/12 max-w-sm p-6 shadow-2xl rounded-xl bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-500 text-white sm:w-full sm:max-w-md sm:p-8 md:max-w-md lg:max-w-lg animate-float"
       >
-
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">

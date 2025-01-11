@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -12,36 +11,56 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-  // Trim inputs
-  const trimmedUsername = username.trim();
-  const trimmedEmail = email.trim();
-  const trimmedPassword = password.trim();
+    // Trim inputs
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
-  try {
-    const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        Username: trimmedUsername,
-        Email: trimmedEmail,
-        Password: trimmedPassword,
-      }),
-    });
+    try {
+      const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Username: trimmedUsername,
+          Email: trimmedEmail,
+          Password: trimmedPassword,
+        }),
+      });
 
       if (response.ok) {
         const data = await response.json();
         console.log('User Signed Up:', data);
-        toast.success('Sign Up successful!', { position: 'top-center' });
-        navigate('/');
+
+        // Trigger SweetAlert success alert
+        Swal.fire({
+          title: 'Sign Up Successful!',
+          text: `Welcome, ${trimmedUsername}!`,
+          icon: 'success', // SweetAlert2 inbuilt success icon
+          showConfirmButton: false, // No confirm button
+          timer: 1500, // Wait for 1.5 seconds before redirecting
+          timerProgressBar: true, // Show progress bar
+        }).then(() => {
+          navigate('/'); // Redirect to login page
+        });
       } else {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
+        Swal.fire({
+          title: 'Error!',
+          text: errorData.message || 'An error occurred during sign-up.',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred during sign-up.', { position: 'top-center' });
+      Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred during sign-up.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
 
