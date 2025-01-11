@@ -17,6 +17,7 @@ import MangGenRouter from "./Router/MangGenRouter.js";
 import PostRouter from "./Router/PostRouter.js";
 import CommentRouter from "./Router/CommentRouter.js";
 import NewsRouter from "./Router/NewsRouter.js";
+import EmailRouter from "./Router/EmailRouter.js";
 
 dotenv.config();
 const app = express();
@@ -77,6 +78,7 @@ app.use("/mangenrouter",MangGenRouter);
 app.use("/post",PostRouter);
 app.use("/comment",CommentRouter);
 app.use("/news", NewsRouter);
+app.use("/mail",EmailRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
     const response = await fetch(
