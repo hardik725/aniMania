@@ -17,7 +17,7 @@ const SignUp = () => {
     const trimmedPassword = password.trim();
 
     try {
-      const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
+      const response = await fetch("https://animania-backend-dmjs.onrender.com/tempuser/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const SignUp = () => {
           timer: 1500, // Wait for 1.5 seconds before redirecting
           timerProgressBar: true, // Show progress bar
         }).then(() => {
-          navigate('/'); // Redirect to login page
+          navigate('/verification'); // Redirect to login page
         });
       } else {
         const errorData = await response.json();

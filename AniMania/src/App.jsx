@@ -24,6 +24,7 @@ import Article from './components/Article/Article';
 import Favourites from './components/Favourites/Favourites';
 import FriendsAnimeList from './components/FriendAnimelist/FriendAnimelist';
 import FriendsMangaList from './components/FriendMangaList/FriendMangaList';
+import VerificationPage from './components/VerificationPage/VerificationPage';
 // import VerificationPage from './components/VerificationPage/VerificationPage';
 
 // Import react-toastify components
@@ -72,6 +73,8 @@ function App() {
         <Route path="/article/:articleid" element={username ? <Article username={username} onLogout={handleLogout} /> : <Navigate to="/"/>}/>
         <Route path="/friendAnimeList/:friendUsername" element={username ? <FriendsAnimeList username={username} onLogout={handleLogout} /> : <Navigate to="/" />}/>
         <Route path="/friendMangaList/:friendUsername" element={username ? <FriendsMangaList username={username} onLogout={handleLogout} /> : <Navigate to="/" />}/>
+        <Route path="/verification" element={<VerificationPage />} />
+
         <Route
           path="/friendprofile/:profileUsername"
           element={
