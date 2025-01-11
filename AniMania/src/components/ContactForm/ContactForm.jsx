@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import emailjs from 'emailjs-com';
 
 function ContactForm({ onClose }) {
   const [isFormOpen, setIsFormOpen] = useState(true); // Assume the form is open by default
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
-    message: ''
+    message: '',
   });
   const [status, setStatus] = useState(null);
 
@@ -19,34 +16,47 @@ function ContactForm({ onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    emailjs.send('service_j5gcdzh', 'template_4dlxz4l', formData, 'aD-y-r2gIOWmwkYUI')
-      .then((result) => {
-        setStatus('Message sent successfully!');
-        setFormData({ name: '', email: '', message: '' });
-        setTimeout(() => {
-          setIsFormOpen(false); // Close the form after a short delay to show success message
-          onClose(); // Call the onClose function passed as a prop
-        }, 1000); // Delay in milliseconds
-      }, (error) => {
-        setStatus('Error sending message.');
-      });
+    setStatus('Sending...');
+    fetch('https://animania-backend-dmjs.onrender.com/mail/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Email: formData.email,
+        Message: formData.message,
+        Username: formData.username,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setStatus(data.message);
+      })
+      .catch(() => setStatus('Error sending message. Please try later.'));
   };
 
   return (
-    <div className={`relative ${isFormOpen ? 'block' : 'hidden'}`}>
-      <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+    <div
+      className={`fixed z-50 inset-x-0 mx-auto transition-transform duration-300 ${
+        isFormOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'
+      } w-11/12 max-w-md bg-white shadow-lg rounded-lg p-6`}
+      style={{ bottom: '15%', maxHeight: '80vh', overflowY: 'auto' }}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl font-bold"
+      >
         &times;
       </button>
-      <h2 className="text-lg font-semibold mb-2">Contact Us</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Contact Us</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          name="username"
+          value={formData.username}
           onChange={handleChange}
-          placeholder="Your Name"
-          className="w-full px-3 py-2 border border-gray-300 rounded"
+          placeholder="Your Username"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
           required
         />
         <input
@@ -55,7 +65,7 @@ function ContactForm({ onClose }) {
           value={formData.email}
           onChange={handleChange}
           placeholder="Your Email"
-          className="w-full px-3 py-2 border border-gray-300 rounded"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
           required
         />
         <textarea
@@ -63,17 +73,17 @@ function ContactForm({ onClose }) {
           value={formData.message}
           onChange={handleChange}
           placeholder="Your Message"
-          className="w-full px-3 py-2 border border-gray-300 rounded"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
           rows="4"
           required
         ></textarea>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
         >
           Send Message
         </button>
-        {status && <p className="text-green-600">{status}</p>}
+        {status && <p className="text-green-600 mt-2">{status}</p>}
       </form>
     </div>
   );
