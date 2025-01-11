@@ -18,6 +18,7 @@ import PostRouter from "./Router/PostRouter.js";
 import CommentRouter from "./Router/CommentRouter.js";
 import NewsRouter from "./Router/NewsRouter.js";
 import EmailRouter from "./Router/EmailRouter.js";
+import TempUserRouter from "./Router/TempUserRouter.js";
 
 dotenv.config();
 const app = express();
@@ -79,6 +80,7 @@ app.use("/post",PostRouter);
 app.use("/comment",CommentRouter);
 app.use("/news", NewsRouter);
 app.use("/mail",EmailRouter);
+app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
     const response = await fetch(
