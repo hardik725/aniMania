@@ -76,7 +76,7 @@ export const verifyTempUser = async (req, res) => {
         return res.status(400).json({error: "Invalid verification code"});
       }
       const trimmedUsername = Username.trim();
-      const trimmedEmail = Email.trim();
+      const trimmedEmail = tempUser.Email.trim();
       const trimmedPass = Password.trim();
 
       const response = await fetch("https://animania-backend-dmjs.onrender.com/user/signUp", {
