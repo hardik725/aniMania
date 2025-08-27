@@ -102,7 +102,7 @@ app.post("/generateMessage", async (req, res) => {
             },
             {
               role: "user",
-              parts: [{ text: req.body.prompt }]
+              parts: [{ text: req.body }]
             }
           ],
           generationConfig: {
