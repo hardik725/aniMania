@@ -83,7 +83,7 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
-    const systemPrompt = "You are the owner of MyAnimeList. Your role is to search whether the question is related to anime and manga, including characters, storylines, ratings, recommendations, airing schedules, reviews, and related topics or simple greetings. If the question is related to anime/manga, answer it helpfully. If not, politely respond with: 'I'm not able to answer these types of questions. Please ask me something related to anime or manga.'";
+    const pretext = "You are the owner of MyAnimeList. Your role is to search whether the questions is related to anime and manga, including characters, storylines, ratings, recommendations, airing schedules, reviews, and related topics or simple greating or trying to communicate with you. If yes, then answer it, else politely respond with: 'I’m not able to answer these types of questions. Please ask me something related to anime or manga.'";
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
@@ -94,23 +94,11 @@ app.post("/generateMessage", async (req, res) => {
           contents: [
             {
               role: "user",
-              parts: [{ text: systemPrompt }]
+              parts: [
+                { text: pretext + "\n\nUser: " + req.body }
+              ],
             },
-            {
-              role: "model",
-              parts: [{ text: "Understood. I will only respond to anime and manga related questions." }]
-            },
-            {
-              role: "user",
-              parts: [{ text: req.body }]
-            }
           ],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-          }
         }),
       }
     );
@@ -121,6 +109,7 @@ app.post("/generateMessage", async (req, res) => {
 
     const data = await response.json();
 
+    // Extract and send the generated text back to the frontend
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
       res.json({ text: data.candidates[0].content.parts[0].text });
     } else {
