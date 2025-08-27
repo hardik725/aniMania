@@ -83,7 +83,8 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
-    const pretext = "You are the owner of MyAnimeList. Your role is to search whether the questions is related to anime and manga, including characters, storylines, ratings, recommendations, airing schedules, reviews, and related topics or simple greating or trying to communicate with you. If yes, then answer it, else politely respond with: 'I’m not able to answer these types of questions. Please ask me something related to anime or manga.'";
+    const pretext =
+      "You are the owner of MyAnimeList. Your role is to answer ONLY questions related to anime and manga (characters, storylines, ratings, recommendations, airing schedules, reviews, etc.) or simple greetings. If the user asks about something unrelated to anime/manga, politely respond with: 'I’m not able to answer these types of questions. Please ask me something related to anime or manga.'";
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
@@ -92,11 +93,15 @@ app.post("/generateMessage", async (req, res) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
+            // System instruction (separate from user query)
+            {
+              role: "system",
+              parts: [{ text: pretext }],
+            },
+            // Actual user query
             {
               role: "user",
-              parts: [
-                { text: pretext + "\n\nUser: " + req.body.prompt }
-              ],
+              parts: [{ text: req.body.prompt }],
             },
           ],
         }),
@@ -109,7 +114,6 @@ app.post("/generateMessage", async (req, res) => {
 
     const data = await response.json();
 
-    // Extract and send the generated text back to the frontend
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
       res.json({ text: data.candidates[0].content.parts[0].text });
     } else {
@@ -120,6 +124,7 @@ app.post("/generateMessage", async (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
 
 
 app.get('/', (req,res) => {
