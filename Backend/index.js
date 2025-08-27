@@ -83,12 +83,23 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
+    const pretext = "You are the owner of MyAnimeList. Your role is to answer only questions related to anime and manga, including characters, storylines, ratings, recommendations, airing schedules, reviews, and related topics. If the user asks about something unrelated to anime or manga, politely respond with: 'I’m not able to answer these types of questions. Please ask me something related to anime or manga.'";
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(req.body),
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { text: pretext + "\n\nUser: " + req.body.prompt }
+              ],
+            },
+          ],
+        }),
       }
     );
 
@@ -102,13 +113,14 @@ app.post("/generateMessage", async (req, res) => {
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
       res.json({ text: data.candidates[0].content.parts[0].text });
     } else {
-      res.status(500).json({ error: "Invalid response structure" });
+      res.status(500).json({ error: "Invalid response structure", raw: data });
     }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
 
 app.get('/', (req,res) => {
     res.send("Welcome")
