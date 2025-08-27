@@ -83,41 +83,46 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
-    const pretext = "You are the owner of MyAnimeList. Your role is to search whether the questions is related to anime and manga, including characters, storylines, ratings, recommendations, airing schedules, reviews, and related topics or simple greating or trying to communicate with you. If yes, then answer it, else politely respond with: 'I’m not able to answer these types of questions. Please ask me something related to anime or manga.'";
+    const { prompt } = req.body;
+
+    const cleanPrompt = `
+You are MyAnimeList chatbot. Only answer questions about anime and manga.
+
+User question: "${prompt}"
+
+If this is about anime/manga, answer helpfully. If not, respond with: "I'm not able to answer these types of questions. Please ask me something related to anime or manga."
+    `.trim();
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
-              role: "user",
-              parts: [
-                { text: pretext + "\n\nUser: " + req.body }
-              ],
-            },
+              parts: [{ text: cleanPrompt }]
+            }
           ],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 1024
+          }
         }),
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch from Gemini API: ${response.statusText}`);
-    }
-
     const data = await response.json();
-
-    // Extract and send the generated text back to the frontend
-    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-      res.json({ text: data.candidates[0].content.parts[0].text });
+    
+    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      res.json({ text: data.candidates[0].content.parts[0].text.trim() });
     } else {
-      res.status(500).json({ error: "Invalid response structure", raw: data });
+      res.json({ text: "Please ask me something about anime or manga!" });
     }
+
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
