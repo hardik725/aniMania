@@ -83,8 +83,7 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
-    const { prompt } = req.body;
-
+    const {prompt} = req.body;
     if (!prompt) {
       return res.status(400).json({ error: "Prompt is required" });
     }
@@ -92,62 +91,37 @@ app.post("/generateMessage", async (req, res) => {
     const systemInstruction = `
 You are an AI assistant specialized in anime and manga. Your expertise is strictly limited to this area. 
 Do not discuss any topics outside of anime and manga, including politics, entertainment, sports, or personal advice.
-
 Analyze the following request: "${prompt}"
-
 If the request is about anime, manga, characters, storylines, ratings, recommendations, airing schedules, reviews, or related topics, provide a detailed and helpful answer.
 If the request is not about anime or manga, simply reply with: "I'm not able to answer these types of questions. Please ask me something related to anime or manga."
-
 Do not attempt to answer off-topic questions. Be polite and concise in your responses.
     `.trim();
-
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: systemInstruction }]
-            }
-          ],
-          generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: 1024,
-            topP: 0.8,
-            topK: 40
-          }
-        }),
+        body: JSON.stringify(systemInstruction),
       }
     );
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Gemini API Error:", errorData);
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`Failed to fetch from Gemini API: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    // Extract the response text
-    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-      const generatedText = data.candidates[0].content.parts[0].text;
-      res.json({ text: generatedText.trim() });
+    // Extract and send the generated text back to the frontend
+    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      res.json({ text: data.candidates[0].content.parts[0].text });
     } else {
-      console.error("Unexpected response structure:", data);
-      res.json({ text: "I'm sorry, I couldn't process your question. Please try again." });
+      res.status(500).json({ error: "Invalid response structure" });
     }
-
   } catch (error) {
-    console.error("Server Error:", error);
-    res.status(500).json({ 
-      error: "Something went wrong",
-      message: error.message 
-    });
+    console.error("Error:", error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
-
 
 app.get('/', (req,res) => {
     res.send("Welcome")
