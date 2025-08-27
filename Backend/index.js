@@ -83,25 +83,38 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
-    const {prompt} = req.body;
+    const { prompt } = req.body;
     if (!prompt) {
       return res.status(400).json({ error: "Prompt is required" });
     }
 
-    const systemInstruction = `
-You are an AI assistant specialized in anime and manga. Your expertise is strictly limited to this area. 
-Do not discuss any topics outside of anime and manga, including politics, entertainment, sports, or personal advice.
-Analyze the following request: "${prompt}"
-If the request is about anime, manga, characters, storylines, ratings, recommendations, airing schedules, reviews, or related topics, provide a detailed and helpful answer.
-If the request is not about anime or manga, simply reply with: "I'm not able to answer these types of questions. Please ask me something related to anime or manga."
-Do not attempt to answer off-topic questions. Be polite and concise in your responses.
-    `.trim();
+    // Combine instructions and user prompt in a single user message
+    const userMessage = `
+You are an AI assistant specialized in anime and manga. 
+Your expertise is strictly limited to this area. 
+
+Instructions:
+1. If the question is about anime, manga, characters, storylines, ratings, recommendations, airing schedules, reviews, or related topics, answer it in detail.
+2. If the question is unrelated to anime or manga, reply exactly: "I'm not able to answer these types of questions. Please ask me something related to anime or manga."
+3. Be polite and concise.
+4. Analyze the following user input before answering.
+
+User question: "${prompt}"
+`;
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(systemInstruction),
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: userMessage }],
+            },
+          ],
+        }),
       }
     );
 
@@ -111,17 +124,17 @@ Do not attempt to answer off-topic questions. Be polite and concise in your resp
 
     const data = await response.json();
 
-    // Extract and send the generated text back to the frontend
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
       res.json({ text: data.candidates[0].content.parts[0].text });
     } else {
-      res.status(500).json({ error: "Invalid response structure" });
+      res.status(500).json({ error: "Invalid response structure", raw: data });
     }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
 
 app.get('/', (req,res) => {
     res.send("Welcome")
