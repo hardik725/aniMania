@@ -82,24 +82,15 @@ app.use("/news", NewsRouter);
 app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
-
-  try {
-    const { contents } = req.body; // you already get contents array
-    console.log(contents);
   const preText = `Is the information about`;
   const postText = `related to the anime or manga series? Respond with a single word, either 'Yes' or 'No'.`;
-
-    // Safely modify the first text part
-    if (contents && contents[0] && contents[0].parts && contents[0].parts[0].text) {
-      contents[0].parts[0].text = `${preText}${contents[0].parts[0].text}${postText}`;
-    }
-
+  try {
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=YOUR_API_KEY",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents }),
+        body: JSON.stringify(req.body),
       }
     );
 
