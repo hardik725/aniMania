@@ -83,9 +83,9 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
 
-  const systemPrompt = preText + d;
   try {
     const { contents } = req.body; // you already get contents array
+    console.log(contents);
   const preText = `Is the information about`;
   const postText = `related to the anime or manga series? Respond with a single word, either 'Yes' or 'No'.`;
 
