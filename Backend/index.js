@@ -83,12 +83,20 @@ app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
   try {
+    const preText = `Is the information about `;
+    const postText = ` related to the anime or manga series? Respond with a single word, either 'Yes' or 'No'.`;
+
+    const userMessage = req.body.userMessage; // make sure your frontend sends { userMessage: "..." }
+
+    // Step 1: Ask Gemini if it's anime/manga related
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(req.body),
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: preText + userMessage + postText }] }],
+        }),
       }
     );
 
@@ -96,20 +104,39 @@ app.post("/generateMessage", async (req, res) => {
       throw new Error(`Failed to fetch from Gemini API: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    console.log("The answer of the question asked is: ",data?.candidates[0].content.parts[0].text);
+    const data1 = await response.json();
 
-    // Extract and send the generated text back to the frontend
-    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-      res.json({ text: data.candidates[0].content.parts[0].text });
+    const answer = data1?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+    if (answer === "Yes") {
+      // Step 2: Now ask Gemini with just the user’s original message
+      const response2 = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userMessage }] }],
+          }),
+        }
+      );
+
+      const data = await response2.json();
+
+      if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        res.json({ text: data.candidates[0].content.parts[0].text });
+      } else {
+        res.status(500).json({ error: "Invalid response structure" });
+      }
     } else {
-      res.status(500).json({ error: "Invalid response structure" });
+      res.json({ text: "Ask me something about anime or manga" });
     }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
 
 app.get('/', (req,res) => {
     res.send("Welcome")

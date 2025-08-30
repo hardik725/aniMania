@@ -23,7 +23,8 @@ const ChatBot = () => {
   const handleSend = async () => {
     if (!userInput.trim()) return;
 
-    const userMessage = preText + " " +  userInput.trim() + " " + postText;
+    const userMessage = userInput.trim();
+    const sendMessage = preText + " " +  userInput.trim() + " " + postText;
     setUserInput("");
 
     // Add user message to chat
@@ -34,12 +35,12 @@ const ChatBot = () => {
     try {
       // Send user input to the backend
       const response = await fetch(
-        "https://animania-backend-dmjs.onrender.com/generateMessage",
+        "http://localhost:4001/generateMessage",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: userMessage }] }],
+            userMessage: userMessage,
           }),
         }
       );
