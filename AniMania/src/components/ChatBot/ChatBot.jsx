@@ -35,7 +35,7 @@ const ChatBot = () => {
     try {
       // Send user input to the backend
       const response = await fetch(
-        "http://localhost:4001/generateMessage",
+        "https://animania-backend-dmjs.onrender.com/generateMessage",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
