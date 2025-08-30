@@ -82,8 +82,6 @@ app.use("/news", NewsRouter);
 app.use("/mail",EmailRouter);
 app.use("/tempuser",TempUserRouter);
 app.post("/generateMessage", async (req, res) => {
-  const preText = `Is the information about`;
-  const postText = `related to the anime or manga series? Respond with a single word, either 'Yes' or 'No'.`;
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
@@ -99,6 +97,7 @@ app.post("/generateMessage", async (req, res) => {
     }
 
     const data = await response.json();
+    console.log("The answer of the question asked is: ",data?.candidates[0].content.parts[0].text);
 
     // Extract and send the generated text back to the frontend
     if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {

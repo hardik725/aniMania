@@ -11,6 +11,8 @@ const ChatBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // For toggling chat visibility
   const chatContainerRef = useRef(null);
+  const preText = `Is the information about`;
+  const postText = `related to the anime or manga series? Respond with a single word, either 'Yes' or 'No'.`;
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -21,7 +23,7 @@ const ChatBot = () => {
   const handleSend = async () => {
     if (!userInput.trim()) return;
 
-    const userMessage = userInput.trim();
+    const userMessage = preText + " " +  userInput.trim() + " " + postText;
     setUserInput("");
 
     // Add user message to chat
